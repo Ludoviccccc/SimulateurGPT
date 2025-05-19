@@ -75,7 +75,6 @@ if __name__=="__main__":
     H = History(max_size=1000)
     En = Env(program)
     G = GoalGenerator(50, 20)
-    #P = OptimizationPolicy(mutation_rate=.1)
     P = OptimizationPolicykNN(k=5,mutation_rate =0.1)
 
     def countL3(H:History):
@@ -97,9 +96,21 @@ if __name__=="__main__":
     counts_per_addr_imgep,D1,counts_per_addr_per_cycle_imgep = countL3(H)
 
     
-    H.purge()
-    rand = IMGEP(N,1000,En, H, G, P)
-    rand()
+    #H.purge()
+
+    ddr = DDRMemory()
+    interconnect = Interconnect(ddr, delay=5, bandwidth=4)
+    core0 = MultiLevelCache(0, l1_conf, l2_conf, l3_conf, interconnect)
+    core1 = MultiLevelCache(1, l1_conf, l2_conf, l3_conf, interconnect)
+    program = runpgrms(core0, core1, 50, interconnect, ddr)
+
+    H = History(max_size=1000)
+    En = Env(program)
+    G = GoalGenerator(50, 20)
+    P = OptimizationPolicykNN(k=5,mutation_rate =0.1)
+
+    Rand = IMGEP(N,N,En, H, G, P)
+    Rand()
     counts_per_addr_rand, D2,counts_per_addr_per_cycle_rand = countL3(H)
 
     plt.figure()
