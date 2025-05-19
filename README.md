@@ -112,7 +112,7 @@ class GoalGenerator:
 ![Alt text](image/figure3.png)
 
 ### Idée 2	
-For parallel execution of a pair of programs, match a vector of ${ {(1,0,0),(0,1,0), (0,0,1) }} {2n}$ with, during the cycle corresponding to the executed instruction:
+For parallel execution of a pair of programs, match a vector of ${\{(1,0,0),(0,1,0), (0,0,1)\}}^{2n}$ with, during the cycle corresponding to the executed instruction:
 	* (1,0,0) if the shared resource (L3) is accessed through reading. 
 	* (0,1,0) if the shared resource is accessed for write.
 	* (0,0,1) if the resource is not accessed.
