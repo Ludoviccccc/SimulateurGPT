@@ -1,7 +1,7 @@
 # curiosity-driven-approach
 
 ## On going:
-Use `sim.class_mem_sim.py` to obtain the following information:
+I'm currenlty using `sim.class_mem_sim.py` to obtain the following informations:
 * Quantifying contention. With the Interconnect.queue tool? ? 
 * Link cause to effect of interference
 * When do simultaneous accesses of an address from the L3 cache by both cores take place? ? 
