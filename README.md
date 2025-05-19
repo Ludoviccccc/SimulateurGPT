@@ -105,6 +105,7 @@ class GoalGenerator:
         return {"addr":out}
 ```
 
+Bellow I compare a basic imgep with a random exploration
 ![Alt text](image/figure1.png)
 
 ![Alt text](image/figure2.png)
