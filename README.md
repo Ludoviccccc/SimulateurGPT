@@ -85,7 +85,7 @@ To construct a distance between two vector pairs $(u,v),(w, z)$, can be used a  
 
  	Thus, an autothelial agent will want to browse a diversity of accesses on the L3 cache, situations where two cores access the same address and the same cycle may occur, which is a source of interference.
 
-  However, this is not a useful way to use **IMGEP***, unless it is actually not easy to access the same address by two hearts, because you have to know in detail the architecture, moreover, you do not learn much, to my knowledge, except that it is possible to have an address of a shared cache line requested by both cores.
+  However, this is not a useful way to use **IMGEP**, unless it is actually not easy to access the same address by two hearts, because you have to know in detail the architecture, moreover, you do not learn much, to my knowledge, except that it is possible to have an address of a shared cache line requested by both cores.
   
 For an objective generator, I simply generate pairs of sequences with values in ${-1,0,...,19}$ to simulate 20 addresses on the L3 cache.
 
