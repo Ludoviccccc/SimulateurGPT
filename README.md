@@ -76,7 +76,7 @@ Below we show that it is simple to access a same address of the L3 cache during 
 Mais supposons qu'il s'agit de quelque chose de pas si simple à faire.
 Les listes d'instructions sont constituées d'instructions read and write. Il y'a un *cycle* par instruction.
 Supposons les programmes consituées d'un nombre fixe de $n$ instructions.
-### Idée 1
+### Idea 1
 
 For parallel execution of a pair of programs: 
 Matching a couple of vectors to constitute an objective: $(o_1, o_2) \in\{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n} \times \{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n}$  where $a_{\{0\leq i \leq L\}}$ are L3 memory addresses. coordinate equal to -1 corresponds to the fact that the cache L3 is not accessed.e.g $(o_1,o_2) = ((-1, -1, -1, a_{17}, -1, -1, a_{5}),(-1, a_{6}, a_{8}, -1, -1,-1, -1))$.
@@ -111,7 +111,7 @@ class GoalGenerator:
 
 ![Alt text](image/figure3.png)
 
-### Idée 2	
+### Idea 2	
 For parallel execution of a pair of programs, match a vector of ${\{(1,0,0),(0,1,0), (0,0,1)\}}^{2n}$ with, during the cycle corresponding to the executed instruction:
 	* (1,0,0) if the shared resource (L3) is accessed through reading. 
 	* (0,1,0) if the shared resource is accessed for write.
