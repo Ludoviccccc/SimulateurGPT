@@ -129,12 +129,12 @@ For parallel execution of a pair of programs, match a vector of ${\{(1,0,0),(0,1
  are parameters and can be modified.
 
 
-* `mem_sim.CacheLine` represents a single cache line in the cache hierarchy
+* `sim.class_mem_sim.CacheLine` represents a single cache line in the cache hierarchy
 
-* `mem_sim.PLRU` Pseudo-LRU (PLRU) replacement policy for N-way set associative caches
+* `sim.class_mem_sim.PLRU` Pseudo-LRU (PLRU) replacement policy for N-way set associative caches
 The pseudoi-LRU is used to determine the bock to replace in case of cache miss.
 A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 
-* `mem_sim.DDRRequest` represents a memory access request (either read or write)
-* `mem_sim.Interconnect`: Interconnect model between CPU cores and DDR, with bandwidth and latency
-* `mem_sim.DDRMemory`:  DDR memory model with banks, row buffers, and latency variations
+* `sim.class_mem_sim.DDRRequest` represents a memory access request (either read or write)
+* `sim.class_mem_sim.Interconnect`: Interconnect model between CPU cores and DDR, with bandwidth and latency
+* `sim.class_mem_sim.DDRMemory`:  DDR memory model with banks, row buffers, and latency variations
