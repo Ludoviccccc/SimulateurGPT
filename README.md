@@ -87,7 +87,7 @@ To construct a distance between two vector pairs $(u,v),(w, z)$, can be used a  
 
   However, this is not a useful way to use **IMGEP**, unless it is actually not easy to access the same address by two hearts, because you have to know in detail the architecture, moreover, you do not learn much, to my knowledge, except that it is possible to have an address of a shared cache line requested by both cores.
   
-For an objective generator, I simply generate pairs of sequences with values in ${-1,0,...,19}$ to simulate 20 addresses on the L3 cache.
+For an objective generator, I simply generate pairs of sequences with values in ${-1,0,...,19}$ to simulate 20 addresses on the L3 cache. And one out of then times the addresses one want to access are the same for both cores. Note that I will soon produce a better goal generator.
 
 ```python
 class GoalGenerator:
