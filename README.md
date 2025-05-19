@@ -77,7 +77,9 @@ Mais supposons qu'il s'agit de quelque chose de pas si simple à faire.
 Les listes d'instructions sont constituées d'instructions read and write. Il y'a un *cycle* par instruction.
 Supposons les programmes consituées d'un nombre fixe de $n$ instructions.
 ### Idée 1
-For parallel execution of a pair of programs: Matching a couple of vectors to constitute an objective:$(o_1, o_2) \in\{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n}\times \{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n}$   where $a_{\{0\leq i \leq L\}}$ are L3 memory addresses. coordinate equal to -1 corresponds to the fact that the cache L3 is not accessed.e.g $(o_1,o_2) = ((-1, -1, -1, a_{17}, -1, -1, a_{5}),(-1, a_{6}, a_{8}, -1, -1,-1, -1))$.
+
+For parallel execution of a pair of programs: 
+Matching a couple of vectors to constitute an objective: $(o_1, o_2) \in\{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n} \times \{\{a_{0},...,a_{L}\}\cup\{-1\}\}^{n}$  where $a_{\{0\leq i \leq L\}}$ are L3 memory addresses. coordinate equal to -1 corresponds to the fact that the cache L3 is not accessed.e.g $(o_1,o_2) = ((-1, -1, -1, a_{17}, -1, -1, a_{5}),(-1, a_{6}, a_{8}, -1, -1,-1, -1))$.
 
 To construct a distance between two vector pairs $(u,v),(w, z)$, can be used a  **norm L1 or L2** *e.g* $d((a_1,a_2),(b_1, b_2)) = \sum_{i}^{n} |u_{i}-w_{i}| + \sum_{i}^{n} |v{i}-z_{i}| $, or **the number of different coordinates between couples**  $$d((u,v),(w, z)) = \sum_{i}^{n} \mathbb{1}_{\{u_i=w_i\}} + \sum_{i}^{n} \mathbb{1}_{\{v_i=z_i\}}$$.
 
