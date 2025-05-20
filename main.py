@@ -25,9 +25,11 @@ if __name__=="__main__":
     core0 = MultiLevelCache(0, l1_conf, l2_conf, l3_conf, interconnect)
     core1 = MultiLevelCache(1, l1_conf, l2_conf, l3_conf, interconnect)
     program = runpgrms(core0, core1, 50, interconnect, ddr)
-    length = 30
+    length = 50
     instr0 = make_random_list_instr(length=length, core=0)
     instr1 = make_random_list_instr(length=length, core=1)
+    #print(len(instr0))
+    #exit()
 #    print(instructions0)
     #instr0 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 0} for j in list(range(20))+list(range(17,20))]
     #instr1 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 1} for j in range(20)]
@@ -44,6 +46,24 @@ if __name__=="__main__":
     print("reorder",program.reorder())
     print("out0",program.out0)
     print("out1",program.out1)
+    out0  = program.out0
+    out1 = program.out1
+    
+    fig, ax = plt.subplots(len(out0.keys()))
+    kk = list(out0.keys())
+    print("len", len(kk))
+    #k=0
+    #for i in range(1,5):
+    #    for j in range(i):
+    #            ax[k].scatter(out0[kk[j]],out0[kk[i]])
+    #            k+=1
+    #plt.show()
+    for j in range(len(kk)):
+        ax[j].grid()
+        ax[j].plot(range(50),out0[kk[j]],label=kk[j]+ "core 0")
+        ax[j].plot(range(50),out1[kk[j]],label=kk[j] + "core 1")
+        ax[j].legend()
+    plt.show()
     exit()
     print("difference", sum(a != b))
     print("addr core0", program.addr_core(0))

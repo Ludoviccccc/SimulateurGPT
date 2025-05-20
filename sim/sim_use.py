@@ -25,12 +25,10 @@ class runpgrms:
         self.out0 = {"addr":-np.ones(50),
                "bank":-np.ones(50),
                "delay":-np.ones(50),
-               "completion_time":-np.ones(50),
                "status":-np.ones(50)}
         self.out1 = {"addr":-np.ones(50),
                "bank":-np.ones(50),
                "delay":-np.ones(50),
-               "completion_time":-np.ones(50),
                "status":-np.ones(50)}
 
     def eviction(self):
@@ -97,15 +95,20 @@ class runpgrms:
                 print("erreur")
                 exit()
     def reorder(self):
+        print(self.list_best_request0)
+        #exit()
         for d in self.list_best_request0:
             if d["core"]==0:
+                print("lennnn", d["addr"])
                 self.out0["addr"][d["emmission_cycle"]] = d["addr"]
+                self.out0["bank"][d["emmission_cycle"]] = d["bank"]
                 self.out0["delay"][d["emmission_cycle"]] = d["delay"]
                 self.out0["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
             elif d["core"]==1:
                 self.out1["addr"][d["emmission_cycle"]] = d["addr"]
+                self.out1["bank"][d["emmission_cycle"]] = d["bank"]
                 self.out1["delay"][d["emmission_cycle"]] = d["delay"]
-                self.out0["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
+                self.out1["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
             else:
                 print("erreur")
                 exit()
