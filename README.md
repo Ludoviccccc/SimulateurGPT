@@ -2,10 +2,10 @@
 
 ## On going:
 I'm currenlty using `sim.class_mem_sim.py` to obtain the following informations:
-* Quantifying contention with the `sim.class_mem_sim.Interconnect.queue` 
+* Quantifying **contention** with the `sim.class_mem_sim.Interconnect.queue` 
 * Link cause to effects, temporal execution time.
-* When do simultaneous accesses of ddr cache by both cores occur ?  
-* What other mechanisms are of interest to users/hardware engineers? acces to same bank in ddr at same time ? what delay ? 
+* When do simultaneous accesses of **ddr** cache by both cores occur ?  
+* What other mechanisms are of interest to users/hardware engineers? acces to same bank in **ddr** at same time ? what delay ? 
 * What other mechanisms are responsible for interferences, and which only occur when two applications are run in parallel on both cores?
 
 
