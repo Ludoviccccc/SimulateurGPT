@@ -89,13 +89,14 @@ class PLRU:
 # Represents a memory access request (either read or write)
 # ---------------------------------------------------------
 class DDRRequest:
-    def __init__(self, core_id, time, req_type, addr, callback=None, value=None):
+    def __init__(self, core_id, time, req_type, addr, callback=None, value=None, num_instr=0):
         self.core_id = core_id
         self.time = time              # Time of request
         self.req_type = req_type      # 'read' or 'write'
         self.addr = addr
         self.callback = callback      # Callback function to return read result
         self.value = value            # Value to write (for write requests)
+        self.num_instr = num_instr
 
     def __lt__(self, other):
         return self.time < other.time
@@ -139,7 +140,7 @@ class Interconnect:
         while self.queue and self.queue[0][0] <= self.cycle and processed < self.bandwidth:
             _, req = heapq.heappop(self.queue)
 
-            print(f"[Cycle {self.cycle}] Interconnect Forwarding: Core {req.core_id} {req.req_type.upper()} addr {req.addr}")
+            #print(f"[Cycle {self.cycle}] Interconnect Forwarding: Core {req.core_id} {req.req_type.upper()} addr {req.addr}")
             self.memory.request(req)
             processed += 1
 
@@ -149,139 +150,19 @@ class Interconnect:
         # Defer excess requests for next cycles
         while self.queue and self.queue[0][0] <= self.cycle:
             temp_queue.append(heapq.heappop(self.queue))
-            print(f"[Cycle {self.cycle}] Interconnect Saturated: Deferring {len(self.queue)} requests")
+            #print(f"[Cycle {self.cycle}] Interconnect Saturated: Deferring {len(self.queue)} requests")
         for item in temp_queue:
             heapq.heappush(self.queue, item)
 
         self.cycle += 1
 
 
-# ---------------------------------------------------------
-#  DDR memory model with banks, row buffers, and latency variations
-# Access latencies depend on the active bank
-# Each bank has a row buffer. An access to the same row is faster. In case of
-# miss, an access precharge and activate delay is added.
-#
-# The parameters are
-# tRCD (Row to Column Delay)
-# tRP (Row Precharge) : time to close one row of memory cell before opening another row
-#                       in the same bank.
-# tCAS (Column Access Strobe latency)
-# tRC (Row Cycle time)
-# Behaviour:
-# - The DDR requests coming from the two cores are queued and arbitrated per cycle by the DDR controler.
-# - The requests are re-ordered so that the best next-command is served first:
-#   - prefer row hits
-#   - avoid accesses to busy banks
-# - The bank is determined by the address' LSB: row = addr % num_banks
-# - Each row contains 16 addresses: row = addr // 16
-# ---------------------------------------------------------
-class DDRMemory:
-    def __init__(self, latency=50, row_hit_latency=20, row_miss_penalty=30, precharge_time=10, num_banks=4):
-        self.base_latency = latency
-        self.row_hit_latency = row_hit_latency
-        self.row_miss_penalty = row_miss_penalty
-        self.precharge_time = precharge_time
-        self.num_banks = num_banks
-        self.bank_row_buffers = [None for _ in range(num_banks)]
-        self.bank_precharge_end = [0 for _ in range(num_banks)]
-        self.memory = {}
-        self.cycle = 0
-
-        self.pending = []  # Requests waiting to be scheduled
-        self.scheduled = []  # Requests that have been scheduled for completion
-        self.last_address_time = {}  # Track the latest cycle each address is scheduled to enforce order
-
-    def _get_bank(self, addr):
-        return addr % self.num_banks
-
-    def _get_row(self, addr):
-        return addr // 16  # Example: each row covers 16 addresses
-
-    # Queue a request
-    def request(self, req):
-        #print(f"[Cycle {self.cycle}] ➜ New DDR request queued: Core {req.core_id}, {req.req_type.upper()} Addr {req.addr}")
-        self.pending.append((self.cycle, req))
-
-    # Process the DDR current cycle
-    def tick(self):
-        output = self._issue_best_request()
-
-        while self.scheduled and self.scheduled[0][0] <= self.cycle:
-            _, req = heapq.heappop(self.scheduled)
-            if req.req_type == 'read':
-                val = self.memory.get(req.addr, 0)
-                #print(f"[Cycle {self.cycle}] ✔ READ COMPLETE (Core {req.core_id}, Addr {req.addr}) => {val}")
-                if req.callback:
-                    req.callback(val)
-            elif req.req_type == 'write':
-                self.memory[req.addr] = req.value
-                #print(f"[Cycle {self.cycle}] ✔ WRITE COMPLETE (Core {req.core_id}, Addr {req.addr}) <= {req.value}")
-
-        self.cycle += 1
-        return output
-
-    # Return the "best" request from the request queue
-    def _issue_best_request(self):
-        output = -1
-        # Is the pending request queue empty?
-        if not self.pending:
-            #print(f"[Cycle {self.cycle}] No pending DDR requests to schedule.")
-            return output
-
-        # Sort the pending requests according to their "score"
-        self.pending.sort(key=lambda pair: self._score(pair[1], pair[0]))
-
-        for i, (arrival_time, req) in enumerate(self.pending):
-            bank = self._get_bank(req.addr)
-            row = self._get_row(req.addr)
-            last_time = self.last_address_time.get(req.addr, -1)
-
-            if last_time >= self.cycle:
-                continue
-
-            if self.bank_precharge_end[bank] > self.cycle:
-                continue  # Bank is busy
-
-            if self.bank_row_buffers[bank] == row:
-                delay = self.row_hit_latency
-                row_status = "ROW HIT"
-            else:
-                delay = self.precharge_time + self.row_miss_penalty + self.row_hit_latency
-                row_status = "ROW MISS"
-                self.bank_row_buffers[bank] = row
-                self.bank_precharge_end[bank] = self.cycle + self.precharge_time
-
-            completion_time = self.cycle + delay
-            req.completion_time = completion_time
-            self.last_address_time[req.addr] = completion_time
-            heapq.heappush(self.scheduled, (completion_time, req))
-            self.pending.pop(i)
-
-            #print(f"[Cycle {self.cycle}] ➜ Scheduling {req.req_type.upper()} for Addr {req.addr} (Core {req.core_id})")
-            #print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
-            return {"addr":req.addr,"bank":bank,"delay":delay,"status":row_status}
-            #break
-        return output
-
-    # Compute a score for each request
-    def _score(self, req, arrival_time):
-        bank = self._get_bank(req.addr)
-        row = self._get_row(req.addr)
-        score = arrival_time
-
-        if self.bank_row_buffers[bank] == row:
-            score -= 100  # Favor row hits
-        elif self.bank_precharge_end[bank] > self.cycle:
-            score += 50  # Penalize busy banks
-
-        return score
-
 #---------------------------------------
 # Models one level in the cache hierarchy
 #----------------------------------------
 class CacheLevel:
     miss_history = {"level":[],"addr":[],"core_id":[]}
+    num_instr = 0
     def __init__(self, level_name, core_id, size, line_size, assoc, memory=None, write_back=True, write_allocate=True):
         self.level = level_name
         self.core_id = core_id
@@ -296,6 +177,9 @@ class CacheLevel:
         self.write_allocate = write_allocate
         self.hits = 0
         self.misses = 0
+        self.num_instr =0
+        #self.
+        #self.num_instr = 0
 
     # Extract the set index from the address
     #  addr = [ tag ][ idx ][ offset ]
@@ -314,9 +198,8 @@ class CacheLevel:
         cache_set = self.sets[index]
         plru = self.plru_trees[index]
         out = 0
-#        #print("level",self.level)
-        if self.level =="L3":
-            out = 1
+        if self.level=="L3":
+            self.num_instr +=1
         # Seach the tag in the cache set
         for i, line in enumerate(cache_set):
             if line.valid and line.tag == tag:
@@ -363,7 +246,8 @@ class CacheLevel:
 #            return 1
         # Or to DDR...
         elif self.memory:
-            self.memory.request(DDRRequest(self.core_id, self.memory.cycle, 'read', addr, lower_cb))
+            self.memory.request(DDRRequest(self.core_id, self.memory.cycle, 'read', addr, lower_cb,num_instr=self.num_instr))
+            out = 1 #acces to ddr
 #            return 1
         return out
 
@@ -375,8 +259,8 @@ class CacheLevel:
         plru = self.plru_trees[index]
         #print(f"[{self.level} cache write for {addr} on core {self.core_id}]")
         out = 0
-        if self.level =="L3":
-            out = 1
+        if self.level=="L3":
+            self.num_instr +=1
         for i, line in enumerate(cache_set):
             if line.valid and line.tag == tag:
                 # There is a cache hit
@@ -392,6 +276,7 @@ class CacheLevel:
                         self.lower.write(addr, val)
                     elif self.memory:
                         self.memory.request(DDRRequest(self.core_id, self.memory.cycle, 'write', addr, value=val))
+                        out = 1
                 return out
 
         # There is a cache miss...
@@ -407,7 +292,7 @@ class CacheLevel:
                 if self.lower:
                     self.lower.write(victim_addr, victim_line.data)
                 elif self.memory:
-                    self.memory.request(DDRRequest(self.core_id, self.memory.cycle, 'write', victim_addr, value=victim_line.data))
+                    self.memory.request(DDRRequest(self.core_id, self.memory.cycle, 'write', victim_addr, value=victim_line.data,num_instr=self.num_instr))
 
             # The entry is now valid
             victim_line.valid = True

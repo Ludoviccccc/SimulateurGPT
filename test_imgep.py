@@ -1,4 +1,5 @@
-from sim.class_mem_sim import DDRMemory, Interconnect, MultiLevelCache
+from sim.class_mem_sim import Interconnect, MultiLevelCache
+from sim.ddr import DDRMemory
 import random
 import time
 import numpy as np
@@ -127,7 +128,7 @@ if __name__=="__main__":
     plt.plot(range(20), np.mean(counts_per_addr_per_cycle_imgep, axis =0), label="imgep")
     plt.plot(range(20), np.mean(counts_per_addr_per_cycle_rand, axis =0), label="rand")
     plt.legend()
-    plt.title("average number of time an address in L3 is accesed by both cores")
+    plt.title("average number of time ddr is accesed by both cores")
     plt.savefig("image/figure2")
     plt.show()
     
@@ -135,7 +136,7 @@ if __name__=="__main__":
     plt.scatter(range(20),counts_per_addr_imgep, label="imgep")
     plt.scatter(range(20),counts_per_addr_rand, label="rand")
     plt.grid()
-    plt.title("number of acces to L3 vs addr")
+    plt.title("number of acces to ddr vs address")
     plt.xlabel("addr")
     plt.legend()
     plt.xticks(range(0,20))

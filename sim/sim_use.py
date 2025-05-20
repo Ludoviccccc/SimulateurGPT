@@ -3,7 +3,8 @@ import sys
 sys.path.append("../sim")
 sys.path.append("../")
 import random
-from sim.class_mem_sim import DDRMemory, Interconnect, MultiLevelCache
+from sim.class_mem_sim import Interconnect, MultiLevelCache
+from sim.ddr import DDRMemory
 class runpgrms: 
     def __init__(self, core1, core0, max_instr, interconnect, ddr):   
         self.nb_read =0   
@@ -12,17 +13,33 @@ class runpgrms:
         self.max_instr = max_instr  
         
         self.core0 = core0
-        self.list_acces_L30 = []    
-        self.list_addr0 = []   
+        self.list_acces_ddr0 = []    
+        self.list_best_request0 = []    
+        self.list_address0 = []   
         
         self.core1 = core1
-        self.list_acces_L31 = []    
-        self.list_addr1 = []   
+        self.list_acces_ddr1 = []    
+        self.list_best_request1 = []    
+        self.list_address1 = []   
+
+        self.out0 = {"addr":-np.ones(50),
+               "bank":-np.ones(50),
+               "delay":-np.ones(50),
+               "completion_time":-np.ones(50),
+               "status":-np.ones(50)}
+        self.out1 = {"addr":-np.ones(50),
+               "bank":-np.ones(50),
+               "delay":-np.ones(50),
+               "completion_time":-np.ones(50),
+               "status":-np.ones(50)}
+
     def eviction(self):
-        self.list_acces_L31 = []    
-        self.list_addr1 = []   
-        self.list_acces_L30 = []    
-        self.list_addr0 = []   
+        self.list_acces_ddr1 = []    
+        self.list_address1 = []   
+        self.list_acces_ddr0 = []    
+        self.list_address0 = []   
+        self.list_best_request1 = []    
+        self.list_best_request0 = []    
     def _execut_instr(self, instr:list[dict], cycle:int):    
         """
         executes a list of instructions. Returns 1 if there is acces to the L3, and 0 else.
@@ -49,45 +66,61 @@ class runpgrms:
     def __call__(self, list_instr0:list[dict], list_instr1:list[dict]):  
         #assert len(list_instr0)>0, "longueur programme"
         #assert len(list_instr1)>0, "longueur programme"
-        #assert len(self.list_addr0)==0
-        #assert len(self.list_addr1)==0
+        #assert len(self.list_address0)==0
+        #assert len(self.list_address1)==0
         #assert len(list_instr0)==len(list_instr1)  
         len_ = 0
-        for j in range(max(len(list_instr0), len(list_instr1))):
+        k =1
+        for j in range(100*max(len(list_instr0), len(list_instr1))):
 #  print(f"\n========== CYCLE {j} ==========") 
             if j <len(list_instr0):
                 out = self._execut_instr(list_instr0[j], cycle=j)
-                self.list_acces_L30.append(out)   
-                self.list_addr0.append(list_instr0[j]["addr"]*out+(1-out)*(-1))
+                self.list_acces_ddr0.append(out)   
+                self.list_address0.append(list_instr0[j]["addr"]*out+(1-out)*(-1))
                 #print(list_instr0[j]["addr"]*out+(1-out)*(-1))
                 len_+=1
             if j <len(list_instr1):
                 out = self._execut_instr(list_instr1[j], cycle=j)
-                self.list_acces_L31.append(out)   
-                #self.list_addr1.append(list_instr1[j]["addr"])   
+                self.list_acces_ddr1.append(out)   
+                #self.list_address1.append(list_instr1[j]["addr"])   
 
-                self.list_addr1.append(list_instr1[j]["addr"]*out+(1-out)*(-1))
+                self.list_address1.append(list_instr1[j]["addr"]*out+(1-out)*(-1))
                 len_+=1
             self.interconnect.tick()
             output_tick = self.ddr.tick()    
             if type(output_tick)==dict:
-                print("output_tick", output_tick)
+                self.list_best_request0.append(output_tick)
+                print(k,"output_tick", output_tick)
+                k+=1
             #print("row buffer",self.ddr.bank_row_buffers)
             if len_==0:
+                print("erreur")
+                exit()
+    def reorder(self):
+        for d in self.list_best_request0:
+            if d["core"]==0:
+                self.out0["addr"][d["emmission_cycle"]] = d["addr"]
+                self.out0["delay"][d["emmission_cycle"]] = d["delay"]
+                self.out0["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
+            elif d["core"]==1:
+                self.out1["addr"][d["emmission_cycle"]] = d["addr"]
+                self.out1["delay"][d["emmission_cycle"]] = d["delay"]
+                self.out0["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
+            else:
                 print("erreur")
                 exit()
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   
-        a[:len(self.list_acces_L30)] = self.list_acces_L30
-        b[:len(self.list_acces_L31)] = self.list_acces_L31
+        a[:len(self.list_acces_ddr0)] = self.list_acces_ddr0
+        b[:len(self.list_acces_ddr1)] = self.list_acces_ddr1
         return a*b
     def addr_core(self,j):
         a = np.zeros(self.max_instr) - 1
         if j==0:
-            a[:len(self.list_addr0)] = self.list_addr0
+            a[:len(self.list_address0)] = self.list_address0
         elif j==1:
-            a[:len(self.list_addr1)] = self.list_addr1
+            a[:len(self.list_address1)] = self.list_address1
         return a
     def addr_obs(self):
         return {"addr":np.concatenate((self.addr_core(0), self.addr_core(1)), axis =0)}

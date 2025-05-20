@@ -1,4 +1,5 @@
-from sim.class_mem_sim import DDRMemory, Interconnect, MultiLevelCache
+from sim.class_mem_sim import Interconnect, MultiLevelCache
+from sim.ddr import DDRMemory
 import random
 import time
 import numpy as np
@@ -25,12 +26,12 @@ if __name__=="__main__":
     core1 = MultiLevelCache(1, l1_conf, l2_conf, l3_conf, interconnect)
     program = runpgrms(core0, core1, 50, interconnect, ddr)
     length = 30
-    instructions0 = make_random_list_instr(length=length, core=0)
-    instructions1 = make_random_list_instr(length=length, core=1)
+    instr0 = make_random_list_instr(length=length, core=0)
+    instr1 = make_random_list_instr(length=length, core=1)
 #    print(instructions0)
-    instr0 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 0} for j in range(20)]
-    instr1 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 1} for j in range(20)]
-    instr1 = []
+    #instr0 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 0} for j in list(range(20))+list(range(17,20))]
+    #instr1 = [{'type': 'r', 'addr': j, 'func': lambda val: None, 'core': 1} for j in range(20)]
+    #instr1 = []
     #program(instructions0, instructions1)
     program(instr0, instr1)
     a = program.addr_core(0)
@@ -38,6 +39,10 @@ if __name__=="__main__":
     o = program.addr_obs()["addr"]
     print(o[:50])
     print(o[50:])
+#    print(program.list_acces_ddr0)
+    print("list acces ddr 0", program.list_acces_ddr0)
+    print("reorder",program.reorder())
+    print("out0",program.out0)
     exit()
     print("difference", sum(a != b))
     print("addr core0", program.addr_core(0))
