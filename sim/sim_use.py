@@ -94,12 +94,10 @@ class runpgrms:
             if len_==0:
                 print("erreur")
                 exit()
+            self.reorder()
     def reorder(self):
-        print(self.list_best_request0)
-        #exit()
         for d in self.list_best_request0:
             if d["core"]==0:
-                print("lennnn", d["addr"])
                 self.out0["addr"][d["emmission_cycle"]] = d["addr"]
                 self.out0["bank"][d["emmission_cycle"]] = d["bank"]
                 self.out0["delay"][d["emmission_cycle"]] = d["delay"]

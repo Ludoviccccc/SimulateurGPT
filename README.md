@@ -29,5 +29,13 @@ A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 * `sim.class_mem_sim.DDRMemory`:  DDR memory model with banks, row buffers, and latency variations
 
 
+## Visualisation
+
+For a random exploration we wish to have nice visualisation that show divsersity
+![Alt text](image/figure1.png) 
+![Alt text](image/figure2.png) 
+![Alt text](image/figure3.png) 
+![Alt text](image/figure4.png) 
+
 ## IMGEP
 We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**, here it can only be accessed by the two cores during the same cycle.
