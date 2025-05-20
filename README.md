@@ -27,3 +27,7 @@ A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 * `sim.class_mem_sim.DDRRequest` represents a memory access request (either read or write)
 * `sim.class_mem_sim.Interconnect`: Interconnect model between CPU cores and DDR, with bandwidth and latency
 * `sim.class_mem_sim.DDRMemory`:  DDR memory model with banks, row buffers, and latency variations
+
+
+## IMGEP
+We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**, here it can only be accessed by the two cores during the same cycle.
