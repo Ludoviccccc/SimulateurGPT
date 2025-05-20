@@ -43,6 +43,7 @@ if __name__=="__main__":
     print("list acces ddr 0", program.list_acces_ddr0)
     print("reorder",program.reorder())
     print("out0",program.out0)
+    print("out1",program.out1)
     exit()
     print("difference", sum(a != b))
     print("addr core0", program.addr_core(0))
