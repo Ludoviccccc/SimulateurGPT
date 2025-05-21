@@ -5,6 +5,7 @@ sys.path.append("../")
 import random
 from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
+import matplotlib.pyplot as plt
 class runpgrms: 
     def __init__(self, core1, core0, max_instr, interconnect, ddr):   
         self.nb_read =0   
@@ -38,6 +39,16 @@ class runpgrms:
         self.list_address0 = []   
         self.list_best_request1 = []    
         self.list_best_request0 = []    
+
+        self.out0 = {"addr":-np.ones(50),
+               "bank":-np.ones(50),
+               "delay":-np.ones(50),
+               "status":-np.ones(50)}
+        self.out1 = {"addr":-np.ones(50),
+               "bank":-np.ones(50),
+               "delay":-np.ones(50),
+               "status":-np.ones(50)}
+
     def _execut_instr(self, instr:list[dict], cycle:int):    
         """
         executes a list of instructions. Returns 1 if there is acces to the L3, and 0 else.
@@ -62,11 +73,6 @@ class runpgrms:
             exit()   
         return out   
     def __call__(self, list_instr0:list[dict], list_instr1:list[dict]):  
-        #assert len(list_instr0)>0, "longueur programme"
-        #assert len(list_instr1)>0, "longueur programme"
-        #assert len(self.list_address0)==0
-        #assert len(self.list_address1)==0
-        #assert len(list_instr0)==len(list_instr1)  
         len_ = 0
         k =1
         for j in range(100*max(len(list_instr0), len(list_instr1))):
@@ -94,7 +100,7 @@ class runpgrms:
             if len_==0:
                 print("erreur")
                 exit()
-            self.reorder()
+        self.reorder()
     def reorder(self):
         for d in self.list_best_request0:
             if d["core"]==0:
@@ -110,6 +116,9 @@ class runpgrms:
             else:
                 print("erreur")
                 exit()
+        #plt.figure()
+        #plt.plot(self.out0["delay"])
+        #plt.show()
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   
@@ -149,7 +158,6 @@ def make_random_list_instr(length = 5, core = "0"):
     return out  
 def make_random_paire_list_instr(length:int=50)->dict:
     assert type(length) == int
-    length = 50
     instructions0 = make_random_list_instr(length=length, core=0)
     instructions1 = make_random_list_instr(length=length, core=1)
     return  {"core0": [instructions0],"core1":[instructions1]}
