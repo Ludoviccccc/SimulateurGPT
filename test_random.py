@@ -63,13 +63,6 @@ if __name__=="__main__":
     imgep()
     for j in range(10):
         print(H.memory_program["core0"][j][0])
-    tab_delay = np.array(H.memory_signature["core0"]["delay"])
-    print(len(tab_delay))
-    for j in range(len(tab_delay)):
-        plt.plot(range(length_programs),tab_delay[j], label=j)
-        plt.title("delays")
-    plt.legend()
-    plt.show()
     def countDDR(H:History2):
         def same(string):
             A = np.array(H.memory_signature["core0"][string])
@@ -130,4 +123,15 @@ if __name__=="__main__":
 
 
 
-
+    def times_plot(H:History2, name="image/figure5"):
+        tab_delay0 = np.array(H.memory_signature["core0"]["delay"])
+        tab_delay1 = np.array(H.memory_signature["core1"]["delay"])
+        for j in range(len(tab_delay0)):
+            plt.plot(range(length_programs),tab_delay0[j], label=f"{j} core 0")
+            plt.plot(range(length_programs),tab_delay1[j], label=f"{j} core 1")
+            plt.title("delays")
+        plt.legend()
+        if name:
+            plt.savefig(name)
+        plt.show()
+    times_plot(H)
