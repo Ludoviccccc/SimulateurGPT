@@ -18,22 +18,24 @@ class Env:
                 l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2},
                 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4},
                 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8},
-                length_programs = 50):
+                length_programs = 50,
+                max_len=350):
         self.l1_conf = l1_conf
         self.l2_conf = l2_conf
         self.l3_conf = l3_conf
+        self.max_len = max_len
         self.length_programs = length_programs
     def __call__(self, parameter:dict):
         ddr = DDRMemory()
         interconnect = Interconnect(ddr, delay=5, bandwidth=4)
         core0 = MultiLevelCache(0, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
         core1 = MultiLevelCache(1, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
-        program = runpgrms(core0, core1, self.length_programs, interconnect, ddr)
+        program = runpgrms(core0, core1, self.length_programs, interconnect, ddr, max_len=max_len)
         program(parameter["core0"][0], parameter["core1"][0])
         return {"core0":program.out0, "core1":program.out1}
 
 class RANDOM:
-    def __init__(self,N:int, N_init:int,E:Env,H:History, periode:int = 1):
+    def __init__(self,N:int, N_init:int,E:Env,H:History2):
         """
         N: int. The experimental budget
         N_init: int. Number of experiments at random
@@ -43,50 +45,31 @@ class RANDOM:
         self.env = E
         self.H = H
         self.N_init = N_init
-        self.periode = periode
     def __call__(self):
         for i in range(self.N):
             if i<self.N_init:
                 parameter = make_random_paire_list_instr()
             self.H.store({"program":parameter}|self.env(parameter))
 if __name__=="__main__":
-
-    # Simulation setup
-    
 #    random.seed(0)
-
-
     N = int(1000)
-    
-    ddr = DDRMemory()
-    interconnect = Interconnect(ddr, delay=5, bandwidth=4)
-    l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
-    l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
-    l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
-    core0 = MultiLevelCache(0, l1_conf, l2_conf, l3_conf, interconnect)
-    core1 = MultiLevelCache(1, l1_conf, l2_conf, l3_conf, interconnect)
-    program = runpgrms(core0, core1, 50, interconnect, ddr)
+    max_len = 350  
+    length_programs = 100
 
 
     H = History2(max_size=1000)
-    En = Env(length_programs=100)
-    parameter = make_random_paire_list_instr()
-    observation = En(parameter)
-    H.store({"program":parameter} | observation)
+    En = Env(length_programs=length_programs, max_len=max_len)
     imgep = RANDOM(N = 10,N_init=10,E = En, H = H)
     imgep()
-    #imgep.__init__
     for j in range(10):
         print(H.memory_program["core0"][j][0])
     tab_delay = np.array(H.memory_signature["core0"]["delay"])
     print(len(tab_delay))
     for j in range(len(tab_delay)):
-        plt.plot(tab_delay[j], label=j)
+        plt.plot(range(length_programs),tab_delay[j], label=j)
         plt.title("delays")
     plt.legend()
     plt.show()
-    print("shape", tab_delay.shape)
-    #exit()
     def countDDR(H:History2):
         def same(string):
             A = np.array(H.memory_signature["core0"][string])

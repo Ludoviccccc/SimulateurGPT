@@ -7,7 +7,7 @@ from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
 import matplotlib.pyplot as plt
 class runpgrms: 
-    def __init__(self, core1, core0, max_instr, interconnect, ddr):   
+    def __init__(self, core1, core0, max_instr, interconnect, ddr, max_len =350):   
         self.nb_read =0   
         self.interconnect = interconnect
         self.ddr = ddr
@@ -22,15 +22,16 @@ class runpgrms:
         self.list_acces_ddr1 = []    
         self.list_best_request1 = []    
         self.list_address1 = []   
+        self.max_len = max_len
 
-        self.out0 = {"addr":-np.ones(50),
-               "bank":-np.ones(50),
-               "delay":-np.ones(50),
-               "status":-np.ones(50)}
-        self.out1 = {"addr":-np.ones(50),
-               "bank":-np.ones(50),
-               "delay":-np.ones(50),
-               "status":-np.ones(50)}
+        self.out0 = {"addr":-np.ones(self.max_len),
+                    "bank":-np.ones(self.max_len),
+                    "delay":-np.ones(self.max_instr),
+                    "status":-np.ones(self.max_len)}
+        self.out1 = {"addr":-np.ones(self.max_len),
+                    "bank":-np.ones(self.max_len),
+                    "delay":-np.ones(self.max_instr),
+                    "status":-np.ones(self.max_len)}
 
     def eviction(self):
         self.list_acces_ddr1 = []    
@@ -41,13 +42,13 @@ class runpgrms:
         self.list_best_request0 = []    
 
         self.out0 = {"addr":-np.ones(50),
-               "bank":-np.ones(50),
-               "delay":-np.ones(50),
-               "status":-np.ones(50)}
+                    "bank":-np.ones(50),
+                    "delay":-np.ones(50),
+                    "status":-np.ones(50)}
         self.out1 = {"addr":-np.ones(50),
-               "bank":-np.ones(50),
-               "delay":-np.ones(50),
-               "status":-np.ones(50)}
+                    "bank":-np.ones(50),
+                    "delay":-np.ones(50),
+                    "status":-np.ones(50)}
 
     def _execut_instr(self, instr:list[dict], cycle:int):    
         """
@@ -104,15 +105,15 @@ class runpgrms:
     def reorder(self):
         for d in self.list_best_request0:
             if d["core"]==0:
-                self.out0["addr"][d["emmission_cycle"]] = d["addr"]
-                self.out0["bank"][d["emmission_cycle"]] = d["bank"]
-                self.out0["delay"][d["emmission_cycle"]] = d["delay"]
-                self.out0["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
+                self.out0["addr"][d["arrival_time"]] = d["addr"]
+                self.out0["bank"][d["arrival_time"]] = d["bank"]
+                self.out0["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                self.out0["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
             elif d["core"]==1:
-                self.out1["addr"][d["emmission_cycle"]] = d["addr"]
-                self.out1["bank"][d["emmission_cycle"]] = d["bank"]
-                self.out1["delay"][d["emmission_cycle"]] = d["delay"]
-                self.out1["status"][d["emmission_cycle"]] = 1*d["status"]=="ROW MISS"
+                self.out1["addr"][d["arrival_time"]] = d["addr"]
+                self.out1["bank"][d["arrival_time"]] = d["bank"]
+                self.out1["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                self.out1["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
             else:
                 print("erreur")
                 exit()
