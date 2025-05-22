@@ -31,12 +31,20 @@ A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 
 ## Visualisation
 
-For a random exploration we wish to have nice visualisation that show divsersity
+For a random exploration we wish to have nice visualisation that show divsersity.
+Here an exploration of 10 iterations, with random programs of 100 instructions.
+default parameters:
+```
+l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
+l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
+l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
+```
 ![Alt text](image/figure1.png) 
 ![Alt text](image/figure2.png) 
 ![Alt text](image/figure3.png) 
 ![Alt text](image/figure4.png) 
 ![Alt text](image/figure5.png) 
+![Alt text](image/figure6.png) 
 
 ## IMGEP
 We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**, here it can only be accessed by the two cores during the same cycle.

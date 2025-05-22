@@ -123,15 +123,16 @@ if __name__=="__main__":
 
 
 
-    def times_plot(H:History2, name="image/figure5"):
-        tab_delay0 = np.array(H.memory_signature["core0"]["delay"])
-        tab_delay1 = np.array(H.memory_signature["core1"]["delay"])
+    def times_plot(H:History2, core = "core0",name=None):
+        tab_delay0 = np.array(H.memory_signature[core]["delay"])
         for j in range(len(tab_delay0)):
-            plt.plot(range(length_programs),tab_delay0[j], label=f"{j} core 0")
-            plt.plot(range(length_programs),tab_delay1[j], label=f"{j} core 1")
-            plt.title("delays")
+            plt.plot(range(length_programs),tab_delay0[j],".-", label=f"{j} {core}")
+            plt.title(f"delays {core}")
         plt.legend()
+        plt.xticks(range(0,length_programs,5))
+        plt.grid()
         if name:
             plt.savefig(name)
         plt.show()
-    times_plot(H)
+    times_plot(H, core = "core0", name = "image/figure5")
+    times_plot(H, core = "core1", name = "image/figure6")
