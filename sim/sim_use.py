@@ -7,7 +7,7 @@ from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
 import matplotlib.pyplot as plt
 class runpgrms: 
-    def __init__(self, core1, core0, max_instr, interconnect, ddr, max_len =350):   
+    def __init__(self, core0, core1, max_instr, interconnect, ddr, max_len =350):   
         self.nb_read =0   
         self.interconnect = interconnect
         self.ddr = ddr
@@ -15,7 +15,7 @@ class runpgrms:
         
         self.core0 = core0
         self.list_acces_ddr0 = []    
-        self.list_best_request0 = []    
+        self.list_best_request = []    
         self.list_address0 = []   
         
         self.core1 = core1
@@ -25,30 +25,45 @@ class runpgrms:
         self.max_len = max_len
 
         self.out0 = {"addr":-np.ones(self.max_len),
+
+                    "addr2": -np.ones(self.max_instr),
                     "bank":-np.ones(self.max_len),
+                    "bank0":-np.zeros(self.max_len),
+                    "bank1":-np.zeros(self.max_len),
+                    "bank2":-np.zeros(self.max_len),
+                    "bank3":-np.zeros(self.max_len),
                     "delay":-np.ones(self.max_instr),
-                    "status":-np.ones(self.max_len)}
+                    "completion_time":-np.ones(self.max_instr),
+                    "status":-np.ones(self.max_len),
+                    "time":0,
+                    "min_time":-np.ones(self.max_instr),
+                    "max_time":-np.ones(self.max_instr),
+                    "min_addr":-np.ones(self.max_instr),
+                    "max_addr":-np.ones(self.max_instr),
+                    "max_radius":-np.ones(self.max_instr),
+                    "pending_addr":[],
+                    "pending_core_id":[],
+                    }
         self.out1 = {"addr":-np.ones(self.max_len),
+                    "addr2":-np.ones(self.max_instr),
                     "bank":-np.ones(self.max_len),
+                    "bank0":-np.zeros(self.max_len),
+                    "bank1":-np.zeros(self.max_len),
+                    "bank2":-np.zeros(self.max_len),
+                    "bank3":-np.zeros(self.max_len),
                     "delay":-np.ones(self.max_instr),
-                    "status":-np.ones(self.max_len)}
+                    "completion_time":-np.ones(self.max_instr),
+                    "status":-np.ones(self.max_len),
+                    "time":0,
+                    "min_time":-np.ones(self.max_instr),
+                    "max_time":-np.ones(self.max_instr),
+                    "min_addr":-np.ones(self.max_instr),
+                    "max_addr":-np.ones(self.max_instr),
+                    "max_radius":-np.ones(self.max_instr),
+                    "pending_addr":[],
+                    "pending_core_id":[],
+                    }
 
-    def eviction(self):
-        self.list_acces_ddr1 = []    
-        self.list_address1 = []   
-        self.list_acces_ddr0 = []    
-        self.list_address0 = []   
-        self.list_best_request1 = []    
-        self.list_best_request0 = []    
-
-        self.out0 = {"addr":-np.ones(50),
-                    "bank":-np.ones(50),
-                    "delay":-np.ones(50),
-                    "status":-np.ones(50)}
-        self.out1 = {"addr":-np.ones(50),
-                    "bank":-np.ones(50),
-                    "delay":-np.ones(50),
-                    "status":-np.ones(50)}
 
     def _execut_instr(self, instr:list[dict], cycle:int):    
         """
@@ -82,38 +97,57 @@ class runpgrms:
                 out = self._execut_instr(list_instr0[j], cycle=j)
                 self.list_acces_ddr0.append(out)   
                 self.list_address0.append(list_instr0[j]["addr"]*out+(1-out)*(-1))
-                #print(list_instr0[j]["addr"]*out+(1-out)*(-1))
                 len_+=1
             if j <len(list_instr1):
                 out = self._execut_instr(list_instr1[j], cycle=j)
                 self.list_acces_ddr1.append(out)   
-                #self.list_address1.append(list_instr1[j]["addr"])   
-
                 self.list_address1.append(list_instr1[j]["addr"]*out+(1-out)*(-1))
                 len_+=1
             self.interconnect.tick()
             output_tick = self.ddr.tick()    
             if type(output_tick)==dict:
-                self.list_best_request0.append(output_tick)
+                self.list_best_request.append(output_tick)
                 print(k,"output_tick", output_tick)
                 k+=1
-            #print("row buffer",self.ddr.bank_row_buffers)
             if len_==0:
                 print("erreur")
                 exit()
         self.reorder()
     def reorder(self):
-        for d in self.list_best_request0:
+        #var = {
+        for d in self.list_best_request:
             if d["core"]==0:
                 self.out0["addr"][d["arrival_time"]] = d["addr"]
+                self.out0["addr2"][d["emmission_cycle"]] = d["addr"]
+                self.out0["min_time"][d["emmission_cycle"]] = d["min_time"]
+                self.out0["max_time"][d["emmission_cycle"]] = d["max_time"]
+                self.out0["max_radius"][d["emmission_cycle"]] = d["max_radius"]
+                self.out0["min_addr"][d["emmission_cycle"]] = d["min_addr"]
+                self.out0["max_addr"][d["emmission_cycle"]] = d["max_addr"]
                 self.out0["bank"][d["arrival_time"]] = d["bank"]
                 self.out0["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                self.out0["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
                 self.out0["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
+                self.out0[f"bank{d['bank']}"][d["arrival_time"]] +=1
+                self.out0["time"] = max(self.out0["time"], d["completion_time"]) 
+                self.out0["pending_addr"].append(d["pending_addr"])
+                self.out0["pending_core_id"].append(d["pending_core_id"])
             elif d["core"]==1:
                 self.out1["addr"][d["arrival_time"]] = d["addr"]
+                self.out1["addr2"][d["emmission_cycle"]] = d["addr"]
+                self.out1["min_time"][d["emmission_cycle"]] = d["min_time"]
+                self.out1["max_time"][d["emmission_cycle"]] = d["max_time"]
+                self.out1["max_radius"][d["emmission_cycle"]] = d["max_radius"]
+                self.out1["min_addr"][d["emmission_cycle"]] = d["min_addr"]
+                self.out1["max_addr"][d["emmission_cycle"]] = d["max_addr"]
                 self.out1["bank"][d["arrival_time"]] = d["bank"]
+                self.out1[f"bank{d['bank']}"][d["arrival_time"]] +=1
                 self.out1["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                self.out1["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
                 self.out1["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
+                self.out1["time"] = max(self.out1["time"], d["completion_time"]) 
+                self.out1["pending_addr"].append(d["pending_addr"])
+                self.out1["pending_core_id"].append(d["pending_core_id"])
             else:
                 print("erreur")
                 exit()

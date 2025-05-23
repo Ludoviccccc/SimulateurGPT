@@ -4,6 +4,7 @@
 
 import random
 import heapq
+import numpy as np
 
 # This model represents a memory hierarchy with
 # - 3 levels of cache (L1, L2, L3)

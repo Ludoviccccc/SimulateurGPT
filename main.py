@@ -61,8 +61,8 @@ if __name__=="__main__":
     labels = ["address", "bank", "delay", "status"]
     for j in range(len(kk)):
         ax[j].grid()
-        ax[j].plot(range(50),out0[kk[j]],label=kk[j]+ "core 0")
-        ax[j].plot(range(50),out1[kk[j]],label=kk[j] + "core 1")
+        ax[j].plot(range(50),out0[kk[j]],label= kk[j] + "core 0")
+        ax[j].plot(range(50),out1[kk[j]],label= kk[j] + "core 1")
         ax[j].legend()
         ax[j].set_ylabel(labels[j])
     plt.show()
