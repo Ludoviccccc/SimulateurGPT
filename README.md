@@ -28,18 +28,7 @@ A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 * `sim.class_mem_sim.DDRMemory`:  DDR memory model with banks, row buffers, and latency variations
 
 
-## Visualisation
-
-For a random exploration we wish to have nice visualisation that show divsersity.
-Here an exploration of 10 iterations, with random programs of 100 instructions.
-default parameters:
-```
-l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
-l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
-l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
-```
-
-## IMGEP
+## Obvservation space
 We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**.
 
 Microarchitectural mechanisms are known, and we wish to identify the ones responsible for interferences. A set of relevant performance counters will provide building blocks for the "observation space" O.
@@ -57,3 +46,16 @@ time[S2, (S_1,S_2)],
 time[S1, (,S_1)],
 time[S2, (S_2,)]}
 ```
+
+
+## Visualisation
+
+For a random exploration we wish to have nice visualisation that show divsersity.
+Here an exploration of 10 iterations, with random programs of 100 instructions.
+default parameters:
+```
+l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
+l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
+l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
+```
+![Alt text](image/miss_ratio.png) 
