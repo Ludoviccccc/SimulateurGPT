@@ -117,8 +117,8 @@ class DDRMemory:
             max_addr = max(addrs)
             min_addr = min(addrs)
             max_radius = np.mean(np.sqrt((times - arrival_time)**2 + (addrs - req.addr)**2))
-            #print(f"[Cycle {self.cycle}] ➜ Scheduling {req.req_type.upper()} for Addr {req.addr} (Core {req.core_id})")
-            #print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
+            print(f"[Cycle {self.cycle}] ➜ Scheduling {req.req_type.upper()} for Addr {req.addr} (Core {req.core_id})")
+            print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
             return {"addr":req.addr,
                     "bank":bank,
                     "delay":delay,

@@ -5,13 +5,23 @@ class History:
         self.memory_program = {"core0":[],"core1":[]}
         keys = ["addr", "bank","bank0", "bank1", "bank2", "bank3", "delay", "status", "completion_time", "time", "max_radius", "pending_addr", "pending_core_id"]
         self.cat = ["core0","core1", "core0_alone", "core1_alone"]
+        self.memory_perf = {"miss_ratios":[],
+                            "miss_ratios_core0":[],            
+                            "miss_ratios_core1":[],            
+                            "time_core0_together":[],
+                            "time_core1_together":[],
+                            "time_core0_alone":[],
+                            "time_core1_alone":[],
+                                                }
         self.memory_signature = {key : {kkey :[] for kkey in keys} for key in self.cat}
         self.k=0
     def eviction(self):
         if len(self.memory_program)>self.max_size:
             self.memory_program["core0"] = self.memory_program["core0"][-self.max_size:]
             self.memory_program["core1"] = self.memory_program["core1"][-self.max_size:]
-            self.memory_signature["addr"] = self.memory_signature["addr"][-self.max_size:]
+        for c in self.cat:
+            for key in self.memory_signature[c].keys():
+                self.memory_signature[c][key] = self.memory_signature[c][key][-self.max_size:]
     def purge(self):
         self.memory_program["core0"] = [] 
         self.memory_program["core1"] = []
@@ -28,4 +38,14 @@ class History:
         for c in self.cat:
             for key in self.memory_signature[c].keys():
                 self.memory_signature[c][key].append(sample[c][key])
+        self.memory_perf["miss_ratios"].append(list(sample["perf"]))
+        self.memory_perf["miss_ratios_core0"].append(list(sample["perf_core0"]))
+        self.memory_perf["miss_ratios_core1"].append(list(sample["perf_core1"]))
+        self.memory_perf["time_core0_together"].append(sample["time_core0_together"])
+        self.memory_perf["time_core1_together"].append(sample["time_core1_together"])
+        self.memory_perf["time_core0_alone"].append(sample["time_core0_alone"])
+        self.memory_perf["time_core1_alone"].append(sample["time_core1_alone"])
         self.eviction()
+    def present_content(self):
+        output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
+        return output

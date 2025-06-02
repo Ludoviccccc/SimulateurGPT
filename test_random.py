@@ -22,7 +22,7 @@ if __name__=="__main__":
 
     H = History(max_size=1000)
     En = Env(length_programs=length_programs, max_len=max_len)
-    imgep = RANDOM(N = N,N_init=N,E = En, H = H)
+    imgep = RANDOM(N = N,E = En, H = H)
     imgep()
     #for j in range(1):
     #    print(H.memory_signature["core0"]["bank"][0])

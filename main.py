@@ -28,6 +28,8 @@ if __name__=="__main__":
     length = 50
     instr0 = make_random_list_instr(length=length, core=0)
     instr1 = make_random_list_instr(length=length, core=1)
+    print(instr0)
+    exit()
     #print(len(instr0))
     #exit()
 #    print(instructions0)

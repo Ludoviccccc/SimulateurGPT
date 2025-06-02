@@ -7,11 +7,12 @@ from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
 import matplotlib.pyplot as plt
 class runpgrms: 
-    def __init__(self, core0, core1, max_instr, interconnect, ddr, max_len =350):   
+    def __init__(self, core0, core1, max_instr, interconnect, ddr, max_len =350, num_banks = 4):   
         self.nb_read =0   
         self.interconnect = interconnect
         self.ddr = ddr
         self.max_instr = max_instr  
+        self.num_banks = num_banks
         
         self.core0 = core0
         self.list_acces_ddr0 = []    
@@ -23,6 +24,7 @@ class runpgrms:
         self.list_best_request1 = []    
         self.list_address1 = []   
         self.max_len = max_len
+        self.out = {"bank":{key:[] for key in range(self.num_banks)}}
 
         self.out0 = {"addr":-np.ones(self.max_len),
 
@@ -63,6 +65,9 @@ class runpgrms:
                     "pending_addr":[],
                     "pending_core_id":[],
                     }
+        self.ratios = None
+        self.compl_time_core0 = 0
+        self.compl_time_core1 = 0
 
 
     def _execut_instr(self, instr:list[dict], cycle:int):    
@@ -107,16 +112,24 @@ class runpgrms:
             output_tick = self.ddr.tick()    
             if type(output_tick)==dict:
                 self.list_best_request.append(output_tick)
-                print(k,"output_tick", output_tick)
+                #print(k,"output_tick", output_tick)
                 k+=1
             if len_==0:
                 print("erreur")
                 exit()
         self.reorder()
     def reorder(self):
-        #var = {
+
+        hits = np.zeros(self.num_banks)
+        miss = np.zeros(self.num_banks)
         for d in self.list_best_request:
+            self.out["bank"][d["bank"]].append(1*d["status"]=="ROW MISS")
+            if d["status"]=="ROW MISS":
+                miss[d["bank"]] +=1
+            else:
+                hits[d["bank"]] +=1
             if d["core"]==0:
+                self.compl_time_core0 = max(self.compl_time_core0,d["completion_time"])
                 self.out0["addr"][d["arrival_time"]] = d["addr"]
                 self.out0["addr2"][d["emmission_cycle"]] = d["addr"]
                 self.out0["min_time"][d["emmission_cycle"]] = d["min_time"]
@@ -133,6 +146,7 @@ class runpgrms:
                 self.out0["pending_addr"].append(d["pending_addr"])
                 self.out0["pending_core_id"].append(d["pending_core_id"])
             elif d["core"]==1:
+                self.compl_time_core1 = max(self.compl_time_core1,d["completion_time"])
                 self.out1["addr"][d["arrival_time"]] = d["addr"]
                 self.out1["addr2"][d["emmission_cycle"]] = d["addr"]
                 self.out1["min_time"][d["emmission_cycle"]] = d["min_time"]
@@ -154,6 +168,8 @@ class runpgrms:
         #plt.figure()
         #plt.plot(self.out0["delay"])
         #plt.show()
+
+        self.ratios = miss/(miss + hits)
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   
