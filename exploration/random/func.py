@@ -51,8 +51,8 @@ class Env:
                 "perf_core1": program1.ratios,
                 "time_core0_together":program.compl_time_core0,
                 "time_core1_together":program.compl_time_core1,
-                "time_core1_alone":program1.compl_time_core1,
                 "time_core0_alone":program0.compl_time_core0,
+                "time_core1_alone":program1.compl_time_core1,
                 }
     def _make_program(self):
         ddr = DDRMemory()

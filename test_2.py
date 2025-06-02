@@ -34,10 +34,11 @@ if __name__=="__main__":
         axs[j,0].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(S_0,)]")
         axs[j,0].set_title("row miss hits ratio difference")
 
-        axs[j,1].hist(content["miss_ratios"][:,j], label="core 0 and 1 together", alpha=.5)
-        axs[j,1].hist(content["miss_ratios_core0"][:,j], label="core 0 alone", alpha=.5)
+        axs[j,1].hist(content["miss_ratios"][:,j], label="core 0 and 1 together", alpha=.5, bins=np.arange(0,1,0.2))
+        axs[j,1].hist(content["miss_ratios_core0"][:,j], label="core 0 alone", alpha=.5, bins= "auto")
         axs[j,1].set_xlabel(f"miss ratios bank {j}")
-        axs[j,1].set_title(f"miss ratios distribution")
+        axs[j,1].set_title(f"miss ratios histogram")
+        axs[j,1].legend()
 
 
         axs[j,2].scatter(content["miss_ratios_core0"][:,j],  content["miss_ratios"][:,j])
