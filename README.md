@@ -43,16 +43,17 @@ l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**.
 
 Microarchitectural mechanisms are known, and we wish to identify the ones responsible for interferences. A set of relevant performance counters will provide building blocks for the "observation space" O.
-Such performance counters can be clock cycles, row misses, instruction types, branch mispredictions, and number of stalls. Thus, an element $o\in O$ of the observation space could be closely related to some micro-architectural mechanisms. An example could be:\\
+Such performance counters can be clock cycles, row misses, instruction types, branch mispredictions, and number of stalls. Thus, an element $o\in O$ of the observation space could be closely related to some micro-architectural mechanisms. An example could be:
+
 ```
 o =  {ratio[row miss,row hit, (S_1,S_2),bank], 
 ratio[row miss,row hit,(S_1,),bank], 
-ratio[row miss,row hit,(,S_2), bank],\\ 
+ratio[row miss,row hit,(,S_2), bank],
 ratio[stall,cycle,(S_1,S_2)],
 ratio[stall,cycle,(S_1,)],
-ratio[stall,cycle,(,S_2)],\\
+ratio[stall,cycle,(,S_2)],
 time[S1, (S_1,S_2)],
 time[S2, (S_1,S_2)],
 time[S1, (,S_1)],
-time[S2, (S_2,)]}\\
+time[S2, (S_2,)]}
 ```
