@@ -1,9 +1,8 @@
 # curiosity-driven-approach
 
 ## On going:
-I'm currenlty using `sim.class_mem_sim.py` to obtain the following informations:
-* Quantifying **contention** with the `sim.class_mem_sim.Interconnect.queue` 
-* Link cause to effects, temporal execution time.
+I'm currenlty using folder `sim` to obtain the following informations:
+* Quantifying **ddr contention** with the `sim.ddr.py` 
 * When do simultaneous accesses of **ddr** cache by both cores occur ?  
 * What other mechanisms are of interest to users/hardware engineers? acces to same bank in **ddr** at same time ? what delay ? 
 * What other mechanisms are responsible for interferences, and which only occur when two applications are run in parallel on both cores?
@@ -39,12 +38,6 @@ l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 ```
-![Alt text](image/figure1.png) 
-![Alt text](image/figure2.png) 
-![Alt text](image/figure3.png) 
-![Alt text](image/figure4.png) 
-![Alt text](image/figure5.png) 
-![Alt text](image/figure6.png) 
 
 ## IMGEP
 We seek to identify a maximum of sources of interference, that is to identify **a maximum of scenarios where shared resources are used simultaneously by the two cores**, here it can only be accessed by the two cores during the same cycle.
