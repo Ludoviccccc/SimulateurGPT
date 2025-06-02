@@ -3,9 +3,6 @@
 ## On going:
 I'm currenlty using folder `sim` to obtain the following informations:
 * Quantifying **ddr contention** with the `sim.ddr.py` 
-* When do simultaneous accesses of **ddr** cache by both cores occur ?  
-* What other mechanisms are of interest to users/hardware engineers? acces to same bank in **ddr** at same time ? what delay ? 
-* What other mechanisms are responsible for interferences, and which only occur when two applications are run in parallel on both cores?
 
 
 ## Description Simulateur Eric:
@@ -36,7 +33,7 @@ Such performance counters can be clock cycles, row misses, instruction types, br
 
 ```
 o =  {ratio[row miss,row hit, (S_1,S_2),bank], 
-ratio[row miss,row hit,(S_1,),bank], 
+ratio[row miss,row hit,(S_1,), bank], 
 ratio[row miss,row hit,(,S_2), bank],
 ratio[stall,cycle,(S_1,S_2)],
 ratio[stall,cycle,(S_1,)],
@@ -46,7 +43,7 @@ time[S2, (S_1,S_2)],
 time[S1, (,S_1)],
 time[S2, (S_2,)]}
 ```
-
+**Question : Is such a vector useful to identify micro-architecural mechanisms ?**
 
 ## Visualisation
 
