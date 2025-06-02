@@ -39,7 +39,6 @@ class Env:
         program = self._make_program()
         program0 = self._make_program()
         program1 = self._make_program()
-
         program(parameter["core0"][0], parameter["core1"][0])
         program0(parameter["core0"][0],[])
         program1([],parameter["core1"][0])
@@ -62,18 +61,17 @@ class Env:
         core1 = MultiLevelCache(1, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
         return runpgrms(core0, core1, self.length_programs, interconnect, ddr, max_len=self.max_len)
 class RANDOM:
-    def __init__(self,N:int,E:Env,H:History):
+    def __init__(self,N:int,E:Env,H:History, H2:History=None):
         """
         N: int. The experimental budget
         H: History. Buffer containing codes and signature pairs
         """
         self.env = E
         self.H = H
+        self.H2 = H2
         self.N = N
     def __call__(self):
         for i in range(self.N):
             parameter = make_random_paire_list_instr()
             self.H.store({"program":parameter}|self.env(parameter))
-
-
-
+            self.H2.store({"program":parameter}|self.env(parameter))

@@ -170,6 +170,8 @@ class runpgrms:
         #plt.show()
 
         self.ratios = miss/(miss + hits)
+        #print(miss+hits)
+        self.ratios[np.isnan(self.ratios)] = -1
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   
