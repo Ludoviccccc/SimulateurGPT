@@ -60,6 +60,6 @@ l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 By performing exploration, we would like the white space within the scatter plot to be as covered as possible. Moreover, we would like the diffusion of the histograms to be as high as possible.
 ## IMGEP
 
-I try to perform an **IMGEP** exploration to explore the time space:
+I try to perform an **IMGEP** exploration to explore the time space using file `test.py`.
 
 ![Alt text](image/comparaison_time.png) 
