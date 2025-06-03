@@ -59,4 +59,4 @@ l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 ![Alt text](image/miss_ratios.png)
 * The second tab of plots shows that the execution time for both application is usually larger when running in parallel. 
 ![Alt text](image/time.png) 
-We performing exploration, we would like the white space within the scatter plot to be as covered as possible.
+We performing exploration, we would like the white space within the scatter plot to be as covered as possible. Moreover, we would like the diffusion of the histograms to be as high as possible.
