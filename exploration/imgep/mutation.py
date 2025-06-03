@@ -31,7 +31,9 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
         mutated.append(instr)
     
     # Now perform random mutations
-    num_mutations = max(1, int(len(mutated) * mutation_rate))
+    num_mutations = max(0, int(len(mutated) * mutation_rate))
+    #print("num mutations",num_mutations)
+    #exit()
     
     for _ in range(num_mutations):
         mutation_type = random.choice(['change'])
@@ -94,6 +96,8 @@ def mix_instruction_lists(instruction_lists: List[List[Dict[str, Any]]],
     Returns:
         A new list of instructions randomly selected from all input lists
     """
+    if len(instruction_lists)==1: 
+        return instruction_lists[0]
     # First replace all functions with lambda val: None in all input lists
     sanitized_lists = []
     for instr_list in instruction_lists:
@@ -136,85 +140,3 @@ def mix_instruction_lists(instruction_lists: List[List[Dict[str, Any]]],
         # all_instructions.remove(selected)
 
     return mixed
-
-#def mix_instruction_lists(instruction_lists: List[List[Dict[str, Any]]],
-#                         max_length: int = None) -> List[Dict[str, Any]]:
-#    """
-#    Mix multiple instruction lists to create a new combined list.
-#
-#    Args:
-#        instruction_lists: List of instruction lists to mix from
-#        max_length: Maximum length of the resulting list (None for no limit)
-#
-#    Returns:
-#        A new list of instructions randomly selected from all input lists
-#    """
-#    # First replace all functions with lambda val: None in all input lists
-#    sanitized_lists = []
-#    for instr_list in instruction_lists:
-#        sanitized = []
-#        for instr in copy.deepcopy(instr_list):
-#            if instr['type'] == 'r' and 'func' in instr:
-#                instr['func'] = lambda val: None
-#            sanitized.append(instr)
-#        sanitized_lists.append(sanitized)
-#
-#    # Flatten all instructions with their source list index
-#    all_instructions = []
-#    for list_idx, instr_list in enumerate(sanitized_lists):
-#        for instr_idx, instr in enumerate(instr_list):
-#            all_instructions.append((list_idx, instr_idx, instr))
-#
-#    if not all_instructions:
-#        return []
-#
-#    # Determine target length
-#    if max_length is None:
-#        # Use average length of input lists
-#        lengths = [len(lst) for lst in sanitized_lists]
-#        target_length = int(sum(lengths) / len(lengths))
-#    else:
-#        target_length = max_length
-#
-#    # Create new mixed list
-#    mixed = []
-#    while len(mixed) < target_length and all_instructions:
-#        # Randomly select an instruction from all available
-#        selected = random.choice(all_instructions)
-#        list_idx, instr_idx, instr = selected
-#
-#        # Add to new list
-#        mixed.append(copy.deepcopy(instr))
-#
-#        # Optionally remove this instance from available choices
-#        # to avoid duplicates if desired
-#        # all_instructions.remove(selected)
-#
-#    return mixed
-
-# Example usage with two instruction lists
-#list1 = [
-#    {'type': 'r', 'addr': 12, 'func': '<function at 0x710fe7d8d120>', 'core': 0},
-#    {'type': 'w', 'addr': 6, 'value': 426, 'core': 0},
-#    {'type': 'r', 'addr': 0, 'func': '<function at 0x710fe7d8d240>', 'core': 1}
-#]
-#
-#list2 = [
-#    {'type': 'r', 'addr': 8, 'func': '<function at 0x710fe7d8d360>', 'core': 0},
-#    {'type': 'w', 'addr': 5, 'value': 978, 'core': 1},
-#    {'type': 'w', 'addr': 11, 'value': 115, 'core': 0},
-#    {'type': 'r', 'addr': 2, 'func': '<function at 0x710fe7da2680>', 'core': 1}
-#]
-#print(list1)
-#print(list2)
-#
-## Mix the lists
-#mixed_instructions = mix_instruction_lists([list1, list2])
-#
-## Print the result
-#print("Mixed instructions:")
-#for i, instr in enumerate(mixed_instructions):
-#    if instr['type'] == 'r':
-#        print(f"{i}: {instr['type']} addr:{instr['addr']} func:lambda val:None core:{instr['core']}")
-#    else:
-#        print(f"{i}: {instr['type']} addr:{instr['addr']} value:{instr['value']} core:{instr['core']}")

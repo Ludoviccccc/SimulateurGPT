@@ -21,35 +21,31 @@ class OptimizationPolicy:
         output = self.light_code_mutation(closest_code["program"]) #expansion strategie: small random mutation
         return output
     def light_code_mutation(self,programs):
-        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"], self.mutation_rate)
+        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"], mutation_rate = self.mutation_rate)
         return {"core0":[mutated0[:50]],"core1":[mutated1[:50]]}
 
 
 class OptimizationPolicykNN:
-    def __init__(self,k=4, mutation_rate = 0.1):
+    def __init__(self,k=4, mutation_rate = 0.1,max_len=50):
         self.k = k
-        self.mutation_rate = .1
-    def __call__(self,goal:dict[list],H)->dict:
+        self.mutation_rate = mutation_rate
+        self.max_len = max_len
+    def __call__(self,goal:np.ndarray,H:History)->dict:
         closest_codes = self.select_closest_codes(H,goal) #most promising sample from the history
         output = self.mix(closest_codes) #expansion strategie: small random mutation
         return output
     def mix(self,programs):
-#        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"])
-        mix0, mix1 = mix_instruction_lists(programs["program"]["core0"],50), mix_instruction_lists(programs["program"]["core1"],50)
+        mix0, mix1 = mix_instruction_lists(programs["program"]["core0"],self.max_len), mix_instruction_lists(programs["program"]["core1"],self.max_len)
 #        print("mix0", mix0)
-        output = self.light_code_mutation({"core0":mix0[:50],"core1":mix1[:50]}) #expansion strategie: small random mutation
+        output = self.light_code_mutation({"core0":mix0[:self.max_len],"core1":mix1[:self.max_len]}) #expansion strategie: small random mutation
         return output 
-    def select_closest_codes(self,H:History,signature: dict)->dict:
+    def select_closest_codes(self,H:History,signature: np.ndarray)->dict:
         assert len(H.memory_program)>0, "history empty"
-        b = np.array([h for h in H.memory_signature.values()]).reshape((len(H),-1))
-        a = np.array([a for a in signature.values()])
-        c = np.abs(a -b)
-        #d = np.sum(c**2, axis=1)
-        #d = np.sum(c, axis=1)
-        d = np.sum(c!=0, axis=1)
+        b,_ = H.times2ndarray()
+        a = signature.reshape(-1,1) 
+        d = np.sum((a -b)**2,axis=0)
 
         idx = np.argsort(d)[:self.k]
-
         output = {"program": {"core0":[],
                             "core1":[]},
                 }
@@ -59,7 +55,5 @@ class OptimizationPolicykNN:
         return output
 
     def light_code_mutation(self,programs:dict[list[dict]]):
-        #print(programs["core0"])
-        #exit()
-        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"],self.mutation_rate)
-        return {"core0":[mutated0[:50]],"core1":[mutated1[:50]]}
+        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"],mutation_rate = self.mutation_rate)
+        return {"core0":[mutated0[:self.max_len]],"core1":[mutated1[:self.max_len]]}

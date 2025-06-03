@@ -15,6 +15,14 @@ class History:
                                                 }
         self.memory_signature = {key : {kkey :[] for kkey in keys} for key in self.cat}
         self.k=0
+    def stats(self):
+        maxcore0 = max(self.memory_perf["time_core0_alone"])
+        mincore0 = min(self.memory_perf["time_core0_alone"])
+        maxcore1 = max(self.memory_perf["time_core1_alone"])
+        mincore1 = min(self.memory_perf["time_core1_alone"])
+        return {"time":{"core0":{"min":mincore0, "max":maxcore0},
+                       "core1":{"min":mincore1, "max":maxcore1}}
+                       }
     def eviction(self):
         if len(self.memory_program)>self.max_size:
             self.memory_program["core0"] = self.memory_program["core0"][-self.max_size:]
@@ -49,3 +57,7 @@ class History:
     def present_content(self):
         output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
         return output
+    def times2ndarray(self)->(np.ndarray,list[str]):
+        keys = ["time_core0_together", "time_core1_together", "time_core0_alone", "time_core1_alone"]
+        out = np.array([np.array(self.memory_perf[key]) for key in keys])
+        return out,keys

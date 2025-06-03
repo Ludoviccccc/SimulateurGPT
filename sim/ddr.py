@@ -38,7 +38,7 @@ class DDRMemory:
         self.pending = []  # Requests waiting to be scheduled
         self.scheduled = []  # Requests that have been scheduled for completion
         self.last_address_time = {}  # Track the latest cycle each address is scheduled to enforce order
-        self.count_prints = 0
+        self.count_pps = 0
 
     def _get_bank(self, addr):
         return addr % self.num_banks
@@ -48,7 +48,7 @@ class DDRMemory:
 
     # Queue a request
     def request(self, req):
-        #print(f"[Cycle {self.cycle}] ➜ New DDR request queued: Core {req.core_id}, {req.req_type.upper()} Addr {req.addr}")
+        ##print(f"[Cycle {self.cycle}] ➜ New DDR request queued: Core {req.core_id}, {req.req_type.upper()} Addr {req.addr}")
         self.pending.append((self.cycle, req))
 
     # Process the DDR current cycle
@@ -59,14 +59,14 @@ class DDRMemory:
             _, req = heapq.heappop(self.scheduled)
             if req.req_type == 'read':
                 val = self.memory.get(req.addr, 0)
-                self.count_prints+=1
-                print(self.count_prints,f"[Cycle {self.cycle}] ✔ READ COMPLETE (Core {req.core_id}, Addr {req.addr}) => {val}")
+                self.count_pps+=1
+                #print(self.count_pps,f"[Cycle {self.cycle}] ✔ READ COMPLETE (Core {req.core_id}, Addr {req.addr}) => {val}")
                 if req.callback:
                     req.callback(val)
             elif req.req_type == 'write':
-                self.count_prints+=1
+                self.count_pps+=1
                 self.memory[req.addr] = req.value
-                print(self.count_prints,f"[Cycle {self.cycle}] ✔ WRITE COMPLETE (Core {req.core_id}, Addr {req.addr}) <= {req.value}")
+                #print(self.count_pps,f"[Cycle {self.cycle}] ✔ WRITE COMPLETE (Core {req.core_id}, Addr {req.addr}) <= {req.value}")
 
         self.cycle += 1
         return output
@@ -77,13 +77,13 @@ class DDRMemory:
         output = -1
         # Is the pending request queue empty?
         if not self.pending:
-            #print(f"[Cycle {self.cycle}] No pending DDR requests to schedule.")
+            ##print(f"[Cycle {self.cycle}] No pending DDR requests to schedule.")
             return output
 
         # Sort the pending requests according to their "score"
         self.pending.sort(key=lambda pair: self._score(pair[1], pair[0]))
-        #print("bank row buffer", self.bank_row_buffers)
-        #print("pending", self.pending)
+        ##print("bank row buffer", self.bank_row_buffers)
+        ##print("pending", self.pending)
 
         times = np.array([item[0] for item in self.pending])
         addrs = np.array([item[1].addr for item in self.pending])
@@ -117,8 +117,8 @@ class DDRMemory:
             max_addr = max(addrs)
             min_addr = min(addrs)
             max_radius = np.mean(np.sqrt((times - arrival_time)**2 + (addrs - req.addr)**2))
-            print(f"[Cycle {self.cycle}] ➜ Scheduling {req.req_type.upper()} for Addr {req.addr} (Core {req.core_id})")
-            print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
+            #print(f"[Cycle {self.cycle}] ➜ Scheduling {req.req_type.upper()} for Addr {req.addr} (Core {req.core_id})")
+            #print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
             return {"addr":req.addr,
                     "bank":bank,
                     "delay":delay,
