@@ -4,7 +4,7 @@ import numpy as np
 import sys
 sys.path.append("../../")
 from exploration.imgep.mutation import mutate_paire_instructions, mix_instruction_lists
-from exploration.imgep.history import History
+from exploration.history import History
 
 
 

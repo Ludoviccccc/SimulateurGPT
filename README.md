@@ -45,7 +45,7 @@ time[S2, (S_2,)]}
 
 ## Visualisation
 
-For a random exploration we wish to have nice visualisation that show divsersity.
+For a random exploration we wish to have nice visualisation that show divsersity with file `visu.py`
 Here an exploration of 100 iterations, with random programs of 100 instructions.
 default parameters:
 ```

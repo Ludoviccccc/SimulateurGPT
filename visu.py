@@ -5,11 +5,7 @@ import time
 import numpy as np
 from sim.sim_use import runpgrms, make_random_list_instr, make_random_paire_list_instr
 from exploration.random.func import RANDOM, Env
-#from exploration.imgep.history import History, History
 from exploration.history import History
-from exploration.imgep.goal_generator import GoalGenerator
-from exploration.imgep.OptimizationPolicy import OptimizationPolicy, OptimizationPolicykNN
-from exploration.imgep.mutation import mutate_paire_instructions 
 import matplotlib.pyplot as plt
 
 
@@ -64,7 +60,7 @@ if __name__=="__main__":
     axs[0,0].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
-    axs[0,1].scatter(content["time_core1_alone"],content["time_core1_together"])
+    axs[0,1].scatter(content["time_core1_alone"],content["time_core1_together"], alpha = .5)
     axs[0,1].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[0,1].set_xlabel("time_core1_alone")
     axs[0,1].set_ylabel("time_core1_together")
