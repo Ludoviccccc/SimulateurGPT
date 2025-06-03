@@ -55,7 +55,8 @@ l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2}
 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 ```
-* The first plot shows that there are more **miss** than **hits** when applications $S_{1}$ and $S_{2}$ are running separetly because de ratio is larger in isolation. Moreover, then the right column show that this quantity is "consistent" because most of the time the ratio remains the same for different runs.
-* The second plot shows that the execution time for both application is usually larger when running in parallel.
-![Alt text](image/miss_ratios.png) 
+* The first tab of plots shows that there are more **miss** than **hits** when applications $S_{1}$ and $S_{2}$ are running separetly because de ratio is larger in isolation. Moreover, then the right column show that this quantity is "consistent" because most of the time the ratio remains the same for different runs.
+![Alt text](image/miss_ratios.png)
+* The second tab of plots shows that the execution time for both application is usually larger when running in parallel. 
 ![Alt text](image/time.png) 
+We performing exploration, we would like the white space within the scatter plot to be as covered as possible.
