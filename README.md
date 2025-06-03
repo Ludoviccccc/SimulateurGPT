@@ -1,10 +1,8 @@
 # curiosity-driven-approach
 
 ## On going:
-I'm currenlty using folder `sim` to obtain the following informations:
 * Quantifying **ddr contention** with the `sim.ddr.py` 
-
-
+* Visualizing these data, and showing the diversity of a set.
 ## Description Simulateur Eric:
  This model represents a memory hierarchy with
  - 3 levels of cache (L1, L2, L3)
