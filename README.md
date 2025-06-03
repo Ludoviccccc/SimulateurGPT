@@ -56,3 +56,4 @@ l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4}
 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 ```
 ![Alt text](image/miss_ratios.png) 
+![Alt text](image/time.png) 
