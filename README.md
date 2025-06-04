@@ -66,7 +66,7 @@ By performing exploration, we would like the white space within the scatter plot
 ### Goal generator
 Let's note the cores $c_{0}$ and $c_{1}$.
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$:
-	* $min T (c_{0}),max T (c_{0}),min T (c_{1}),max T (c_{1}) \leftarrow \mathcal{H}.stats()$
+	* $min T (c_{0}),max T (c_{0}),min T (c_{1}),max T (c_{1})$ $ \leftarrow \mathcal{H}.stats()$
 * Sample the time vector $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$ in two stages:
 
 	* $(t_{\cdot,1},t_{0,\cdot})\sim (\mathcal{U}([min T (c_{0}), max T (c_{0})]),\mathcal{U}([min T (c_{1}), max T (c_{1})]))$
@@ -93,7 +93,7 @@ class GoalGenerator:
         return np.concatenate((times,times_together))
 ```
 ### Goal strategy achievement
-For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm(${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$):
+For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm, ${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$):
 *  to select the **k** closest time vectors from our database $\mathcal{H}$. 
 * Once k tuples $((S_{0},S_{1}),(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0})))\in\Theta\times\mathcal{T}$ are selected, mix the pairs of programs together to produce a new one. See function `exploration.imgep.mix_instruction_lists`
 * If `k=1`, the **kNN** model returns the program corresponding to the closest pair from $g$, that is $(S_{0},S_{1})$. If `k>1` the model returns the mixed pair of program.

@@ -168,10 +168,11 @@ class runpgrms:
         #plt.figure()
         #plt.plot(self.out0["delay"])
         #plt.show()
-
-        self.ratios = miss/(miss + hits)
-        #print(miss+hits)
-        self.ratios[np.isnan(self.ratios)] = -1
+        denominator = miss + hits
+        denominator[denominator==0] = -1
+        self.ratios = miss/(denominator)
+        self.ratios[self.ratios<0] = -1
+        #self.ratios[np.isnan(self.ratios)] = -1
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   

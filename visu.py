@@ -64,7 +64,7 @@ def representation(content, content2 = None):
     plt.show()
 
 
-def comparaison(content_random, content_imgep = None):
+def comparaison(content_random, content_imgep = None, name = None):
     fig, axs = plt.subplots(4,3, figsize = (15,10), layout='constrained')
     for j in range(4):
         bins = np.arange(-1.0,1.0,0.1)
@@ -76,16 +76,24 @@ def comparaison(content_random, content_imgep = None):
 
         axs[j,1].scatter(content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j],  label="(S_0,) random")
         axs[j,1].scatter(content_random["miss_ratios_core1"][:,j],  content_random["miss_ratios"][:,j],  label="(,S_1) random")
-        axs[j,1].scatter(content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j],label="(S_0,) imgep")
-        axs[j,1].scatter(content_imgep["miss_ratios_core1"][:,j],  content_imgep["miss_ratios"][:,j],label="(,S_1) imgep")
         axs[j,1].set_xlabel("miss ratio alone")
         axs[j,1].set_ylabel("(S_0,S_1)")
         axs[j,1].axline(xy1=(0, 0), slope=1, color='r', lw=2)
         axs[j,1].set_title(f"miss ratios bank {j+1}")
         axs[j,1].legend()
 
-    plt.savefig("image/comparaison_miss_ratios")
-    plt.show()
+
+
+        axs[j,2].scatter(content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j],label="(S_0,) imgep")
+        axs[j,2].scatter(content_imgep["miss_ratios_core1"][:,j],  content_imgep["miss_ratios"][:,j],label="(,S_1) imgep")
+        axs[j,2].set_xlabel("miss ratio alone")
+        axs[j,2].set_ylabel("(S_0,S_1)")
+        axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+        axs[j,2].set_title(f"miss ratios bank {j+1}")
+        axs[j,2].legend()
+
+    if name:
+        plt.savefig(name[0])
 
     fig, axs = plt.subplots(3,2, figsize = (15,10), layout='constrained')
     axs[0,0].scatter(content_random["time_core0_alone"],content_random["time_core0_together"], label="random")
@@ -108,8 +116,8 @@ def comparaison(content_random, content_imgep = None):
     axs[1,0].hist(content_imgep["time_core0_together"] - content_imgep["time_core0_alone"], bins="auto",alpha=.5, label="imgep")
     axs[1,0].set_xlabel("time[together] - time[alone]")
     axs[1,0].legend()
-    axs[1,1].hist(content_random["time_core1_together"]-content_random["time_core1_alone"], bins="auto", label="random")
-    axs[1,1].hist(content_imgep["time_core1_together"]-content_imgep["time_core1_alone"],   bins="auto", label="imgep")
+    axs[1,1].hist(content_random["time_core1_together"]-content_random["time_core1_alone"], bins="auto",alpha = .5, label="random")
+    axs[1,1].hist(content_imgep["time_core1_together"]-content_imgep["time_core1_alone"],   bins="auto",alpha = .5, label="imgep")
     axs[1,1].set_xlabel("time[together] - time[alone]")
     axs[1,1].legend()
 
@@ -118,9 +126,9 @@ def comparaison(content_random, content_imgep = None):
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
     axs[2,0].legend()
-
-    plt.savefig("image/comparaison_time")
-    plt.show()
+    if name:
+        plt.savefig(name[1])
+    #plt.show()
 if __name__=="__main__":
     random.seed(0)
     N = int(10)
