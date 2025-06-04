@@ -107,4 +107,4 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 * perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`.
 The performed mutations consist of changing the existing instructions
  ### Results
-![Alt text](image/comparaison_time.png) 
+![Alt text](image/comp_times_k3.png) 
