@@ -59,9 +59,11 @@ l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8}
 ![Alt text](image/time.png) 
 By performing exploration, we would like the white space within the scatter plot to be as covered as possible. Moreover, we would like the diffusion of the histograms to be as high as possible.
 ## IMGEP
-* I would like to perform a modular approach of IMGEP with two modules : 
-	* time 
-	* miss ratios
+* I would like to perform a modular approach of IMGEP with several modules : 
+	* time :$(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))\in\mathbb{R}^{4}$
+	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
+   	* $\cdots$
+   	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
 * For now, I try to perform an **IMGEP** exploration to explore the only time space using file `test.py`.
 ### Goal generator
 Let's note the cores $c_{0}$ and $c_{1}$.
