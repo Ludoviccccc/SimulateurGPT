@@ -95,7 +95,10 @@ class GoalGenerator:
 ### Goal strategy achievement
 For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm(${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$):
 *  to select the **k** closest time vectors from our database $\mathcal{H}$. 
-* Once k tuples $((S_{0},S_{1}),(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0})))\in\Theta\times\mathcal{T}$ are selected, mix the program together to produce a new one. See function `exploration.imgep.mix_instruction_lists`
+* Once k tuples $((S_{0},S_{1}),(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0})))\in\Theta\times\mathcal{T}$ are selected, mix the pairs of programs together to produce a new one. See function `exploration.imgep.mix_instruction_lists`
+* If `k=1`, the **kNN** model returns the program corresponding to the closest pair from $g$, that is $(S_{0},S_{1})$. If `k>1` the model returns the mixed pair of program.
+
+
 To provide more efficiency and to avoid working with a limited novelty in our parameter space, we also:
 * Perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`
  ### Results
