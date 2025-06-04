@@ -94,6 +94,6 @@ class GoalGenerator:
 ```
 ### Goal strategy achievement
 For a given time goal $g$, I choose to exploit a **kNN** model. That is to select the **k** closest time vectors from our database $\mathcal{H}$. I choose a loss function based on the $L2 norm$:
-$\mathcal{L}_{g}(z) = {{||z - g||}_{2}}^{2}$
+$\mathcal{L}_{g}(z) = {||z - g||}_{2}$
  ### Results
 ![Alt text](image/comparaison_time.png) 
