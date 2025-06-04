@@ -64,7 +64,7 @@ By performing exploration, we would like the white space within the scatter plot
 	* miss ratios
 * For now, I try to perform an **IMGEP** exploration to explore the only time space using file `test.py`.
 ### Goal generator
-
+Let's note the cores $c_{0}$ and $c_{1}$.
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$: 
  minT(core0),maxT(core0),minT(core1),maxT(core1) =  $\leftarrow \mathcal{H}.stats()$
 * Sample the times :
