@@ -64,6 +64,7 @@ By performing exploration, we would like the white space within the scatter plot
 	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
+	* miss ratio differences: $(|ratio[(0,1)] - ratio[(0,\cdot)]|, |ratio[(0,1)] - ratio[(\cdot,1)]|)$
 * For now, I try to perform an **IMGEP** exploration to explore the only time space using file `test.py`.
 ### Goal generator
 Let's note the cores $c_{0}$ and $c_{1}$.
