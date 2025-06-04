@@ -93,7 +93,11 @@ class GoalGenerator:
         return np.concatenate((times,times_together))
 ```
 ### Goal strategy achievement
-For a given time goal $g$, I choose to exploit a **kNN** model. That is to select the **k** closest time vectors from our database $\mathcal{H}$. I choose a loss function based on the L2 norm:
+For a given time goal $g$, I choose to exploit a **kNN** model. That is:
+*  to select the **k** closest time vectors from our database $\mathcal{H}$. I choose a loss function based on the L2 norm:
 ${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$
+* Once k tuples ((S_{0},S_{1}),(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0})))\in\Theta\times\mathcal{T} are selected, mix the program together to produce a new one. See function `exploration.imgep.mix_instruction\_lists`
+To provide more efficiency and to avoid working with a limited novelty in our parameter space, we also:
+* Perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate\_instructions`
  ### Results
 ![Alt text](image/comparaison_time.png) 
