@@ -72,5 +72,28 @@ Let's note the cores $c_{0}$ and $c_{1}$.
 	* $(t_{\cdot,1},t_{0,\cdot})\sim (\mathcal{U}([min T (c_{0}), max T (c_{0})]),\mathcal{U}([min T (c_{1}), max T (c_{1})]))$
 
 	* $(t_{0,1}(c_{1}),t_{0,1}(c_{1}))\sim (t_{\cdot,1}(c_{1})\cdot \mathcal{U}([1.0,4.0]),t_{0,\cdot}(c_{0})\cdot \mathcal{U}([1.0,4.0]))$
+```python
+class GoalGenerator:
+    def __init__(self, max_len, num_addr):
+        self.num_addr = num_addr
+        self.max_len = max_len
+        self.k = 0
+    def __call__(self,H:History, module="time")->dict:
+        if module == "time":
+            stats = H.stats()
+            if self.k%10==0:
+                self.mincore0time = stats["time"]["core0"]["min"]
+                self.maxcore0time = stats["time"]["core0"]["max"]
+                self.mincore1time = stats["time"]["core1"]["min"] 
+                self.maxcore1time = stats["time"]["core1"]["max"] 
+                self.k+=1
+            times = np.concatenate((np.floor(.5*np.random.randint(self.mincore0time,self.maxcore0time,(1,))),np.floor(4.0*np.random.randint(self.mincore1time,self.maxcore1time,(1,)))))
+            delta = np.random.uniform(.6,4.0,(2,))
+        times_together = np.floor(delta*times)
+        return np.concatenate((times,times_together))
+```
+### Goal strategy achievement
+For a given time goal $g$, I choose to exploit a **kNN** model. That is to select the **k** closest time vectors from our database $\mathcal{H}$. I choose a loss function based on the $L2 norm$:
+$\mathcal{L}_{g}(z) = {{||z - g||}_{2}}^{2}$
  ### Results
 ![Alt text](image/comparaison_time.png) 
