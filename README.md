@@ -100,6 +100,7 @@ For a given time goal $g$, I choose to exploit a **kNN** model with a loss funct
 
 
 To provide more efficiency and to avoid working with a limited novelty in our parameter space, we also:
-* Perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`
+* perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`.
+The performed mutations consist of changing the existing instructions
  ### Results
 ![Alt text](image/comparaison_time.png) 
