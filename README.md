@@ -69,7 +69,7 @@ By performing exploration, we would like the white space within the scatter plot
  minT(core0),maxT(core0),minT(core1),maxT(core1) =  $\leftarrow \mathcal{H}.stats()$
 * Sample the times :
 
-$(t_{0,1},t_{0,1},t_{,1},t_{0,})\sim \mathcal{U}([min T (0), max T (0)])
+$(t_{0,1},t_{0,1},t_{,1},t_{0,})\sim \mathcal{U}([min T (0), max T (0)])$
 
 
 ![Alt text](image/comparaison_time.png) 
