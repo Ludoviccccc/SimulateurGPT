@@ -67,7 +67,7 @@ By performing exploration, we would like the white space within the scatter plot
 Let's note the cores $c_{0}$ and $c_{1}$.
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$: 
  minT(core0),maxT(core0),minT(core1),maxT(core1) =  $\leftarrow \mathcal{H}.stats()$
-* Sample the times :
+* Sample the time vector $(t_{\cdot,1},t_{0,\cdot}, t_{0,1},t_{0,1})$ in two stages:
 
 $(t_{0,1},t_{0,1},t_{,1},t_{0,})\sim \mathcal{U}([min T (0), max T (0)])$
 
