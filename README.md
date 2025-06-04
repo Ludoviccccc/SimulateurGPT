@@ -67,7 +67,9 @@ By performing exploration, we would like the white space within the scatter plot
 
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$: 
  minT(core0),maxT(core0),minT(core1),maxT(core1) =  $\leftarrow \mathcal{H}.stats()$
-* Sample the times : ${{t}^{j}}_{(0,2)},t^{j}_{(0,1)},{t}^{j}_{(,1)},t^{j}_{(0,)}$
+* Sample the times :
+
+${t}_{(0,1)},t^{j}_{(0,1)},{t}^{j}_{(,1)},t^{j}_{(0,)}$
 
 
 ![Alt text](image/comparaison_time.png) 
