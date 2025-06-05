@@ -66,6 +66,8 @@ By performing exploration, we would like the white space within the scatter plot
 ## IMGEP
 * I would like to perform a modular approach of IMGEP with several modules : 
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
+	* time difference: $|(t_{\cdot,1}(c_{1}),(t_{0,1}(c_{1}))|$
+	* time difference: $|(t_{0,\cdot}(c_{1}),(t_{0,1}(c_{1}))|$
 	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
@@ -111,5 +113,6 @@ For a given time goal $g$, I choose to exploit a **kNN** model with a loss funct
 To provide more efficiency and to avoid working with a limited novelty in our parameter space, we also:
 * perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`.
 The performed mutations consist of changing the existing instructions
- ### Results
+### Results
+The result of an exploration with **kNN** with k=2.
 ![Alt text](image/comp_times_k2.png) 
