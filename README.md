@@ -115,6 +115,18 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 The performed mutations consist of changing the existing instructions
 ### Results
 The result of an exploration with **kNN** with k=2.
-I think the shape of the distributions gaussian. This is probably a consequence of Central limit theorem ? 
+* I think the shape of the distributions gaussian. This is probably a consequence of Central limit theorem ? 
+
+* Modules that are used there, are:
+
+	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
+	* time difference: $|(t_{\cdot,1}(c_{1}),(t_{0,1}(c_{1}))|$
+	* time difference: $|(t_{0,\cdot}(c_{1}),(t_{0,1}(c_{1}))|$
+	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
+   	* $\cdots$
+   	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
+ 
 ![Alt text](image/comp_times_k2.png) 
 ![Alt text](image/comp_ratios_2.png) 
+
+
