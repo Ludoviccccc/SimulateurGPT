@@ -116,3 +116,4 @@ The performed mutations consist of changing the existing instructions
 ### Results
 The result of an exploration with **kNN** with k=2.
 ![Alt text](image/comp_times_k2.png) 
+![Alt text](image/comp_ratios_2.png) 
