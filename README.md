@@ -1,4 +1,4 @@
-# curiosity-driven-approach
+# Curiosity-driven-approach
 
 ## On going:
 * Quantifying **ddr contention** with the `sim.ddr.py` 
