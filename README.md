@@ -125,7 +125,8 @@ The result of an exploration with **kNN** with k=2.
 	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
- 
+   	  
+ Next I have to add differences of the ratio, together vs in isolation 
 ![Alt text](image/comp_times_k2.png) 
 ![Alt text](image/comp_ratios_2.png) 
 
