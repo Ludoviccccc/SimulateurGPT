@@ -32,7 +32,7 @@ class OptimizationPolicykNN:
         self.max_len = max_len
         self.num_bank = 4
     def __call__(self,goal:np.ndarray,H:History, module:str)->dict:
-        assert module in ["time"]+[f"miss_bank_{j}" for j in range(self.num_bank)], f"module {module} is unknown"
+        #assert module in ["time"]+[f"miss_bank_{j}" for j in range(self.num_bank)], f"module {module} is unknown"
         closest_codes = self.select_closest_codes(H,goal, module) #most promising sample from the history
         output = self.mix(closest_codes) #expansion strategie: small random mutation
         return output
@@ -47,8 +47,10 @@ class OptimizationPolicykNN:
         assert len(H.memory_program)>0, "history empty"
         if module=="time":
             b,_ = H.times2ndarray()
-        else:
+        elif module in [f"miss_bank_{j}" for j in range(4)]:
             b,_ = H.miss2ndarray(int(module[-1]))
+        elif module=="time_diff":
+            b,_ = H.timesdiff2ndarray()
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}

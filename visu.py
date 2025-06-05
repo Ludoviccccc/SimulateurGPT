@@ -65,7 +65,7 @@ def representation(content, content2 = None):
 
 
 def comparaison(content_random, content_imgep = None, name = None):
-    fig, axs = plt.subplots(4,3, figsize = (15,10), layout='constrained')
+    fig, axs = plt.subplots(4,4, figsize = (15,10), layout='constrained')
     for j in range(4):
         bins = np.arange(-1.0,1.0,0.1)
         axs[j,0].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core0"][:,j],  bins=bins,alpha = .5, label="random")
@@ -74,30 +74,36 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,0].set_title("row miss hits ratio difference")
         axs[j,0].legend()
 
-        axs[j,1].scatter(content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j],  label="(S_0,) random")
-        axs[j,1].scatter(content_random["miss_ratios_core1"][:,j],  content_random["miss_ratios"][:,j],  label="(,S_1) random")
-        axs[j,1].set_xlabel("miss ratio alone")
-        axs[j,1].set_ylabel("(S_0,S_1)")
-        axs[j,1].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-        axs[j,1].set_title(f"miss ratios bank {j+1}")
+        axs[j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
+        axs[j,1].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j],bins=bins,alpha = .5, label="imgep")
+        axs[j,1].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(,S_1)]")
+        axs[j,1].set_title("row miss hits ratio difference")
         axs[j,1].legend()
 
-
-
-        axs[j,2].scatter(content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j],label="(S_0,) imgep")
-        axs[j,2].scatter(content_imgep["miss_ratios_core1"][:,j],  content_imgep["miss_ratios"][:,j],label="(,S_1) imgep")
+        axs[j,2].scatter(content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j],  label="(S_0,) random", alpha = .5)
+        axs[j,2].scatter(content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j],label="(S_0,) imgep", alpha = .5)
         axs[j,2].set_xlabel("miss ratio alone")
         axs[j,2].set_ylabel("(S_0,S_1)")
         axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
         axs[j,2].set_title(f"miss ratios bank {j+1}")
         axs[j,2].legend()
 
+
+
+        axs[j,3].scatter(content_random["miss_ratios_core1"][:,j],  content_random["miss_ratios"][:,j],  label="(,S_1) random", alpha=.5)
+        axs[j,3].scatter(content_imgep["miss_ratios_core1"][:,j],  content_imgep["miss_ratios"][:,j],label="(,S_1) imgep", alpha=.5)
+        axs[j,3].set_xlabel("miss ratio alone")
+        axs[j,3].set_ylabel("(S_0,S_1)")
+        axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+        axs[j,3].set_title(f"miss ratios bank {j+1}")
+        axs[j,3].legend()
+
     if name:
         plt.savefig(name[0])
 
     fig, axs = plt.subplots(3,2, figsize = (15,10), layout='constrained')
-    axs[0,0].scatter(content_random["time_core0_alone"],content_random["time_core0_together"], label="random")
-    axs[0,0].scatter(content_imgep["time_core0_alone"],content_imgep["time_core0_together"], label="imgep")
+    axs[0,0].scatter(content_random["time_core0_alone"],content_random["time_core0_together"], label="random", alpha = .5)
+    axs[0,0].scatter(content_imgep["time_core0_alone"],content_imgep["time_core0_together"], label="imgep", alpha = .5)
     axs[0,0].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
