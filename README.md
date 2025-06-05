@@ -115,5 +115,6 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 The performed mutations consist of changing the existing instructions
 ### Results
 The result of an exploration with **kNN** with k=2.
+I think the shape of the distributions gaussian. This is probably a consequence of Central limit theorem ? 
 ![Alt text](image/comp_times_k2.png) 
 ![Alt text](image/comp_ratios_2.png) 
