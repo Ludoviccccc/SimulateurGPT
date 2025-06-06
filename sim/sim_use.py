@@ -24,47 +24,8 @@ class runpgrms:
         self.list_best_request1 = []    
         self.list_address1 = []   
         self.max_len = max_len
-        self.out = {"bank":{key:[] for key in range(self.num_banks)}}
-
-        self.out0 = {"addr":-np.ones(self.max_len),
-
-                    "addr2": -np.ones(self.max_instr),
-                    "bank":-np.ones(self.max_len),
-                    "bank0":-np.zeros(self.max_len),
-                    "bank1":-np.zeros(self.max_len),
-                    "bank2":-np.zeros(self.max_len),
-                    "bank3":-np.zeros(self.max_len),
-                    "delay":-np.ones(self.max_instr),
-                    "completion_time":-np.ones(self.max_instr),
-                    "status":-np.ones(self.max_len),
-                    "time":0,
-                    "min_time":-np.ones(self.max_instr),
-                    "max_time":-np.ones(self.max_instr),
-                    "min_addr":-np.ones(self.max_instr),
-                    "max_addr":-np.ones(self.max_instr),
-                    "max_radius":-np.ones(self.max_instr),
-                    "pending_addr":[],
-                    "pending_core_id":[],
-                    }
-        self.out1 = {"addr":-np.ones(self.max_len),
-                    "addr2":-np.ones(self.max_instr),
-                    "bank":-np.ones(self.max_len),
-                    "bank0":-np.zeros(self.max_len),
-                    "bank1":-np.zeros(self.max_len),
-                    "bank2":-np.zeros(self.max_len),
-                    "bank3":-np.zeros(self.max_len),
-                    "delay":-np.ones(self.max_instr),
-                    "completion_time":-np.ones(self.max_instr),
-                    "status":-np.ones(self.max_len),
-                    "time":0,
-                    "min_time":-np.ones(self.max_instr),
-                    "max_time":-np.ones(self.max_instr),
-                    "min_addr":-np.ones(self.max_instr),
-                    "max_addr":-np.ones(self.max_instr),
-                    "max_radius":-np.ones(self.max_instr),
-                    "pending_addr":[],
-                    "pending_core_id":[],
-                    }
+        self.miss_count = np.zeros(self.num_banks) 
+        self.hits_count = np.zeros(self.num_banks)
         self.ratios = None
         self.compl_time_core0 = 0
         self.compl_time_core1 = 0
@@ -119,60 +80,26 @@ class runpgrms:
                 exit()
         self.reorder()
     def reorder(self):
-
         hits = np.zeros(self.num_banks)
         miss = np.zeros(self.num_banks)
         for d in self.list_best_request:
-            self.out["bank"][d["bank"]].append(1*d["status"]=="ROW MISS")
+            self.miss_count[d["bank"]]+=1*d["status"]=="ROW MISS"
+            self.hits_count[d["bank"]]+=1*d["status"]=="ROW HIT"
             if d["status"]=="ROW MISS":
                 miss[d["bank"]] +=1
             else:
                 hits[d["bank"]] +=1
             if d["core"]==0:
                 self.compl_time_core0 = max(self.compl_time_core0,d["completion_time"])
-                #self.out0["addr"][d["arrival_time"]] = d["addr"]
-                #self.out0["addr2"][d["emmission_cycle"]] = d["addr"]
-                #self.out0["min_time"][d["emmission_cycle"]] = d["min_time"]
-                #self.out0["max_time"][d["emmission_cycle"]] = d["max_time"]
-                #self.out0["max_radius"][d["emmission_cycle"]] = d["max_radius"]
-                #self.out0["min_addr"][d["emmission_cycle"]] = d["min_addr"]
-                #self.out0["max_addr"][d["emmission_cycle"]] = d["max_addr"]
-                #self.out0["bank"][d["arrival_time"]] = d["bank"]
-                #self.out0["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
-                #self.out0["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
-                #self.out0["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
-                #self.out0[f"bank{d['bank']}"][d["arrival_time"]] +=1
-                #self.out0["time"] = max(self.out0["time"], d["completion_time"]) 
-                #self.out0["pending_addr"].append(d["pending_addr"])
-                #self.out0["pending_core_id"].append(d["pending_core_id"])
             elif d["core"]==1:
                 self.compl_time_core1 = max(self.compl_time_core1,d["completion_time"])
-                #self.out1["addr"][d["arrival_time"]] = d["addr"]
-                #self.out1["addr2"][d["emmission_cycle"]] = d["addr"]
-                #self.out1["min_time"][d["emmission_cycle"]] = d["min_time"]
-                #self.out1["max_time"][d["emmission_cycle"]] = d["max_time"]
-                #self.out1["max_radius"][d["emmission_cycle"]] = d["max_radius"]
-                #self.out1["min_addr"][d["emmission_cycle"]] = d["min_addr"]
-                #self.out1["max_addr"][d["emmission_cycle"]] = d["max_addr"]
-                #self.out1["bank"][d["arrival_time"]] = d["bank"]
-                #self.out1[f"bank{d['bank']}"][d["arrival_time"]] +=1
-                #self.out1["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
-                #self.out1["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
-                #self.out1["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
-                #self.out1["time"] = max(self.out1["time"], d["completion_time"]) 
-                #self.out1["pending_addr"].append(d["pending_addr"])
-                #self.out1["pending_core_id"].append(d["pending_core_id"])
             else:
                 print("erreur")
                 exit()
-        #plt.figure()
-        #plt.plot(self.out0["delay"])
-        #plt.show()
         denominator = miss + hits
         denominator[denominator==0] = -1
         self.ratios = miss/(denominator)
         self.ratios[self.ratios<0] = -1
-        #self.ratios[np.isnan(self.ratios)] = -1
     def acces_history(self):   
         a = np.zeros(self.max_instr)   
         b = np.zeros(self.max_instr)   

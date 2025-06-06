@@ -11,6 +11,9 @@ class History:
                             "time_core1_together":[],
                             "time_core0_alone":[],
                             "time_core1_alone":[],
+                            "miss_count":[],
+                            "miss_count_core0":[],
+                            "miss_count_core1":[],
                                                 }
         self.k=0
     def stats2(self):
@@ -36,6 +39,9 @@ class History:
         self.memory_perf["time_core1_together"].append(sample["time_core1_together"])
         self.memory_perf["time_core0_alone"].append(sample["time_core0_alone"])
         self.memory_perf["time_core1_alone"].append(sample["time_core1_alone"])
+        self.memory_perf["miss_count"].append(sample["miss_count"])
+        self.memory_perf["miss_count_core0"].append(sample["miss_count_core0"])
+        self.memory_perf["miss_count_core1"].append(sample["miss_count_core1"])
 
         self.memory_perf["diff_ratios_core0"] = np.abs(np.array(self.memory_perf["miss_ratios_core0"]) - np.array(self.memory_perf["miss_ratios"]))
         self.memory_perf["diff_ratios_core1"] = np.abs(np.array(self.memory_perf["miss_ratios_core1"]) - np.array(self.memory_perf["miss_ratios"]))
@@ -55,6 +61,10 @@ class History:
         return out,["diff_time0", "diff_time1"]
     def miss2ndarray(self, bank:int):
         keys = ["miss_ratios_core0","miss_ratios_core1","miss_ratios"]
+        out = np.array([np.array(self.memory_perf[key])[:,bank] for key in keys])
+        return out,keys
+    def miss_count_2ndarray(self, bank:int):
+        keys = ["miss_count_core0","miss_count_core1","miss_ratios"]
         out = np.array([np.array(self.memory_perf[key])[:,bank] for key in keys])
         return out,keys
     def missdiff2ndarray(self):

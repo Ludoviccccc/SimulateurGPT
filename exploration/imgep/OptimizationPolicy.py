@@ -49,6 +49,8 @@ class OptimizationPolicykNN:
             b,_ = H.times2ndarray()
         elif module in [f"miss_bank_{j}" for j in range(4)]:
             b,_ = H.miss2ndarray(int(module[-1]))
+        elif module in [f"miss_count_bank_{j}" for j in range(4)]:
+            b,_ = H.miss_count_2ndarray(int(module[-1]))
         elif module=="time_diff":
             b,_ = H.timesdiff2ndarray()
         elif module=="ratios_diff":

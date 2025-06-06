@@ -130,3 +130,5 @@ The result of an exploration with **kNN** with k=2.
 
 
 
+![Alt text](image/comp_ratios_2.png)
+![Alt text](image/miss_times_k2.png)
