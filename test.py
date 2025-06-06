@@ -12,12 +12,13 @@ from visu import representation, comparaison
 
 if __name__=="__main__":
     #random.seed(0)
-    N = int(400)
+    N = int(500)
     N_init = 100
     max_len = 1000  
     length_programs = 100
     k = 4
     periode = 5
+    num_bank = 4
 
     H_rand = History(max_size=1000)
     H2_rand = History(max_size=1000)
@@ -27,15 +28,12 @@ if __name__=="__main__":
     content_random = H_rand.present_content()
     
     for k in [1,2,3,4,5,6]:
-        G = GoalGenerator(num_bank = 4)
-        Pi = OptimizationPolicykNN(k=k,mutation_rate=.2,max_len=50)
+        G = GoalGenerator(num_bank = num_bank)
+        Pi = OptimizationPolicykNN(k=k,mutation_rate=.3,max_len=50)
         H_imgep = History(max_size=1000)
         H2_imgep = History(max_size=1000)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi, periode = periode)
         imgep()
-#        print(H_imgep.stats2())
-#        print(H_rand.stats2())
-#        exit()
         content_imgep = H_imgep.present_content()
         comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k}",f"image/comp_times_k{k}"])
         print(f"done: k = {k}")

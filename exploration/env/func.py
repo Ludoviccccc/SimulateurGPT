@@ -23,10 +23,11 @@ class Env:
         program(parameter["core0"][0], parameter["core1"][0])
         program0(parameter["core0"][0],[])
         program1([],parameter["core1"][0])
-        return {"core0":program.out0,
-                "core1":program.out1,
-                "core0_alone":program0.out0,
-                "core1_alone":program1.out1,
+        return {
+                #"core0":program.out0,
+                #"core1":program.out1,
+                #"core0_alone":program0.out0,
+                #"core1_alone":program1.out1,
                 "perf": program.ratios,
                 "perf_core0": program0.ratios,
                 "perf_core1": program1.ratios,

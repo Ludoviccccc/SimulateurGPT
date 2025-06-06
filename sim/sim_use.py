@@ -74,7 +74,7 @@ class runpgrms:
         """
         executes a list of instructions. Returns 1 if there is acces to the L3, and 0 else.
         """
-        out = -1
+        #out = -1
         #print("instr:",instr)
         #exit()
         if instr["type"]=="r": 
@@ -89,9 +89,9 @@ class runpgrms:
                 out = self.core0.write(instr["addr"], instr["value"])  
             elif instr["core"]==1:  
                 out = self.core1.write(instr["addr"], instr["value"])  
-        else:   
-            print("erreur")    
-            exit()   
+        #else:   
+        #    print("erreur")    
+        #    exit()   
         return out   
     def __call__(self, list_instr0:list[dict], list_instr1:list[dict]):  
         len_ = 0
@@ -130,38 +130,38 @@ class runpgrms:
                 hits[d["bank"]] +=1
             if d["core"]==0:
                 self.compl_time_core0 = max(self.compl_time_core0,d["completion_time"])
-                self.out0["addr"][d["arrival_time"]] = d["addr"]
-                self.out0["addr2"][d["emmission_cycle"]] = d["addr"]
-                self.out0["min_time"][d["emmission_cycle"]] = d["min_time"]
-                self.out0["max_time"][d["emmission_cycle"]] = d["max_time"]
-                self.out0["max_radius"][d["emmission_cycle"]] = d["max_radius"]
-                self.out0["min_addr"][d["emmission_cycle"]] = d["min_addr"]
-                self.out0["max_addr"][d["emmission_cycle"]] = d["max_addr"]
-                self.out0["bank"][d["arrival_time"]] = d["bank"]
-                self.out0["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
-                self.out0["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
-                self.out0["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
-                self.out0[f"bank{d['bank']}"][d["arrival_time"]] +=1
-                self.out0["time"] = max(self.out0["time"], d["completion_time"]) 
-                self.out0["pending_addr"].append(d["pending_addr"])
-                self.out0["pending_core_id"].append(d["pending_core_id"])
+                #self.out0["addr"][d["arrival_time"]] = d["addr"]
+                #self.out0["addr2"][d["emmission_cycle"]] = d["addr"]
+                #self.out0["min_time"][d["emmission_cycle"]] = d["min_time"]
+                #self.out0["max_time"][d["emmission_cycle"]] = d["max_time"]
+                #self.out0["max_radius"][d["emmission_cycle"]] = d["max_radius"]
+                #self.out0["min_addr"][d["emmission_cycle"]] = d["min_addr"]
+                #self.out0["max_addr"][d["emmission_cycle"]] = d["max_addr"]
+                #self.out0["bank"][d["arrival_time"]] = d["bank"]
+                #self.out0["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                #self.out0["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
+                #self.out0["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
+                #self.out0[f"bank{d['bank']}"][d["arrival_time"]] +=1
+                #self.out0["time"] = max(self.out0["time"], d["completion_time"]) 
+                #self.out0["pending_addr"].append(d["pending_addr"])
+                #self.out0["pending_core_id"].append(d["pending_core_id"])
             elif d["core"]==1:
                 self.compl_time_core1 = max(self.compl_time_core1,d["completion_time"])
-                self.out1["addr"][d["arrival_time"]] = d["addr"]
-                self.out1["addr2"][d["emmission_cycle"]] = d["addr"]
-                self.out1["min_time"][d["emmission_cycle"]] = d["min_time"]
-                self.out1["max_time"][d["emmission_cycle"]] = d["max_time"]
-                self.out1["max_radius"][d["emmission_cycle"]] = d["max_radius"]
-                self.out1["min_addr"][d["emmission_cycle"]] = d["min_addr"]
-                self.out1["max_addr"][d["emmission_cycle"]] = d["max_addr"]
-                self.out1["bank"][d["arrival_time"]] = d["bank"]
-                self.out1[f"bank{d['bank']}"][d["arrival_time"]] +=1
-                self.out1["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
-                self.out1["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
-                self.out1["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
-                self.out1["time"] = max(self.out1["time"], d["completion_time"]) 
-                self.out1["pending_addr"].append(d["pending_addr"])
-                self.out1["pending_core_id"].append(d["pending_core_id"])
+                #self.out1["addr"][d["arrival_time"]] = d["addr"]
+                #self.out1["addr2"][d["emmission_cycle"]] = d["addr"]
+                #self.out1["min_time"][d["emmission_cycle"]] = d["min_time"]
+                #self.out1["max_time"][d["emmission_cycle"]] = d["max_time"]
+                #self.out1["max_radius"][d["emmission_cycle"]] = d["max_radius"]
+                #self.out1["min_addr"][d["emmission_cycle"]] = d["min_addr"]
+                #self.out1["max_addr"][d["emmission_cycle"]] = d["max_addr"]
+                #self.out1["bank"][d["arrival_time"]] = d["bank"]
+                #self.out1[f"bank{d['bank']}"][d["arrival_time"]] +=1
+                #self.out1["delay"][d["emmission_cycle"]] = d["emmission_cycle"]
+                #self.out1["completion_time"][d["emmission_cycle"]] = d["emmission_cycle"]
+                #self.out1["status"][d["arrival_time"]] = 1*d["status"]=="ROW MISS"
+                #self.out1["time"] = max(self.out1["time"], d["completion_time"]) 
+                #self.out1["pending_addr"].append(d["pending_addr"])
+                #self.out1["pending_core_id"].append(d["pending_core_id"])
             else:
                 print("erreur")
                 exit()
