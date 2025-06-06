@@ -8,7 +8,7 @@ from sim.sim_use import make_random_paire_list_instr
 import random
 
 class IMGEP:
-    def __init__(self,N:int, N_init:int,E:Env,H:History, G:GoalGenerator, Pi:OptimizationPolicykNN, periode:int = 1):
+    def __init__(self,N:int, N_init:int,E:Env,H:History, G:GoalGenerator, Pi:OptimizationPolicykNN, periode:int = 1, modules = ["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"]+["ratios_diff"]):
         """
         N: int. The experimental budget
         N_init: int. Number of experiments at random
@@ -23,6 +23,7 @@ class IMGEP:
         self.N_init = N_init
         self.Pi = Pi
         self.periode = periode
+        self.modules = modules 
     def __call__(self):
         for i in range(self.N):
             if i<self.N_init:
@@ -30,7 +31,7 @@ class IMGEP:
             else:
                 #Sample target goal
                 if i%self.periode==0:
-                    module = random.choice(["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"]+["ratios_diff"])
+                    module = random.choice(self.modules)
 #                    module = random.choice(["time"])
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
