@@ -51,6 +51,8 @@ class OptimizationPolicykNN:
             b,_ = H.miss2ndarray(int(module[-1]))
         elif module=="time_diff":
             b,_ = H.timesdiff2ndarray()
+        elif module=="ratios_diff":
+            b,_ = H.missdiff2ndarray()
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}

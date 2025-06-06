@@ -30,7 +30,7 @@ class IMGEP:
             else:
                 #Sample target goal
                 if i%self.periode==0:
-                    module = random.choice(["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"])
+                    module = random.choice(["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"]+["ratios_diff"])
 #                    module = random.choice(["time"])
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)

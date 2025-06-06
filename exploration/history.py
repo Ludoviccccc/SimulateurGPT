@@ -16,10 +16,6 @@ class History:
         self.memory_signature = {key : {kkey :[] for kkey in keys} for key in self.cat}
         self.k=0
     def stats2(self):
-        self.memory_perf["diff_ratios_core0"] = np.abs(np.array(self.memory_perf["miss_ratios_core0"]) - np.array(self.memory_perf["miss_ratios"]))
-        self.memory_perf["diff_ratios_core1"] = np.abs(np.array(self.memory_perf["miss_ratios_core1"]) - np.array(self.memory_perf["miss_ratios"]))
-        self.memory_perf["diff_time0"] = np.abs(np.array(self.memory_perf["time_core0_alone"]) - np.array(self.memory_perf["time_core0_together"]))
-        self.memory_perf["diff_time1"] = np.abs(np.array(self.memory_perf["time_core1_alone"]) - np.array(self.memory_perf["time_core1_together"]))
         out = {key:{"min":np.min(self.memory_perf[key],axis=0),"max":np.max(self.memory_perf[key],axis=0)} for key in self.memory_perf.keys()}
         return out
     def stats(self):
@@ -68,6 +64,11 @@ class History:
         self.memory_perf["time_core1_together"].append(sample["time_core1_together"])
         self.memory_perf["time_core0_alone"].append(sample["time_core0_alone"])
         self.memory_perf["time_core1_alone"].append(sample["time_core1_alone"])
+
+        self.memory_perf["diff_ratios_core0"] = np.abs(np.array(self.memory_perf["miss_ratios_core0"]) - np.array(self.memory_perf["miss_ratios"]))
+        self.memory_perf["diff_ratios_core1"] = np.abs(np.array(self.memory_perf["miss_ratios_core1"]) - np.array(self.memory_perf["miss_ratios"]))
+        self.memory_perf["diff_time0"] = np.abs(np.array(self.memory_perf["time_core0_alone"]) - np.array(self.memory_perf["time_core0_together"]))
+        self.memory_perf["diff_time1"] = np.abs(np.array(self.memory_perf["time_core1_alone"]) - np.array(self.memory_perf["time_core1_together"]))
         self.eviction()
     def present_content(self):
         output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
@@ -84,6 +85,5 @@ class History:
         keys = ["miss_ratios_core0","miss_ratios_core1","miss_ratios"]
         out = np.array([np.array(self.memory_perf[key])[:,bank] for key in keys])
         return out,keys
-    #def missdiff2ndarray(self):
-    #    out = np.array([np.array(self.
-    #    pass
+    def missdiff2ndarray(self):
+        return np.stack((self.memory_perf["diff_time0"],self.memory_perf["diff_time1"]))

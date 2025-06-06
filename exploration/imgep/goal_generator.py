@@ -9,10 +9,11 @@ class GoalGenerator:
         self.num_bank = num_bank
         self.k_time = 0
         self.k_miss = 0
-    def __call__(self,H:History, module:str)->dict:
         time_module = ["time", "time_diff"]
-        miss_modules = [f"miss_bank_{j}" for j in range(self.num_bank)]
-        assert module in time_module + miss_modules, f"module {module} unknown"
+        self.miss_modules = [f"miss_bank_{j}" for j in range(self.num_bank)]+["ratios_diff"]
+        self.modules = time_module + self.miss_modules
+    def __call__(self,H:History, module:str)->dict:
+        assert module in self.modules, f"module {module} unknown"
         stats = H.stats2()
         if module=="time":
             times = np.concatenate((np.floor(.5*np.random.randint(stats["time_core0_alone"]["min"],4.0*stats["time_core0_alone"]["max"],(1,))),

@@ -87,6 +87,9 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
         axs[j,2].set_title(f"miss ratios bank {j+1}")
         axs[j,2].legend()
+        axs[j,2].set_xticks(np.linspace(0,1,11))
+        axs[j,2].set_yticks(np.linspace(0,1,11))
+        axs[j,2].grid()
 
 
 
@@ -97,6 +100,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
         axs[j,3].set_title(f"miss ratios bank {j+1}")
         axs[j,3].legend()
+        axs[j,3].grid()
 
     if name:
         plt.savefig(name[0])
@@ -108,6 +112,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
     axs[0,0].legend()
+    axs[0,0].grid()
 
     axs[0,1].scatter(content_random["time_core1_alone"],content_random["time_core1_together"], alpha = .5, label="random")
     axs[0,1].scatter(content_imgep["time_core1_alone"],content_imgep["time_core1_together"], alpha = .5, label="imgep")
@@ -115,6 +120,9 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,1].set_xlabel("time_core1_alone")
     axs[0,1].set_ylabel("time_core1_together")
     axs[0,1].legend()
+    axs[j,2].set_xticks(np.linspace(0,600,11))
+    axs[j,2].set_yticks(np.linspace(0,600,11))
+    axs[0,1].grid()
 
 
 
@@ -132,6 +140,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
     axs[2,0].legend()
+    axs[2,0].grid()
     if name:
         plt.savefig(name[1])
     #plt.show()
@@ -149,4 +158,3 @@ if __name__=="__main__":
     content = H.present_content()
     content2 = H2.present_content()
     representation(content, content2)
-    representation(content)

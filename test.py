@@ -12,8 +12,8 @@ from visu import representation, comparaison
 
 if __name__=="__main__":
     #random.seed(0)
-    N = int(500)
-    N_init = 100
+    N = int(50)
+    N_init = 10
     max_len = 1000  
     length_programs = 100
     k = 4
