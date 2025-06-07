@@ -129,6 +129,9 @@ The result of an exploration with **kNN** with k=2.
  Next I have to add differences of the ratio, together vs in isolation 
 
 
-
+#### k = 2
 ![Alt text](image/comp_ratios_2.png)
 ![Alt text](image/comp_times_k2.png)
+#### k = 3
+![Alt text](image/comp_ratios_3.png)
+![Alt text](image/comp_times_k3.png)
