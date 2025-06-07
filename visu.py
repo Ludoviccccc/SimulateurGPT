@@ -107,7 +107,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,3].set_xlabel("miss ratio alone")
         axs[j,3].set_ylabel("(S_0,S_1)")
         axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-        axs[j,3].set_title(f"miss ratios bank {j+1}")
+        axs[j,3].set_title(f"miss ratios bank {j+1}, diver imgep:{diversity_ratio_imgep}, diver random:{diversity_ratio_random}")
         axs[j,3].legend()
         axs[j,3].set_xticks(np.linspace(0,1,11))
         axs[j,3].set_yticks(np.linspace(0,1,11))
@@ -117,7 +117,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         plt.savefig(name[0])
 
 
-    bins = np.linspace(0,600,11)
+    bins = np.linspace(0,1000,20)
     diversity_time_rand = diversity([content_random["time_core0_alone"],content_random["time_core0_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core0_alone"],content_imgep["time_core0_together"]], [bins, bins])
 
@@ -128,8 +128,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
     axs[0,0].legend()
-    axs[0,0].set_yticks(np.linspace(0,600,6))
-    axs[0,0].set_yticks(np.linspace(0,600,6))
+    axs[0,0].set_yticks(bins)
+    axs[0,0].set_yticks(bins)
     axs[0,0].grid()
     axs[0,0].set_title(f"diver imgep:{diversity_time_imgep}, diver rand:{diversity_time_rand}")
 
@@ -143,8 +143,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,1].set_xlabel("time_core1_alone")
     axs[0,1].set_ylabel("time_core1_together")
     axs[0,1].legend()
-    axs[0,1].set_xticks(np.linspace(0,600,11))
-    axs[0,1].set_yticks(np.linspace(0,600,11))
+    axs[0,1].set_xticks(bins)
+    axs[0,1].set_yticks(bins)
     axs[0,1].grid()
     axs[0,1].set_title(f"diver imgep:{diversity_time_imgep}, diver rand:{diversity_time_rand}")
 
@@ -170,8 +170,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
     axs[2,0].legend()
-    axs[2,0].set_xticks(np.linspace(0,600,11))
-    axs[2,0].set_yticks(np.linspace(0,600,11))
+    axs[2,0].set_xticks(bins)
+    axs[2,0].set_yticks(bins)
     axs[2,0].grid()
     axs[2,0].set_title(f"diver imgep:{diversity_time_imgep}, diver rand:{diversity_time_rand}")
 
