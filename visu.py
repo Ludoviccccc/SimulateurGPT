@@ -94,7 +94,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,2].set_xlabel("miss ratio alone")
         axs[j,2].set_ylabel("(S_0,S_1)")
         axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-        axs[j,2].set_title(f"bank {j+1}, imgep:{diversity_ratio_imgep}, random:{diversity_ratio_random}")
+        axs[j,2].set_title(f"bank {j+1}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
         axs[j,2].legend()
         axs[j,2].set_xticks(np.linspace(0,1,11))
         axs[j,2].set_yticks(np.linspace(0,1,11))
@@ -107,7 +107,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,3].set_xlabel("miss ratio alone")
         axs[j,3].set_ylabel("(S_0,S_1)")
         axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-        axs[j,3].set_title(f"miss ratios bank {j+1}, imgep:{diversity_ratio_imgep}, random:{diversity_ratio_random}")
+        axs[j,3].set_title(f"bank {j+1}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
         axs[j,3].legend()
         axs[j,3].set_xticks(np.linspace(0,1,11))
         axs[j,3].set_yticks(np.linspace(0,1,11))
@@ -117,7 +117,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         plt.savefig(name[0])
 
 
-    bins = np.linspace(0,1000,20)
+    bins = np.linspace(0,1000,21)
     diversity_time_rand = diversity([content_random["time_core0_alone"],content_random["time_core0_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core0_alone"],content_imgep["time_core0_together"]], [bins, bins])
 
