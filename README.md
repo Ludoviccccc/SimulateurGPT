@@ -114,8 +114,10 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 * perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`.
 The performed mutations consist of changing the existing instructions
 ### Results
-The result of an exploration with **kNN** with k=2.
-* I think the shape of the distributions gaussian. This is probably a consequence of Central limit theorem ? 
+The phenomenon is stochastic and the variance seems non negligeable. As Pierre-Yves suggested, I will maybe calculate the empirical mean of the statistics for each program.
+
+The result of an exploration with **kNN** with k=1,2,3
+* I think the shape of the distributions gaussian: This is probably a consequence of **Central limit theorem** ? 
 
 * Modules that are used there, are:
 
@@ -126,7 +128,7 @@ The result of an exploration with **kNN** with k=2.
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	  
- Next I have to add differences of the ratio, together vs in isolation 
+Next, in order to observe more spreading in the y-axis of the miss ratios scatter plots, I will add differences of the ratio, together vs in isolation. 
 
 #### k = 1
 ![Alt text](image/comp_ratios_1.png)
