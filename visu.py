@@ -21,10 +21,6 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,0].set_title("row miss hits ratio difference")
         axs[j,0].legend()
 
-        hist_rand = np.histogram(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j], bins = bins)
-        hist_imgep = np.histogram(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j], bins = bins)
-        print("hist_rand", hist_rand)
-        print("hist_imgep", hist_imgep)
 
         axs[j,1].bar(hist_rand[1][:-1],hist_rand[0], alpha = .5, label="random")
         axs[j,1].bar(hist_imgep[1][:-1],hist_imgep[0], alpha = .5, label="imgep")
