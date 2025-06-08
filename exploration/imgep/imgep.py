@@ -30,7 +30,7 @@ class IMGEP:
                 parameter = make_random_paire_list_instr()
             else:
                 #Sample target goal
-                if i%self.periode==0:
+                if (i-self.N_init)%self.periode==0:
                     module = random.choice(self.modules)
 #                    module = random.choice(["time"])
                     goal = self.G(self.H, module = module)

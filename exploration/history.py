@@ -1,4 +1,6 @@
 import numpy as np
+import pickle
+import os.path
 class History:
     def __init__(self, max_size = 100):
         self.max_size = max_size
@@ -50,6 +52,15 @@ class History:
     def present_content(self):
         output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
         return output
+    def save_pickle(self, name:str=None):
+        k = 0
+        name = f"data/{name}_{k}"
+        while os.path.isfile(f"data/{name}_{k}"):
+            k+=1
+            name = f"data/{name}_{k}"
+        output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
+        with open(name, "wb") as f:
+            pickle.dump(output, f)
     def times2ndarray(self)->(np.ndarray,list[str]):
         keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
         out = np.array([np.array(self.memory_perf[key]) for key in keys])
