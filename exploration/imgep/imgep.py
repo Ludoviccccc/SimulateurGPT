@@ -32,7 +32,6 @@ class IMGEP:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0:
                     module = random.choice(self.modules)
-#                    module = random.choice(["time"])
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
             observation = self.env(parameter)

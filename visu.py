@@ -22,11 +22,9 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,0].legend()
 
 
-        axs[j,1].bar(hist_rand[1][:-1],hist_rand[0], alpha = .5, label="random")
-        axs[j,1].bar(hist_imgep[1][:-1],hist_imgep[0], alpha = .5, label="imgep")
-        #exit()
 
-
+        axs[j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
+        axs[j,1].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j],bins=bins,alpha = .5, label="imgep")
         axs[j,1].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(,S_1)]")
         axs[j,1].set_title("row miss hits ratio difference")
         axs[j,1].legend()
@@ -56,6 +54,8 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,3].set_xticks(np.linspace(0,1,11))
         axs[j,3].set_yticks(np.linspace(0,1,11))
         axs[j,3].grid()
+    if name:
+        plt.savefig(name[0])
 
     bins = np.linspace(0,1000,21)
     diversity_time_rand = diversity([content_random["time_core0_alone"],content_random["time_core0_together"]], [bins, bins])
@@ -68,7 +68,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
     axs[0,0].legend()
-    axs[0,0].set_yticks(bins)
+    axs[0,0].set_xticks(bins)
     axs[0,0].set_yticks(bins)
     axs[0,0].grid()
     axs[0,0].set_title(f"imgep:{diversity_time_imgep}, rand:{diversity_time_rand}")
@@ -184,8 +184,6 @@ def representation(content, content2 = None):
 
     plt.savefig("image/time")
     plt.show()
-    if name:
-        plt.savefig(name[0])
 
 
     #plt.show()

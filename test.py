@@ -36,7 +36,8 @@ if __name__=="__main__":
     with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
         content_random = pickle.load(f)
     modules = ["time"]+ ["time_diff"]+[f"miss_bank_{j}" for j in range(num_bank)]+["ratios_diff"]+ [f"miss_count_bank_{j}" for j in range(num_bank)]
-    for k in [1]:
+    for k in []:
+        print(f"start: k = {k}")
         G = GoalGenerator(num_bank = num_bank)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
         H_imgep = History(max_size=N)
@@ -45,8 +46,7 @@ if __name__=="__main__":
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done: k = {k}")
     N = 2000
-    k = 1
-    for name in [f"data/history_kNN_{k}_N_{N}_0"]:
+    for k_moins_un,name in enumerate([f"data/history_kNN_{k}_N_{N}_0" for k in range(1,4)]):
         with open(name, "rb") as f:
             content_imgep = pickle.load(f)
-        comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k}",f"image/comp_times_k{k}"])
+        comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k_moins_un +1}",f"image/comp_times_k{k_moins_un+1}"])
