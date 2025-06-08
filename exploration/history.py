@@ -3,7 +3,6 @@ class History:
     def __init__(self, max_size = 100):
         self.max_size = max_size
         self.memory_program = {"core0":[],"core1":[]}
-        self.cat = ["core0","core1", "core0_alone", "core1_alone"]
         self.memory_perf = {"miss_ratios":[],
                             "miss_ratios_core0":[],            
                             "miss_ratios_core1":[],            
@@ -15,7 +14,7 @@ class History:
                             "miss_count_core0":[],
                             "miss_count_core1":[],
                                                 }
-        self.k=0
+        #self.k=0
     def stats2(self):
         out = {key:{"min":np.min(self.memory_perf[key],axis=0),"max":np.max(self.memory_perf[key],axis=0)} for key in self.memory_perf.keys()}
         return out
@@ -47,7 +46,7 @@ class History:
         self.memory_perf["diff_ratios_core1"] = np.abs(np.array(self.memory_perf["miss_ratios_core1"]) - np.array(self.memory_perf["miss_ratios"]))
         self.memory_perf["diff_time0"] = np.abs(np.array(self.memory_perf["time_core0_alone"]) - np.array(self.memory_perf["time_core0_together"]))
         self.memory_perf["diff_time1"] = np.abs(np.array(self.memory_perf["time_core1_alone"]) - np.array(self.memory_perf["time_core1_together"]))
-        self.eviction()
+        #self.eviction()
     def present_content(self):
         output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
         return output
