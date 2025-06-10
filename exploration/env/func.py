@@ -24,9 +24,9 @@ class Env:
         program0(parameter["core0"][0],[])
         program1([],parameter["core1"][0])
         return {
-                "perf": program.ratios,
-                "perf_core0": program0.ratios,
-                "perf_core1": program1.ratios,
+                "miss_ratios": program.ratios,
+                "miss_ratios_core0": program0.ratios,
+                "miss_ratios_core1": program1.ratios,
                 "time_core0_together":program.compl_time_core0,
                 "time_core1_together":program.compl_time_core1,
                 "time_core0_alone":program0.compl_time_core0,
@@ -34,6 +34,10 @@ class Env:
                 "miss_count":program.miss_count,
                 "miss_count_core0":program0.miss_count,
                 "miss_count_core1":program1.miss_count,
+                "diff_ratios_core0":np.abs(program.ratios - program0.ratios),
+                "diff_ratios_core1":np.abs(program.ratios - program1.ratios),
+                "diff_time0":np.abs(program.compl_time_core0 - program0.compl_time_core0),
+                "diff_time1":np.abs(program.compl_time_core1 - program1.compl_time_core1)
                 }
     def _make_program(self):
         ddr = DDRMemory()

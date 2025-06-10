@@ -46,15 +46,25 @@ class OptimizationPolicykNN:
     def select_closest_codes(self,H:History,signature: np.ndarray,module:str)->dict:
         assert len(H.memory_program)>0, "history empty"
         if module=="time":
-            b,_ = H.times2ndarray()
+            keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
+            b = np.array([np.array(H.memory_perf[key]) for key in keys])
         elif module in [f"miss_bank_{j}" for j in range(4)]:
-            b,_ = H.miss2ndarray(int(module[-1]))
+            keys = ["miss_ratios_core0","miss_ratios_core1","miss_ratios"]
+            bank = int(module[-1])
+            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
         elif module in [f"miss_count_bank_{j}" for j in range(4)]:
-            b,_ = H.miss_count_2ndarray(int(module[-1]))
+            keys = ["miss_count_core0","miss_count_core1","miss_ratios"]
+            bank = int(module[-1])
+            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
         elif module=="time_diff":
-            b,_ = H.timesdiff2ndarray()
-        elif module=="ratios_diff":
-            b,_ = H.missdiff2ndarray()
+            keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
+            b = np.array([np.abs(np.array(H.memory_perf[keys[i+2]]) - np.array(H.memory_perf[keys[i]])) for i in range(2)])
+        elif module in [f"diff_ratios_bank_{j}" for j in range(4)]:
+            bank = int(module[-1])
+            keys = [f"diff_ratios_core{j}" for j in range(2)]
+            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
+        ##########################################
+        print("module", module)
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}
