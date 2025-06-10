@@ -64,7 +64,6 @@ class OptimizationPolicykNN:
             keys = [f"diff_ratios_core{j}" for j in range(2)]
             b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
         ##########################################
-        print("module", module)
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}

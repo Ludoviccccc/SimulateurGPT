@@ -53,7 +53,7 @@ class GoalGenerator:
                                   stats["diff_ratios_core1"]["max"][int(module[-1])]
                                   )
                                    )
-            diff_ratios_target = 1.5* maxmiss
+            diff_ratios_target = np.random.uniform(minmiss,maxmiss)
             return diff_ratios_target
 
         elif module=="time_diff":
