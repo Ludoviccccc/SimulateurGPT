@@ -10,7 +10,7 @@ class GoalGenerator:
         self.k_time = 0
         self.k_miss = 0
         self.modules = modules
-    def __call__(self,H:History, module:str)->dict:
+    def __call__(self,H:History, module:str)->np.ndarray:
         assert module in self.modules, f"module {module} unknown"
         stats = H.stats2()
 

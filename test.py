@@ -10,17 +10,17 @@ from exploration.imgep.OptimizationPolicy import OptimizationPolicykNN
 from exploration.imgep.imgep import IMGEP
 import matplotlib.pyplot as plt
 from visu import representation, comparaison
-
+from exploration.imgep.intrinsec_reward import IR
 if __name__=="__main__":
-    N = int(2000)
-    N_init = 500
+    N = int(30)
+    N_init = 5
     #N = 10
     #N_init = 3
     max_len = 1000  
     length_programs = 100
     k = 4
     periode = 20
-    num_bank = 4 # N'est pas variable, a changer dans la classe Env
+    num_bank = 4 # m'est pas variable, a changer dans la classe Env
     mutation_rate = .1
     modules = ["time"]+ ["time_diff"]+[f"miss_bank_{j}" for j in range(num_bank)]+[f"miss_count_bank_{j}" for j in range(num_bank)]+[f"diff_ratios_bank_{j}" for j in range(num_bank)]
     dict_modules = [{"type":"miss_ratios","bank":bank, "core":core} for core in [None, 0,1] for bank in range(num_bank)]
@@ -39,19 +39,21 @@ if __name__=="__main__":
         rand()
         #save results
         H_rand.save_pickle(f"history_rand_N_{N}")
-    with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
-        content_random = pickle.load(f)
-    for k in [1,2,3]:
+    if False:
+        with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
+            content_random = pickle.load(f)
+    for k in [3]:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
         H_imgep = History(max_size=N)
-        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi, periode = periode, modules = modules)
+        ir = IR(modules=modules)
+        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
     N = 2000
-    if True:
+    if False:
         for k_moins_un,name in enumerate([f"data/history_kNN_{k}_N_{N}_0" for k in [1,2,3]]):
             with open(name, "rb") as f:
                 content_imgep = pickle.load(f)

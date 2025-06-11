@@ -16,7 +16,7 @@ class Env:
         self.l3_conf = l3_conf
         self.max_len = max_len
         self.length_programs = length_programs
-    def __call__(self, parameter:dict):
+    def __call__(self, parameter:dict)->dict:
         program = self._make_program()
         program0 = self._make_program()
         program1 = self._make_program()
