@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from visu import representation, comparaison
 from exploration.imgep.intrinsic_reward import IR
 if __name__=="__main__":
-    N = int(30)
-    N_init = 5
+    N = int(2000)
+    N_init = 500
     #N = 10
     #N_init = 3
     max_len = 1000  
@@ -39,10 +39,10 @@ if __name__=="__main__":
         rand()
         #save results
         H_rand.save_pickle(f"history_rand_N_{N}")
-    if False:
+    if True:
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
             content_random = pickle.load(f)
-    for k in [3]:
+    for k in []:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
@@ -53,7 +53,7 @@ if __name__=="__main__":
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
     N = 2000
-    if False:
+    if True:
         for k_moins_un,name in enumerate([f"data/history_kNN_{k}_N_{N}_0" for k in [1,2,3]]):
             with open(name, "rb") as f:
                 content_imgep = pickle.load(f)

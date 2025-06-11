@@ -36,7 +36,7 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
     #exit()
     
     for _ in range(num_mutations):
-        mutation_type = random.choice(['change'])
+        mutation_type = random.choice(['change','delete', 'add'])
         
         if mutation_type == 'change' and len(mutated) > 0:
             idx = random.randint(0, len(mutated) - 1)

@@ -111,6 +111,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[2,0].scatter(content_imgep["time_core0_together"],content_imgep["time_core1_together"], label="imgep", alpha = .5)
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
+    axs[2,0].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[2,0].legend()
     axs[2,0].set_xticks(bins)
     axs[2,0].set_yticks(bins)
