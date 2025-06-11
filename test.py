@@ -13,15 +13,22 @@ from visu import representation, comparaison
 
 if __name__=="__main__":
     N = int(2000)
-    N_init = 200
+    N_init = 500
     #N = 10
     #N_init = 3
     max_len = 1000  
     length_programs = 100
     k = 4
     periode = 20
-    num_bank = 4 # n'est pas variable, a changer dans la classe Env
+    num_bank = 4 # N'est pas variable, a changer dans la classe Env
     mutation_rate = .1
+    modules = ["time"]+ ["time_diff"]+[f"miss_bank_{j}" for j in range(num_bank)]+[f"miss_count_bank_{j}" for j in range(num_bank)]+[f"diff_ratios_bank_{j}" for j in range(num_bank)]
+    dict_modules = [{"type":"miss_ratios","bank":bank, "core":core} for core in [None, 0,1] for bank in range(num_bank)]
+    dict_modules2 = [{"type":"time", "core":core,"single":single} for core in range(2) for single in [True, False]]
+    modules = modules + dict_modules2 + dict_modules
+
+
+
     En = Env(length_programs=length_programs, max_len=max_len)
 
     H_rand = History(max_size= N)
@@ -34,16 +41,15 @@ if __name__=="__main__":
         H_rand.save_pickle(f"history_rand_N_{N}")
     with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
         content_random = pickle.load(f)
-    modules = ["time"]+ ["time_diff"]+[f"miss_bank_{j}" for j in range(num_bank)]+[f"miss_count_bank_{j}" for j in range(num_bank)]+[f"diff_ratios_bank_{j}" for j in range(num_bank)]
-    for k in []:
-        print(f"start: k = {k}")
-        G = GoalGenerator(num_bank = num_bank)
+    for k in [1,2,3]:
+        print(f"start: k = {k}, N={N}")
+        G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
         H_imgep = History(max_size=N)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi, periode = periode, modules = modules)
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
-        print(f"done: k = {k}")
+        print(f"done")
     N = 2000
     if True:
         for k_moins_un,name in enumerate([f"data/history_kNN_{k}_N_{N}_0" for k in [1,2,3]]):

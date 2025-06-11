@@ -41,9 +41,13 @@ class OptimizationPolicykNN:
         output = self.light_code_mutation({"core0":mix0[:self.max_len],"core1":mix1[:self.max_len]}) #expansion strategie: small random mutation
         return output 
     def loss(self,goal:np.ndarray, elements:np.ndarray):
-        a = goal.reshape(-1,1) 
+        if type(goal)!=float:
+            a = goal.reshape(-1,1) 
+        else:
+            a = np.array([goal]).reshape(-1,1) 
         return  np.sum((a -elements)**2,axis=0)
     def select_closest_codes(self,H:History,signature: np.ndarray,module:str)->dict:
+        t = False
         assert len(H.memory_program)>0, "history empty"
         if module=="time":
             keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
@@ -63,6 +67,24 @@ class OptimizationPolicykNN:
             bank = int(module[-1])
             keys = [f"diff_ratios_core{j}" for j in range(2)]
             b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
+        elif type(module)==dict:
+            t = True
+            if module["type"]=="miss_ratios":
+                bank = module["bank"]
+                core = module["core"]
+                if core:
+                    keys = [f"miss_ratios_core{core}"]
+                else:
+                    keys = ["miss_ratios"]
+                b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
+            elif module["type"]=="time":
+                core = module["core"]
+                single = module["single"]
+                if single:
+                    keys = [f"time_core{core}_alone"]
+                else:
+                    keys = [f"time_core{core}_together"]
+                b = np.array([np.array(H.memory_perf[key]) for key in keys])
         ##########################################
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]

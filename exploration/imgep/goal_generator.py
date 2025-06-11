@@ -5,22 +5,23 @@ sys.path.append("../../")
 from exploration.history import History
 
 class GoalGenerator:
-    def __init__(self,num_bank):
+    def __init__(self,num_bank:int,modules:list):
         self.num_bank = num_bank
         self.k_time = 0
         self.k_miss = 0
-        time_module = ["time", "time_diff"]
-        self.miss_modules = [f"miss_bank_{j}" for j in range(self.num_bank)]+["ratios_diff"] + [f"miss_count_bank_{j}" for j in range(self.num_bank)]+[f"diff_ratios_bank_{j}" for j in range(self.num_bank)]
-        self.modules = time_module + self.miss_modules
+        self.modules = modules
     def __call__(self,H:History, module:str)->dict:
         assert module in self.modules, f"module {module} unknown"
         stats = H.stats2()
+
         if module=="time":
-            times = np.concatenate((np.floor(.5*np.random.randint(stats["time_core0_alone"]["min"],4.0*stats["time_core0_alone"]["max"],(1,))),
-                np.floor(.5*np.random.randint(stats["time_core1_alone"]["min"],4.0*stats["time_core1_alone"]["max"],(1,)))))
+            times = np.concatenate((np.floor(np.random.randint(0.6*stats["time_core0_alone"]["min"],4.0*stats["time_core0_alone"]["max"],(1,))),
+                np.floor(np.random.randint(.5*stats["time_core1_alone"]["min"],4.0*stats["time_core1_alone"]["max"],(1,)))))
             delta = np.random.uniform(.6,4.0,(2,))
             times_together = np.floor(delta*times)
             return np.concatenate((times,times_together))
+
+
         elif module in [f"miss_bank_{j}" for j in range(self.num_bank)]:
             minmiss = np.stack((stats["miss_ratios_core0"]["min"][int(module[-1])],
                                 stats["miss_ratios_core1"]["min"][int(module[-1])],
@@ -30,9 +31,31 @@ class GoalGenerator:
                                   stats["miss_ratios_core1"]["max"][int(module[-1])],
                                   stats["miss_ratios"]["max"][int(module[-1])])
                                    )
-            #miss_target = np.random.uniform(minmiss,maxmiss)
-            miss_target = maxmiss
+            miss_target = np.random.uniform(minmiss,maxmiss)
+            miss_target = 1.5*maxmiss
             return miss_target
+        elif type(module)==dict: 
+            if module["type"]=="miss_ratios":
+                bank = module["bank"]
+                core = module["core"]
+                if core:
+                    minmiss = stats[f"miss_ratios_core{core}"]["min"][bank]
+                    minmiss = (1-np.sign(minmiss)*0.4)*minmiss
+                    maxmiss = 2*stats[f"miss_ratios_core{core}"]["max"][bank]
+
+                else:
+                    minmiss = stats["miss_ratios"]["min"][bank] 
+                    maxmiss = 2*stats["miss_ratios"]["max"][bank]
+                miss_target = np.random.uniform(minmiss,maxmiss)
+                return miss_target
+            if module["type"]=="time":
+                core = module["core"]
+                single = module["single"]
+                if single:
+                    out = np.random.randint(0.6*stats[f"time_core{core}_alone"]["min"],4.0*stats[f"time_core{core}_alone"]["max"],(1,))
+                else:
+                    out = np.random.randint(0.6*stats[f"time_core{core}_together"]["min"],4.0*stats[f"time_core{core}_together"]["max"],(1,))
+                return out
         elif module in [f"miss_count_bank_{j}" for j in range(self.num_bank)]:
             minmiss = np.stack((stats["miss_count_core0"]["min"][int(module[-1])],
                                 stats["miss_count_core1"]["min"][int(module[-1])],
@@ -50,9 +73,7 @@ class GoalGenerator:
                                 ))
             minmiss = (1-np.sign(minmiss)*0.4)*minmiss
             maxmiss = np.stack((stats["diff_ratios_core0"]["max"][int(module[-1])],
-                                  stats["diff_ratios_core1"]["max"][int(module[-1])]
-                                  )
-                                   )
+                                  stats["diff_ratios_core1"]["max"][int(module[-1])]))
             diff_ratios_target = np.random.uniform(minmiss,maxmiss)
             return diff_ratios_target
 

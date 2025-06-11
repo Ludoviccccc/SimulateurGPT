@@ -14,7 +14,7 @@ def diversity(data:[np.ndarray,np.ndarray],bins:[np.ndarray, np.ndarray]):
 def comparaison(content_random, content_imgep = None, name = None):
     fig, axs = plt.subplots(4,4, figsize = (15,10), layout='constrained')
     for j in range(4):
-        bins = np.arange(-1.0,1.0,0.1)
+        bins = np.arange(-1.0,1.0,0.05)
         axs[j,0].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core0"][:,j],  bins=bins,alpha = .5, label="random")
         axs[j,0].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core0"][:,j],bins=bins,alpha = .5, label="imgep")
         axs[j,0].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(S_0,)]")
