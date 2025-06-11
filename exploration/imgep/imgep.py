@@ -7,7 +7,7 @@ from exploration.imgep.goal_generator import GoalGenerator
 from sim.sim_use import make_random_paire_list_instr
 import random
 
-from exploration.imgep.intrinsec_reward import IR
+from exploration.imgep.intrinsic_reward import IR
 
 class IMGEP:
     def __init__(self,N:int,
@@ -47,8 +47,7 @@ class IMGEP:
             observation = self.env(parameter)
             if i>=self.N_init:
                 self.ir(parameter=parameter,
-                    observation=observation,
-                    goal=goal,
-                    module = module,
-                    history=self.H)
+                        observation=observation,
+                        goal=goal,
+                        module = module)
             self.H.store({"program":parameter}|observation)

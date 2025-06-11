@@ -10,7 +10,7 @@ from exploration.imgep.OptimizationPolicy import OptimizationPolicykNN
 from exploration.imgep.imgep import IMGEP
 import matplotlib.pyplot as plt
 from visu import representation, comparaison
-from exploration.imgep.intrinsec_reward import IR
+from exploration.imgep.intrinsic_reward import IR
 if __name__=="__main__":
     N = int(30)
     N_init = 5
@@ -47,7 +47,7 @@ if __name__=="__main__":
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
         H_imgep = History(max_size=N)
-        ir = IR(modules=modules)
+        ir = IR(modules,H_imgep)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
