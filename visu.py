@@ -123,7 +123,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     plt.close()
 
 
-def comparaison2(content_random, content_imgep = None, name = None):
+def comparaison2(content_random, content_imgep = None, name = None,k = None):
     plt.figure()
     fig, axs = plt.subplots(4,1, figsize = (15,10), layout='constrained')
 
@@ -136,13 +136,13 @@ def comparaison2(content_random, content_imgep = None, name = None):
         axs[j].set_ylabel("diversity")
         axs[j].plot(range(0,ll,100),diversity_ratio_random, label="random")
         axs[j].plot(range(0,ll,100),diversity_ratio_imgep, label="imgep")
-        axs[j].set_title(f"miss_ratios vs miss ratios together core 0, bank {j}")
+        axs[j].set_title(f"miss_ratios vs miss ratios together core 0, bank {j} k = "+str(k))
         axs[j].legend()
     if name:
         plt.savefig(f"image/{name}")
     plt.show()
     plt.close()
-def diversity_time_iteration(content_random, content_imgep, name=None):
+def diversity_time_iteration(content_random, content_imgep, name=None,title=None):
     ll = len(content_random["miss_ratios_core0"])
     bins = np.linspace(0,1000,21)
     diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
@@ -152,7 +152,10 @@ def diversity_time_iteration(content_random, content_imgep, name=None):
     plt.plot(range(0,ll,100),diversity_time_imgep, label="imgep")
     plt.xlabel("iteration")
     plt.ylabel("diversity")
-    plt.title("time")
+    if title:
+        plt.title(title)
+    else:
+        plt.title("time")
     plt.legend()
     if name:
         plt.savefig(f"image/{name}")

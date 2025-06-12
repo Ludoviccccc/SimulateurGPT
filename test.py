@@ -46,7 +46,7 @@ if __name__=="__main__":
         H_rand.save_pickle(f"history_rand_N_{N}")
 
 
-    for k in [4]:
+    for k in []:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
@@ -62,5 +62,5 @@ if __name__=="__main__":
             with open(name, "rb") as f:
                 content_imgep = pickle.load(f)
             comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k_moins_un +1}",f"image/comp_times_k{k_moins_un+1}"])
-            comparaison2(content_random, content_imgep, name = f"comp_ratios_iteration_{k_moins_un +1}")
-            diversity_time_iteration(content_random, content_imgep, f"time_diversity_{k_moins_un+1}")
+            comparaison2(content_random, content_imgep, name = f"comp_ratios_iteration_{k_moins_un +1}", k = k_moins_un + 1)
+            diversity_time_iteration(content_random, content_imgep, f"time_diversity_{k_moins_un+1}", title=f"time, k = {k_moins_un+1}")
