@@ -57,7 +57,7 @@ if __name__=="__main__":
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
     N = 2000
-    if True:
+    if False:
         for k_moins_un,name in enumerate([f"data/history_kNN_{k}_N_{N}_0" for k in [1,2,3,4]]):
             with open(name, "rb") as f:
                 content_imgep = pickle.load(f)

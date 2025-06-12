@@ -134,17 +134,17 @@ Next, in order to observe more spreading in the y-axis of the miss ratios scatte
 #### k = 1
 ![Alt text](image/comp_ratios_1.png)
 ![Alt text](image/comp_times_k1.png)
-![Alt text](image/itime_diversity_1.png)
+![Alt text](image/time_diversity_1.png)
 
 #### k = 2
 ![Alt text](image/comp_ratios_2.png)
 ![Alt text](image/comp_times_k2.png)
-![Alt text](image/itime_diversity_2.png)
+![Alt text](image/time_diversity_2.png)
 #### k = 3
 ![Alt text](image/comp_ratios_3.png)
 ![Alt text](image/comp_times_k3.png)
-![Alt text](image/itime_diversity_3.png)
+![Alt text](image/time_diversity_3.png)
 #### k = 4
 ![Alt text](image/comp_ratios_4.png)
 ![Alt text](image/comp_times_k4.png)
-![Alt text](image/itime_diversity_4.png)
+![Alt text](image/time_diversity_4.png)
