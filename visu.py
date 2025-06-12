@@ -56,6 +56,7 @@ def comparaison(content_random, content_imgep = None, name = None):
         axs[j,3].grid()
     if name:
         plt.savefig(name[0])
+    plt.close()
 
     bins = np.linspace(0,1000,21)
     diversity_time_rand = diversity([content_random["time_core0_alone"],content_random["time_core0_together"]], [bins, bins])
@@ -111,7 +112,6 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[2,0].scatter(content_imgep["time_core0_together"],content_imgep["time_core1_together"], label="imgep", alpha = .5)
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
-    axs[2,0].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[2,0].legend()
     axs[2,0].set_xticks(bins)
     axs[2,0].set_yticks(bins)
@@ -120,6 +120,44 @@ def comparaison(content_random, content_imgep = None, name = None):
 
     if name:
         plt.savefig(name[1])
+    plt.close()
+
+
+def comparaison2(content_random, content_imgep = None, name = None):
+    plt.figure()
+    fig, axs = plt.subplots(4,1, figsize = (15,10), layout='constrained')
+
+    ll = len(content_random["miss_ratios_core0"])
+    for j in range(4):
+        bins = np.arange(-1.0,1.0,0.05)
+        diversity_ratio_random = [diversity([content_random["miss_ratios_core0"][:k,j],  content_random["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
+        diversity_ratio_imgep = [diversity([content_imgep["miss_ratios_core0"][:k,j],  content_imgep["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
+        axs[j].set_xlabel("iteration")
+        axs[j].set_ylabel("diversity")
+        axs[j].plot(range(0,ll,100),diversity_ratio_random, label="random")
+        axs[j].plot(range(0,ll,100),diversity_ratio_imgep, label="imgep")
+        axs[j].set_title(f"miss_ratios vs miss ratios together core 0, bank {j}")
+        axs[j].legend()
+    if name:
+        plt.savefig(f"image/{name}")
+    plt.show()
+    plt.close()
+def diversity_time_iteration(content_random, content_imgep, name=None):
+    ll = len(content_random["miss_ratios_core0"])
+    bins = np.linspace(0,1000,21)
+    diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
+    diversity_time_imgep = [diversity([content_imgep["time_core0_together"][:k],content_imgep["time_core1_together"][:k]],[bins, bins]) for k in range(0,ll,100)]
+    plt.figure()
+    plt.plot(range(0,ll,100),diversity_time_random, label="random")
+    plt.plot(range(0,ll,100),diversity_time_imgep, label="imgep")
+    plt.xlabel("iteration")
+    plt.ylabel("diversity")
+    plt.title("time")
+    plt.legend()
+    if name:
+        plt.savefig(f"image/{name}")
+    plt.show()
+    plt.close()
 
 def representation(content, content2 = None):
     if content2:
