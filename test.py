@@ -11,6 +11,21 @@ from exploration.imgep.imgep import IMGEP
 import matplotlib.pyplot as plt
 from visu import representation, comparaison, comparaison2, diversity_time_iteration
 from exploration.imgep.intrinsic_reward import IR
+def test(modules,num_bank):
+    N = 500
+    N_init = 5
+    mutation_rate  = .1
+    periode = 4
+    for k in [1]:
+        print(f"start: k = {k}, N={N}")
+        G = GoalGenerator(num_bank = num_bank, modules = modules)
+        Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
+        H_imgep = History(max_size=N)
+        ir = IR(modules,H_imgep, G)
+        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
+        imgep()
+        H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
+        print(f"done")
 if __name__=="__main__":
     N = int(2000)
     N_init = 500
@@ -28,15 +43,19 @@ if __name__=="__main__":
     dict_modules = [{"type":"miss_ratios","bank":bank, "core":core} for core in [None, 0,1] for bank in range(num_bank)]
     dict_modules2 = [{"type":"time", "core":core,"single":single} for core in range(2) for single in [True, False]]
     modules = modules + dict_modules2 + dict_modules
-
+    print(f"{len(modules)} modules")
+    #modules = [f"miss_count_bank_{j}" for j in range(num_bank)]
 
 
     En = Env(length_programs=length_programs, max_len=max_len)
 
     H_rand = History(max_size= N)
     H2_rand = History(max_size=N)
-
     rand = RANDOM(N = N,E = En, H = H_rand, H2 = H2_rand)
+
+
+    test(modules, num_bank)
+
     try:
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
             content_random = pickle.load(f)
@@ -51,7 +70,7 @@ if __name__=="__main__":
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=50)
         H_imgep = History(max_size=N)
-        ir = IR(modules,H_imgep)
+        ir = IR(modules,H_imgep, G)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")

@@ -45,9 +45,9 @@ class IMGEP:
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
             observation = self.env(parameter)
-            #if i>=self.N_init:
-            #    self.ir(parameter=parameter,
-            #            observation=observation,
-            #            goal=goal,
-            #            module = module)
+            if i>=self.N_init:
+                self.ir(parameter=parameter,
+                        observation=observation,
+                        goal=goal,
+                        module = module)
             self.H.store({"program":parameter}|observation)

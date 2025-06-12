@@ -84,7 +84,7 @@ class GoalGenerator:
             stat = self.data2feature(stats_, module)
             minmiss = .6*stat.min(axis=1)
             maxmiss = 1*stat.max(axis=1)
-            miss_count_target = 1.5* maxmiss
+            miss_count_target = np.floor(1.5* maxmiss)
             return miss_count_target
         elif module in [f"diff_ratios_bank_{j}" for j in range(self.num_bank)]:
             stat = self.data2feature(stats_, module)
