@@ -7,11 +7,10 @@ from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
 import matplotlib.pyplot as plt
 class runpgrms: 
-    def __init__(self, core0, core1, max_instr, interconnect, ddr, max_len =350, num_banks = 4):   
+    def __init__(self, core0, core1, interconnect, ddr, num_banks = 4):   
         self.nb_read =0   
         self.interconnect = interconnect
         self.ddr = ddr
-        self.max_instr = max_instr  
         self.num_banks = num_banks
         
         self.core0 = core0
@@ -23,7 +22,7 @@ class runpgrms:
         self.list_acces_ddr1 = []    
         self.list_best_request1 = []    
         self.list_address1 = []   
-        self.max_len = max_len
+        #self.max_len = max_len
         self.miss_count = np.zeros(self.num_banks) 
         self.hits_count = np.zeros(self.num_banks)
         self.ratios = None
@@ -100,28 +99,28 @@ class runpgrms:
         denominator[denominator==0] = -1
         self.ratios = miss/(denominator)
         self.ratios[self.ratios<0] = -1
-    def acces_history(self):   
-        a = np.zeros(self.max_instr)   
-        b = np.zeros(self.max_instr)   
-        a[:len(self.list_acces_ddr0)] = self.list_acces_ddr0
-        b[:len(self.list_acces_ddr1)] = self.list_acces_ddr1
-        return a*b
-    def addr_core(self,j):
-        a = np.zeros(self.max_instr) - 1
-        if j==0:
-            a[:len(self.list_address0)] = self.list_address0
-        elif j==1:
-            a[:len(self.list_address1)] = self.list_address1
-        return a
-    def addr_obs(self):
-        return {"addr":np.concatenate((self.addr_core(0), self.addr_core(1)), axis =0)}
-    def addr_history(self):
-        a = self.addr_core(0)
-        b = self.addr_core(1)
-        return a==b
-    def same_acces(self):
-        out = self.addr_history()*self.acces_history()*1.0
-        return out
+    #def acces_history(self):   
+    #    a = np.zeros(self.max_instr)   
+    #    b = np.zeros(self.max_instr)   
+    #    a[:len(self.list_acces_ddr0)] = self.list_acces_ddr0
+    #    b[:len(self.list_acces_ddr1)] = self.list_acces_ddr1
+    #    return a*b
+    #def addr_core(self,j):
+    #    a = np.zeros(self.max_instr) - 1
+    #    if j==0:
+    #        a[:len(self.list_address0)] = self.list_address0
+    #    elif j==1:
+    #        a[:len(self.list_address1)] = self.list_address1
+    #    return a
+    #def addr_obs(self):
+    #    return {"addr":np.concatenate((self.addr_core(0), self.addr_core(1)), axis =0)}
+    #def addr_history(self):
+    #    a = self.addr_core(0)
+    #    b = self.addr_core(1)
+    #    return a==b
+    #def same_acces(self):
+    #    out = self.addr_history()*self.acces_history()*1.0
+    #    return out
 def make_random_list_instr(length = 5, core = "0"):
     out = []
     for j in range(length):
@@ -137,9 +136,11 @@ def make_random_list_instr(length = 5, core = "0"):
             "func":lambda val: None,
             "core":core}) 
     return out  
-def make_random_paire_list_instr(length:int=50)->dict:
+def make_random_paire_list_instr(length:int=50,length2:int=None)->dict:
     assert type(length) == int
+    if not length2:
+        length2 = length
     instructions0 = make_random_list_instr(length=length, core=0)
-    instructions1 = make_random_list_instr(length=length, core=1)
+    instructions1 = make_random_list_instr(length=length2, core=1)
     return  {"core0": [instructions0],"core1":[instructions1]}
 

@@ -9,13 +9,12 @@ class Env:
                 l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2},
                 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4},
                 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8},
-                length_programs = 50,
-                max_len=350):
+                ):
         self.l1_conf = l1_conf
         self.l2_conf = l2_conf
         self.l3_conf = l3_conf
-        self.max_len = max_len
-        self.length_programs = length_programs
+        #self.max_len = max_len
+        #self.length_programs = length_programs
     def __call__(self, parameter:dict)->dict:
         program = self._make_program()
         program0 = self._make_program()
@@ -44,4 +43,4 @@ class Env:
         interconnect = Interconnect(ddr, delay=5, bandwidth=4)
         core0 = MultiLevelCache(0, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
         core1 = MultiLevelCache(1, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
-        return runpgrms(core0, core1, self.length_programs, interconnect, ddr, max_len=self.max_len)
+        return runpgrms(core0, core1, interconnect, ddr)

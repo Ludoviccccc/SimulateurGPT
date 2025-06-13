@@ -25,7 +25,7 @@ def random_exploration(core0, core1,interconnect,ddr, budget:int=50, max_instr:i
     return list_intersection, list_obj
 
 class RANDOM:
-    def __init__(self,N:int,E:Env,H:History, H2:History=None):
+    def __init__(self,N:int,E:Env,H:History, H2:History=None,max_=50):
         """
         N: int. The experimental budget
         H: History. Buffer containing codes and signature pairs
@@ -34,8 +34,11 @@ class RANDOM:
         self.H = H
         self.H2 = H2
         self.N = N
+        self.max_ = max_
     def __call__(self):
         for i in range(self.N):
-            parameter = make_random_paire_list_instr()
+            L1 = int(np.random.randint(5,self.max_,(1,))[0])
+            L2 = int(np.random.randint(5,self.max_,(1,))[0])
+            parameter = make_random_paire_list_instr(L1,L2)
             self.H.store({"program":parameter}|self.env(parameter))
             self.H2.store({"program":parameter}|self.env(parameter))

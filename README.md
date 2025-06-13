@@ -129,7 +129,8 @@ The result of an exploration with **kNN** with k=1,2,3
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	  
-Next, in order to observe more spreading in the y-axis of the miss ratios scatter plots, I will add differences of the ratio, together vs in isolation. 
+Next, in order to observe more spreading in the y-axis of the miss ratios scatter plots, I add differences of the ratio, together vs in isolation. 
+As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
 
 #### k = 1
 ![Alt text](image/comp_ratios_1.png)

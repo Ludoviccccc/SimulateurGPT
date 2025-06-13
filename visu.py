@@ -15,24 +15,24 @@ def comparaison(content_random, content_imgep = None, name = None):
     fig, axs = plt.subplots(4,4, figsize = (15,10), layout='constrained')
     for j in range(4):
         bins = np.arange(-1.0,1.0,0.05)
-        axs[j,0].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core0"][:,j],  bins=bins,alpha = .5, label="random")
         axs[j,0].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core0"][:,j],bins=bins,alpha = .5, label="imgep")
+        axs[j,0].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core0"][:,j],  bins=bins,alpha = .5, label="random")
         axs[j,0].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(S_0,)]")
         axs[j,0].set_title("row miss hits ratio difference")
         axs[j,0].legend()
 
 
 
-        axs[j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
         axs[j,1].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j],bins=bins,alpha = .5, label="imgep")
+        axs[j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
         axs[j,1].set_xlabel(f"ratio[bank{j+1},(S_0,S_1)] - ratio[bank{j+1},(,S_1)]")
         axs[j,1].set_title("row miss hits ratio difference")
         axs[j,1].legend()
 
         diversity_ratio_random = diversity([content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j]], [bins, bins])
         diversity_ratio_imgep = diversity([content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j]], [bins, bins])
-        axs[j,2].scatter(content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j],  label="(S_0,) random", alpha = .5)
         axs[j,2].scatter(content_imgep["miss_ratios_core0"][:,j],  content_imgep["miss_ratios"][:,j],label="(S_0,) imgep", alpha = .5)
+        axs[j,2].scatter(content_random["miss_ratios_core0"][:,j],  content_random["miss_ratios"][:,j],  label="(S_0,) random", alpha = .5)
         axs[j,2].set_xlabel("miss ratio alone")
         axs[j,2].set_ylabel("(S_0,S_1)")
         axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
@@ -44,8 +44,8 @@ def comparaison(content_random, content_imgep = None, name = None):
 
 
 
-        axs[j,3].scatter(content_random["miss_ratios_core1"][:,j],  content_random["miss_ratios"][:,j],  label="(,S_1) random", alpha=.5)
         axs[j,3].scatter(content_imgep["miss_ratios_core1"][:,j],  content_imgep["miss_ratios"][:,j],label="(,S_1) imgep", alpha=.5)
+        axs[j,3].scatter(content_random["miss_ratios_core1"][:,j],  content_random["miss_ratios"][:,j],  label="(,S_1) random", alpha=.5)
         axs[j,3].set_xlabel("miss ratio alone")
         axs[j,3].set_ylabel("(S_0,S_1)")
         axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
@@ -64,8 +64,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     diversity_time_imgep = diversity([content_imgep["time_core0_alone"],content_imgep["time_core0_together"]], [bins, bins])
 
     fig, axs = plt.subplots(3,2, figsize = (15,10), layout='constrained')
-    axs[0,0].scatter(content_random["time_core0_alone"],content_random["time_core0_together"], label="random", alpha = .5)
     axs[0,0].scatter(content_imgep["time_core0_alone"],content_imgep["time_core0_together"], label="imgep", alpha = .5)
+    axs[0,0].scatter(content_random["time_core0_alone"],content_random["time_core0_together"], label="random", alpha = .5)
     axs[0,0].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[0,0].set_xlabel("time_core0_alone")
     axs[0,0].set_ylabel("time_core0_together")
@@ -80,8 +80,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     diversity_time_rand = diversity([content_random["time_core1_alone"],content_random["time_core1_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core1_alone"],content_imgep["time_core1_together"]], [bins, bins])
 
-    axs[0,1].scatter(content_random["time_core1_alone"],content_random["time_core1_together"], alpha = .5, label="random")
     axs[0,1].scatter(content_imgep["time_core1_alone"],content_imgep["time_core1_together"], alpha = .5, label="imgep")
+    axs[0,1].scatter(content_random["time_core1_alone"],content_random["time_core1_together"], alpha = .5, label="random")
     axs[0,1].axline(xy1=(0, 0), slope=1, color='r', lw=2)
     axs[0,1].set_xlabel("time_core1_alone")
     axs[0,1].set_ylabel("time_core1_together")
@@ -94,14 +94,14 @@ def comparaison(content_random, content_imgep = None, name = None):
 
     bins_hist= np.linspace(-200,1000,25)
     bins = np.linspace(0,1000,21)
-    axs[1,0].hist(content_random["time_core0_together"] - content_random["time_core0_alone"], bins=bins_hist,alpha=.5, label="random")
     axs[1,0].hist(content_imgep["time_core0_together"] - content_imgep["time_core0_alone"], bins=bins_hist,alpha=.5, label="imgep")
+    axs[1,0].hist(content_random["time_core0_together"] - content_random["time_core0_alone"], bins=bins_hist,alpha=.5, label="random")
     axs[1,0].set_xlabel("time[together] - time[alone]")
     axs[1,0].legend()
 
 
-    axs[1,1].hist(content_random["time_core1_together"]-content_random["time_core1_alone"], bins=bins_hist,alpha = .5, label="random")
     axs[1,1].hist(content_imgep["time_core1_together"]-content_imgep["time_core1_alone"],   bins=bins_hist,alpha = .5, label="imgep")
+    axs[1,1].hist(content_random["time_core1_together"]-content_random["time_core1_alone"], bins=bins_hist,alpha = .5, label="random")
     axs[1,1].set_xlabel("time[together] - time[alone]")
     axs[1,1].legend()
 
@@ -112,8 +112,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     bins = np.arange(0,max(np.max(content_imgep["time_core0_together"]),np.max(content_imgep["time_core1_together"])),50)
     diversity_time_rand = diversity([content_random["time_core0_together"],content_random["time_core1_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core0_together"],content_imgep["time_core1_together"]],[bins, bins])
-    axs[2,0].scatter(content_random["time_core0_together"],content_random["time_core1_together"], label="random", alpha=.5)
     axs[2,0].scatter(content_imgep["time_core0_together"],content_imgep["time_core1_together"], label="imgep", alpha = .5)
+    axs[2,0].scatter(content_random["time_core0_together"],content_random["time_core1_together"], label="random", alpha=.5)
     axs[2,0].set_xlabel("time_core0_together")
     axs[2,0].set_ylabel("time_core1_together")
     axs[2,0].legend()
@@ -134,26 +134,26 @@ def comparaison2(content_random, content_imgep = None, name = None,k = None):
     ll = len(content_random["miss_ratios_core0"])
     for j in range(4):
         bins = np.arange(-1.0,1.0,0.05)
-        diversity_ratio_random = [diversity([content_random["miss_ratios_core0"][:k,j],  content_random["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
         diversity_ratio_imgep = [diversity([content_imgep["miss_ratios_core0"][:k,j],  content_imgep["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
+        diversity_ratio_random = [diversity([content_random["miss_ratios_core0"][:k,j],  content_random["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
         axs[j].set_xlabel("iteration")
         axs[j].set_ylabel("diversity")
-        axs[j].plot(range(0,ll,100),diversity_ratio_random, label="random")
         axs[j].plot(range(0,ll,100),diversity_ratio_imgep, label="imgep")
+        axs[j].plot(range(0,ll,100),diversity_ratio_random, label="random")
         axs[j].set_title(f"miss_ratios vs miss ratios together core 0, bank {j} k = "+str(k))
         axs[j].legend()
     if name:
         plt.savefig(f"image/{name}")
-    plt.show()
+    #plt.show()
     plt.close()
 def diversity_time_iteration(content_random, content_imgep, name=None,title=None):
     ll = len(content_random["miss_ratios_core0"])
     bins = np.linspace(0,1000,21)
-    diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
     diversity_time_imgep = [diversity([content_imgep["time_core0_together"][:k],content_imgep["time_core1_together"][:k]],[bins, bins]) for k in range(0,ll,100)]
+    diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
     plt.figure()
-    plt.plot(range(0,ll,100),diversity_time_random, label="random")
     plt.plot(range(0,ll,100),diversity_time_imgep, label="imgep")
+    plt.plot(range(0,ll,100),diversity_time_random, label="random")
     plt.xlabel("iteration")
     plt.ylabel("diversity")
     if title:
@@ -163,7 +163,7 @@ def diversity_time_iteration(content_random, content_imgep, name=None,title=None
     plt.legend()
     if name:
         plt.savefig(f"image/{name}")
-    plt.show()
+    #plt.show()
     plt.close()
 
 def representation(content, content2 = None):
