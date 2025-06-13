@@ -90,7 +90,8 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,1].set_title(f"imgep:{diversity_time_imgep}, rand:{diversity_time_rand}")
 
 
-    bins_hist = bins = np.linspace(-200,1000,25)
+    bins_hist= np.linspace(-200,1000,25)
+    bins = np.linspace(0,1000,21)
     axs[1,0].hist(content_random["time_core0_together"] - content_random["time_core0_alone"], bins=bins_hist,alpha=.5, label="random")
     axs[1,0].hist(content_imgep["time_core0_together"] - content_imgep["time_core0_alone"], bins=bins_hist,alpha=.5, label="imgep")
     axs[1,0].set_xlabel("time[together] - time[alone]")

@@ -11,19 +11,72 @@ class IR:
         self.history = history
         self.modules = modules
         self.goal_module = goal_module
-        self.progress = {}
+        self.diversity = {}
+    def add(self,name:str, div:int) -> None:
+        if name in self.diversity:
+            self.diversity[name].append(div)
+        else:
+            self.diversity[name] = [div]
+    def progress(self):
+        out = {}
+        for key in self.diversity.keys():
+            #print("len", len(self.diversity[key]))
+            out[key] = np.abs(self.diversity[key][-1] - self.diversity[key][-2])/np.abs(self.diversity[key][-2])
+        return out
     def __call__(self,
                  parameter:dict[list], 
                  observation:dict[list],
                  goal:np.ndarray,
                  module):
-        print("module",module)
-        def feature(module,observation):
-            if type(module)==dict:
-                observation_bis = {k:[observation[k]] for k in observation.keys()}
-                feature = self.goal_module.data2feature(observation_bis, module)
-                if module["type"] in self.progress:
-                    self.progress.append(np.linalg.norm(goal-feature))
-                elif:
-                    self.progress[module["type"]] = [np.linalg.norm(goal-feature)]
+        for module in self.modules:
+            feature = self.goal_module.data2feature(self.history.memory_perf, module)
+            #print(feature.shape)
+            #print("module", module)
+            if type(module) is dict:
+                if module["type"] == "miss_ratios":
+                    core = module["core"]
+                    bank = module["bank"]
+                    if core!=None:
+                        name = f"miss_core_{core}_bank_{bank}"
+                    else:
+                        name = f"miss_together_bank_{bank}"
+                    bins = np.linspace(0,1,21)
+                elif module["type"] == "time":
+                    core = module["core"]
+                    single = module["single"]
+                    if single:
+                        name = f"time_{core}_isolation"
+                    else:
+                        name = f"time_{core}_mutual"
+                    bins = np.linspace(0,1000,21)
+                hist,_ = np.histogram(feature,bins =bins)
+                div = sum(hist>0)
+                self.add(name, div=div)
+            elif module in [f"miss_bank_{j}" for j in range(self.goal_module.num_bank)]:
+                bins = np.linspace(0,1,21)
+                hist0,_,_ = np.histogram2d(feature[0,:],feature[2,:], bins=[bins, bins])
+                hist1,_,_ = np.histogram2d(feature[1,:],feature[2,:], bins=[bins, bins])
+                div = .5*(np.sum(hist0>0)+np.sum(hist1>0))
+                self.add(module, div=div)
+            elif module in [f"miss_count_bank_{j}" for j in range(self.goal_module.num_bank)]:
+                bins = np.linspace(0,1000,21)
+                hist,_ = np.histogram(feature,bins =bins)
+                div = sum(hist>0)
+                self.add(module,div=div)
+            elif module in [f"diff_ratios_bank_{j}" for j in range(self.goal_module.num_bank)]:
+                bins = np.linspace(0,1,21)
+                hist,_,_ = np.histogram2d(feature[0,:],feature[1,:], bins=[bins, bins])
+                div = np.sum(hist>0)
+                self.add(module,div=div)
+            elif module in ["time","time_diff"]:
+                bins = np.linspace(0,1000,21)
+                hist,_,_ = np.histogram2d(feature[0,:],feature[1,:], bins=[bins, bins])
+                div = np.sum(hist>0)
+                self.add(module,div=div)
+                #print("div", div)
+                #exit()
+        #print(len(self.diversity.keys()))
+        #print(self.diversity.keys())
+        #exit()
+
 

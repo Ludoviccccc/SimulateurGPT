@@ -5,7 +5,9 @@ sys.path.append("../../")
 from exploration.history import History
 
 class GoalGenerator:
-    def __init__(self,num_bank:int,modules:list):
+    def __init__(self,
+                 num_bank:int,
+                 modules:list):
         self.num_bank = num_bank
         self.k_time = 0
         self.k_miss = 0
@@ -21,7 +23,7 @@ class GoalGenerator:
             if module["type"]=="miss_ratios":
                 bank = module["bank"]
                 core = module["core"]
-                if core:
+                if core!=None:
                     out = np.array(stats[f"miss_ratios_core{core}"])[:,bank]
                 else:
                     out = np.array(stats[f"miss_ratios"])[:,bank]
@@ -32,17 +34,16 @@ class GoalGenerator:
                     out = stats[f"time_core{core}_alone"]
                 else:
                     out = stats[f"time_core{core}_together"]
-                return out
         elif module in [f"miss_count_bank_{j}" for j in range(self.num_bank)]:
             out  = np.stack((np.array(stats["miss_count_core0"])[:,int(module[-1])],
-                np.array(stats["miss_count_core1"])[:,int(module[-1])],
-                np.array(stats["miss_count"])[:,int(module[-1])]))
+                            np.array(stats["miss_count_core1"])[:,int(module[-1])],
+                            np.array(stats["miss_count"])[:,int(module[-1])]))
         elif module in [f"diff_ratios_bank_{j}" for j in range(self.num_bank)]:
             out = np.stack((np.array(stats["diff_ratios_core0"])[:,int(module[-1])],
                 np.array(stats["diff_ratios_core1"])[:,int(module[-1])]))
         elif module=="time_diff":
             out = np.stack((np.array(stats["diff_time0"]),np.array(stats["diff_time1"])))
-        return out
+        return np.array(out)
     def __call__(self,H:History, module:str)->np.ndarray:
         assert module in self.modules, f"module {module} unknown"
         #stats = H.stats2()
@@ -92,6 +93,7 @@ class GoalGenerator:
             maxmiss = stat.max(axis=1)
             minmiss = (1-np.sign(minmiss)*0.4)*minmiss
             diff_ratios_target = np.random.uniform(minmiss,maxmiss)
+            #print("diff_ratios_target", diff_ratios_target.shape)
             return diff_ratios_target
 
         elif module=="time_diff":
@@ -100,4 +102,5 @@ class GoalGenerator:
             maxtime = stat.max(axis=1)
             times = np.concatenate((np.floor(1.0*np.random.randint(mintime[0],4.0*maxtime[0],(1,))),
                 np.floor(1.0*np.random.randint(mintime[1],4.0*maxtime[1],(1,)))))
+            #print("times", times.shape)
             return times 
