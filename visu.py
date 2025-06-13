@@ -58,7 +58,8 @@ def comparaison(content_random, content_imgep = None, name = None):
         plt.savefig(name[0])
     plt.close()
 
-    bins = np.linspace(0,1000,21)
+    #bins = np.linspace(0,1000,21)
+    bins = np.arange(0,max(np.max(content_imgep["time_core0_alone"]),np.max(content_imgep["time_core0_together"])),50)
     diversity_time_rand = diversity([content_random["time_core0_alone"],content_random["time_core0_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core0_alone"],content_imgep["time_core0_together"]], [bins, bins])
 
@@ -74,6 +75,7 @@ def comparaison(content_random, content_imgep = None, name = None):
     axs[0,0].grid()
     axs[0,0].set_title(f"imgep:{diversity_time_imgep}, rand:{diversity_time_rand}")
 
+    bins = np.arange(1,max(np.max(content_imgep["time_core1_alone"]),np.max(content_imgep["time_core1_together"])),50)
 
     diversity_time_rand = diversity([content_random["time_core1_alone"],content_random["time_core1_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core1_alone"],content_imgep["time_core1_together"]], [bins, bins])
