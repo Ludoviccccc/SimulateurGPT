@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from visu import representation, comparaison, comparaison2, diversity_time_iteration
 from exploration.imgep.intrinsic_reward import IR
 def test(modules,num_bank):
-    N = 200
+    N = 500
     N_init = 50
     mutation_rate  = .1
     periode = 10
@@ -27,7 +27,7 @@ def test(modules,num_bank):
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
 if __name__=="__main__":
-    test_mode = True
+    test_mode = False
     N = int(2000)
     N_init = 500
     #N = 10
@@ -66,7 +66,7 @@ if __name__=="__main__":
         #save results
         H_rand.save_pickle(f"history_rand_N_{N}")
 
-    ks = []
+    ks = [4]
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)

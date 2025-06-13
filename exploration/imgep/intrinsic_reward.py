@@ -6,23 +6,38 @@ from exploration.imgep.goal_generator import GoalGenerator
 class IR:
     def __init__(self,modules,
             history:History,
-            goal_module:GoalGenerator
+            goal_module:GoalGenerator,
+            window:int=10
             ):
         self.history = history
         self.modules = modules
         self.goal_module = goal_module
         self.diversity = {}
+        self.window = window
     def add(self,name:str, div:int) -> None:
         if name in self.diversity:
             self.diversity[name].append(div)
+            self.diversity[name] = self.diversity[name][-self.window:]
         else:
             self.diversity[name] = [div]
     def progress(self):
         out = {}
         for key in self.diversity.keys():
             #print("len", len(self.diversity[key]))
-            out[key] = np.abs(self.diversity[key][-1] - self.diversity[key][-2])/np.abs(self.diversity[key][-2])
+            out[key] = np.abs(self.diversity[key][-1] - self.diversity[key][0])/np.abs(self.diversity[key][0])
         return out
+    def prob(self)->dict:
+        in_ = self.progress()
+        sum_ = 0
+        probs = {}
+        for key in in_.keys():
+            sum_ += in_[key]
+        for key in in_.keys():
+            probs[key] = in_[key]/sum_
+        return probs
+    def choice(self):
+        probs = self.prob()
+        return self.modules[int(np.random.choice(len(self.modules), 1, p=list(probs.values())))]
     def __call__(self,
                  parameter:dict[list], 
                  observation:dict[list],
@@ -73,10 +88,4 @@ class IR:
                 hist,_,_ = np.histogram2d(feature[0,:],feature[1,:], bins=[bins, bins])
                 div = np.sum(hist>0)
                 self.add(module,div=div)
-                #print("div", div)
-                #exit()
-        #print(len(self.diversity.keys()))
-        #print(self.diversity.keys())
-        #exit()
-
 
