@@ -106,7 +106,8 @@ def comparaison(content_random, content_imgep = None, name = None):
 
 
 
-
+    
+    bins = np.arange(0,max(np.max(content_imgep["time_core0_together"]),np.max(content_imgep["time_core1_together"])),50)
     diversity_time_rand = diversity([content_random["time_core0_together"],content_random["time_core1_together"]], [bins, bins])
     diversity_time_imgep = diversity([content_imgep["time_core0_together"],content_imgep["time_core1_together"]],[bins, bins])
     axs[2,0].scatter(content_random["time_core0_together"],content_random["time_core1_together"], label="random", alpha=.5)

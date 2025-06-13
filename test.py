@@ -66,7 +66,7 @@ if __name__=="__main__":
         #save results
         H_rand.save_pickle(f"history_rand_N_{N}")
 
-    ks = [4]
+    ks = []
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
@@ -78,6 +78,7 @@ if __name__=="__main__":
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
     N = 2000
+    ks = [4]
     
     for k_moins_un,name in [(k,f"data/history_kNN_{k}_N_{N}_0") for k in ks]:
         with open(name, "rb") as f:
