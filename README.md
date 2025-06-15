@@ -73,8 +73,7 @@ By performing exploration, we would like the white space within the scatter plot
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
 	* miss ratio differences for bank 0: $(|ratio[(0,1)] - ratio[(0,\cdot)]|, |ratio[(0,1)] - ratio[(\cdot,1)]|)$
    	* $\cdots$
-* For now, I try to perform an **IMGEP** exploration to explore the only time space using file `test.py`.
-* Further, but not right now, I will implement a module selection method using intrinsic reward based on learning progress.
+* For now, I perform an **IMGEP** exploration to explore the system using file `test.py`.
 ### Goal generator
 Let's note the cores $c_{0}$ and $c_{1}$.
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$, *e.g*:
@@ -105,7 +104,7 @@ class GoalGenerator:
         return np.concatenate((times,times_together))
 ```
 ### Goal strategy achievement
-For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm, ${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$):
+For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm, ${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$:
 *  to select the **k** closest time vectors from our database $\mathcal{H}$. 
 * Once k tuples $((S_{0},S_{1}),(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0})))\in\Theta\times\mathcal{T}$ are selected, mix the pairs of programs together to produce a new one. See function `exploration.imgep.mix_instruction_lists`
 * If `k=1`, the **kNN** model returns the program corresponding to the closest pair from $g$, that is $(S_{0},S_{1})$. If `k>1` the model returns the mixed pair of program.
@@ -115,23 +114,21 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 * perform lights mutations on the program according to a `mutation operator`. See function `exploration.imgep.mutation.mutate_instructions`.
 The performed mutations consist of changing the existing instructions
 ### Results
-The phenomenon is stochastic and the variance seems non negligeable. As Pierre-Yves suggested, I will maybe calculate the empirical mean of the statistics for each program.
 
-The result of an exploration with **kNN** with k=1,2,3
-* I think the shape of the distributions gaussian: This is probably a consequence of **Central limit theorem** ? 
-
+The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with a random exploration for `N=2000` iterations, with `N_init = 500` steps for initialization. 
 * Modules that are used there, are:
 
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
-	* time difference: $|(t_{\cdot,1}(c_{1}),(t_{0,1}(c_{1}))|$
-	* time difference: $|(t_{0,\cdot}(c_{1}),(t_{0,1}(c_{1}))|$
+	* time difference: $|t_{\cdot,1}(c_{1}),- t_{0,1}(c_{1})|$
+	* time difference: $|t_{0,\cdot}(c_{0})- t_{0,1}(c_{0})|$
 	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
    	* $\cdots$
    	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
-   	  
-Next, in order to observe more spreading in the y-axis of the miss ratios scatter plots, I add differences of the ratio, together vs in isolation. 
-As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
-
+   	* miss ratio difference  for bank 0: $|ratio[(0,\cdot)] - ratio[(0,1)]|$
+* The phenomenon is stochastic and the variance seems non negligeable. As Pierre-Yves suggested, I will maybe calculate the empirical mean of the statistics for each program.
+* We can visualise distributions on histograms for time differences and miss ratios differences. The distributions look gaussian, probably a consequence of **Central limit theorem** ? 
+* As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
+* The diversity is higher with IMGEP, for both miss ratios and time spaces. Meanwhile some spaces aren't explored enough. I will have to make a longer exploration to see changes.
 #### k = 1
 ![Alt text](image/comp_ratios_1.png)
 ![Alt text](image/comp_times_k1.png)
