@@ -29,7 +29,7 @@ def test(modules,num_bank):
 if __name__=="__main__":
     np.random.seed(0)
     test_mode = False
-    N = int(2000)
+    N = int(3000)
     N_init = 500
     max_len = 50
     k = 4
@@ -58,7 +58,7 @@ if __name__=="__main__":
         H_rand.save_pickle(f"history_rand_N_{N}")
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
             content_random = pickle.load(f)
-    ks = []
+    ks = [4]
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
@@ -69,14 +69,14 @@ if __name__=="__main__":
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}")
         print(f"done")
-    N = 2000
-    ks = [1,2,3,4]
+    N = 3000
+    ks = [4]
     
     for k_moins_un,name in [(k,f"data/history_kNN_{k}_N_{N}_0") for k in ks]:
         with open(name, "rb") as f:
             content_imgep = pickle.load(f)
-        comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k_moins_un}",f"image/comp_times_k{k_moins_un}",f"image/comp_count_{k_moins_un}"])
-        comparaison_ratios_iterations(content_random, content_imgep, name = f"comp_ratios_iteration_{k_moins_un}", k = k_moins_un + 1)
-        diversity_time_iteration(content_random, content_imgep, f"time_diversity_{k_moins_un}",title=f"time, k = {k_moins_un}")
-    ks = [1,2,3,4,5]
+        comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k_moins_un}_{N}",f"image/comp_times_k{k_moins_un}_{N}",f"image/comp_count_{k_moins_un}_{N}"])
+        comparaison_ratios_iterations(content_random, content_imgep, name = f"comp_ratios_iteration_{k_moins_un}_{N}", k = k_moins_un + 1)
+        diversity_time_iteration(content_random, content_imgep, f"time_diversity_{k_moins_un}_{N}",title=f"time, k = {k_moins_un}")
+    ks = [4]
     diversity_time_iteration2(content_random,[(k,f"data/history_kNN_{k}_N_{N}_0") for k in ks],"comparaison_time_diversity")

@@ -105,7 +105,7 @@ class runpgrms:
         self.ratios[self.ratios<0] = -1
 
         denominator_tab  = miss_tab + hits_tab
-        denominator_tab[denominator==0] = -1
+        denominator_tab[denominator_tab==0] = -1
         self.ratios_tab = miss_tab/(denominator_tab)
         self.ratios_tab[self.ratios_tab<0] = -1
 def make_random_list_instr(length = 5, core = "0"):
