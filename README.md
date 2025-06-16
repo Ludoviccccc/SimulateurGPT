@@ -68,9 +68,7 @@ By performing exploration, we would like the white space within the scatter plot
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
 	* time difference: $|(t_{\cdot,1}(c_{1})-(t_{0,1}(c_{1}))|$
 	* time difference: $|(t_{0,\cdot}(c_{1})-(t_{0,1}(c_{1}))|$
-	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in\mathbb{R}^{3}, \mbox{with bank} bk\in\{1,2,3,4\}$
-   	* $\cdots$
-   	* miss ratio for bank 4 : $(ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)])\in\mathbb{R}^{3}$
+	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in\mathbb{R}^{3}, \mbox{with bank } bk\in{1,2,3,4}$
 	* miss ratio differences for bank 0, core 0: $|ratio[(0,1)] - ratio[(0,\cdot)]|, |ratio[(0,1)] - ratio[(\cdot,1)]|)$
 	* miss ratio differences for bank 0, core 0: $|ratio[(0,1)] - ratio[(0,\cdot)]|, |ratio[(0,1)] - ratio[(\cdot,1)]|)$
    	* $\cdots$
