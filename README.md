@@ -66,16 +66,19 @@ By performing exploration, we would like the white space within the scatter plot
 ## IMGEP
 * I would like to perform a modular approach of IMGEP with several modules : 
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
-	* time difference: $|(t_{\cdot,1}(c_{1})-(t_{0,1}(c_{1}))|$
-	* time difference: $|(t_{0,\cdot}(c_{1})-(t_{0,1}(c_{1}))|$
-	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in\mathbb{R}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}$
+	* time difference core 0: $|(t_{0,\cdot}(c_{0})-(t_{0,1}(c_{0}))|$
+	* time difference core 1: $|(t_{\cdot,1}(c_{1})-(t_{0,1}(c_{1}))|$
+	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in{[0,1]}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}$
+	* miss ratio in isolation core 0: $ratio[(0,\cdot),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
+	* miss ratio in isolation core 1: $ratio[(\cdot,1),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
+	* mutual miss ratio: $ratio[(0,1),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
 	* miss ratio differences core 0: $|ratio[(0,1),bk] - ratio[(0,\cdot),bk]|, |ratio[(0,1),bk] - ratio[(\cdot,1),bk]|), \mbox{with bank } bk\in\\{1,2,3,4\\}$
 	* miss ratio differences core 1: $|ratio[(0,1),bk] - ratio[(0,\cdot),bk]|, |ratio[(0,1),bk] - ratio[(\cdot,1),bk]|), \mbox{with bank } bk\in\\{1,2,3,4\\}$
    	* $\cdots$
 ### Goal generator
 Let's note the cores $c_{0}$ and $c_{1}$.
 * Periodically set the sampling boundaries based on the history $\mathcal{H}$, *e.g*:
-	* $min T (c_{0}),max T (c_{0}),min T (c_{1}),max T (c_{1})$ $ \leftarrow \mathcal{H}.stats()$
+	* $min T (c_{0}),max T (c_{0}),min T (c_{1}),max T (c_{1}) \leftarrow \mathcal{H}.stats()$
 * Sample the time vector $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$ in two stages:
 
 	* $(t_{\cdot,1},t_{0,\cdot})\sim (\mathcal{U}([min T (c_{0}), max T (c_{0})]),\mathcal{U}([min T (c_{1}), max T (c_{1})]))$
