@@ -121,6 +121,7 @@ class DDRMemory:
             #print(f"                  ↳ Bank {bank}, Row {row} | {row_status} | Will complete at Cycle {completion_time}")
             return {"addr":req.addr,
                     "bank":bank,
+                    "row": row,
                     "delay":delay,
                     "status":row_status, 
                     "emmission_cycle":req.num_instr, 

@@ -47,7 +47,9 @@ class IMGEP:
                         module = random.choice(self.modules)
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
-            observation = self.env(parameter)
+            observation = self.env.call2(parameter)
+            #print(observation)
+            #exit()
             if (i-self.N_init)%self.periode==0 and i>=self.N_init and True:
                 self.ir(parameter=parameter,
                         observation=observation,

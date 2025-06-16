@@ -81,13 +81,17 @@ class runpgrms:
     def reorder(self):
         hits = np.zeros(self.num_banks)
         miss = np.zeros(self.num_banks)
+        hits_tab = np.zeros((2,self.num_banks))
+        miss_tab = np.zeros((2,self.num_banks))
         for d in self.list_best_request:
             self.miss_count[d["bank"]]+=1*d["status"]=="ROW MISS"
             self.hits_count[d["bank"]]+=1*d["status"]=="ROW HIT"
             if d["status"]=="ROW MISS":
                 miss[d["bank"]] +=1
+                miss_tab[d["row"],d["bank"]] +=1
             else:
                 hits[d["bank"]] +=1
+                hits_tab[d["row"],d["bank"]] +=1
             if d["core"]==0:
                 self.compl_time_core0 = max(self.compl_time_core0,d["completion_time"])
             elif d["core"]==1:
@@ -99,28 +103,11 @@ class runpgrms:
         denominator[denominator==0] = -1
         self.ratios = miss/(denominator)
         self.ratios[self.ratios<0] = -1
-    #def acces_history(self):   
-    #    a = np.zeros(self.max_instr)   
-    #    b = np.zeros(self.max_instr)   
-    #    a[:len(self.list_acces_ddr0)] = self.list_acces_ddr0
-    #    b[:len(self.list_acces_ddr1)] = self.list_acces_ddr1
-    #    return a*b
-    #def addr_core(self,j):
-    #    a = np.zeros(self.max_instr) - 1
-    #    if j==0:
-    #        a[:len(self.list_address0)] = self.list_address0
-    #    elif j==1:
-    #        a[:len(self.list_address1)] = self.list_address1
-    #    return a
-    #def addr_obs(self):
-    #    return {"addr":np.concatenate((self.addr_core(0), self.addr_core(1)), axis =0)}
-    #def addr_history(self):
-    #    a = self.addr_core(0)
-    #    b = self.addr_core(1)
-    #    return a==b
-    #def same_acces(self):
-    #    out = self.addr_history()*self.acces_history()*1.0
-    #    return out
+
+        denominator_tab  = miss_tab + hits_tab
+        denominator_tab[denominator==0] = -1
+        self.ratios_tab = miss_tab/(denominator_tab)
+        self.ratios_tab[self.ratios_tab<0] = -1
 def make_random_list_instr(length = 5, core = "0"):
     out = []
     for j in range(length):

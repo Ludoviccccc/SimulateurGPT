@@ -4,7 +4,7 @@ import numpy as np
 from exploration.random.func import RANDOM, Env
 from exploration.history import History
 import matplotlib.pyplot as plt
-
+import pickle
 def diversity(data:[np.ndarray,np.ndarray],bins:[np.ndarray, np.ndarray]):
     H,_,_ = np.histogram2d(data[0],data[1],bins)
     divers = np.sum(H>0)
@@ -125,9 +125,55 @@ def comparaison(content_random, content_imgep = None, name = None):
     if name:
         plt.savefig(name[1])
     plt.close()
+    #bins = np.arange(1,max(np.max(content_imgep["time_core1_alone"]),np.max(content_imgep["time_core1_together"])),50)
+    #tikcsx = np.arange(1,np.max(content_imgep["miss_count_core0"]),50)
+    fig, axs = plt.subplots(4,4, figsize = (15,10), layout='constrained')
+    for j in range(4):
+        bins = np.arange(-60.0,60.0,1)
+        axs[j,0].hist(content_imgep["miss_count"][:,j] - content_imgep["miss_count_core0"][:,j],bins=bins,alpha = .5, label="imgep")
+        axs[j,0].hist(content_random["miss_count"][:,j] - content_random["miss_count_core0"][:,j],  bins=bins,alpha = .5, label="random")
+        axs[j,0].set_xlabel(f"count[bank{j+1},(S_0,S_1)] - count[bank{j+1},(S_0,)]")
+        axs[j,0].set_title("row miss hits count difference")
+        axs[j,0].legend()
 
 
-def comparaison2(content_random, content_imgep = None, name = None,k = None):
+
+        axs[j,1].hist(content_imgep["miss_count"][:,j] - content_imgep["miss_count_core1"][:,j],bins=bins,alpha = .5, label="imgep")
+        axs[j,1].hist(content_random["miss_count"][:,j] - content_random["miss_count_core1"][:,j],  bins=bins,alpha = .5, label="random")
+        axs[j,1].set_xlabel(f"count[bank{j+1},(S_0,S_1)] - count[bank{j+1},(,S_1)]")
+        axs[j,1].set_title("row miss hits count difference")
+        axs[j,1].legend()
+
+        diversity_count_random = diversity([content_random["miss_count_core0"][:,j],  content_random["miss_count"][:,j]], [bins, bins])
+        diversity_count_imgep = diversity([content_imgep["miss_count_core0"][:,j],  content_imgep["miss_count"][:,j]], [bins, bins])
+        axs[j,2].scatter(content_imgep["miss_count_core0"][:,j],  content_imgep["miss_count"][:,j],label="(S_0,) imgep", alpha = .5)
+        axs[j,2].scatter(content_random["miss_count_core0"][:,j],  content_random["miss_count"][:,j],  label="(S_0,) random", alpha = .5)
+        axs[j,2].set_xlabel("miss count acount")
+        axs[j,2].set_ylabel("(S_0,S_1)")
+        axs[j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+        axs[j,2].set_title(f"bank {j+1}, imgep:{diversity_count_imgep}, rand:{diversity_count_random}")
+        axs[j,2].legend()
+        #axs[j,2].set_xticks(np.linspace(0,1,11))
+        #axs[j,2].set_yticks(np.linspace(0,1,11))
+        #axs[j,2].grid()
+
+
+
+        axs[j,3].scatter(content_imgep["miss_count_core1"][:,j],  content_imgep["miss_count"][:,j],label="(,S_1) imgep", alpha=.5)
+        axs[j,3].scatter(content_random["miss_count_core1"][:,j],  content_random["miss_count"][:,j],  label="(,S_1) random", alpha=.5)
+        axs[j,3].set_xlabel("miss ratio alone")
+        axs[j,3].set_ylabel("(S_0,S_1)")
+        axs[j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+        axs[j,3].set_title(f"bank {j+1}, imgep:{diversity_count_imgep}, rand:{diversity_count_random}")
+        axs[j,3].legend()
+        #axs[j,3].set_xticks(np.linspace(0,1,11))
+        #axs[j,3].set_yticks(np.linspace(0,1,11))
+        #axs[j,3].grid()
+    if name:
+        plt.savefig(name[2])
+    plt.close()
+
+def comparaison_ratios_iterations(content_random, content_imgep = None, name = None,k = None):
     plt.figure()
     fig, axs = plt.subplots(4,1, figsize = (15,10), layout='constrained')
 
@@ -165,7 +211,30 @@ def diversity_time_iteration(content_random, content_imgep, name=None,title=None
         plt.savefig(f"image/{name}")
     #plt.show()
     plt.close()
-
+def diversity_time_iteration2(content_random,name_list=[str],title=None):
+    count_bins = lambda content: np.arange(0,max(np.max(content["time_core0_together"]),np.max(content["time_core1_together"])),50)
+    ll = len(content_random["miss_ratios_core0"])
+    bins = count_bins(content_random)
+    plt.figure()
+    diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
+    plt.plot(range(0,ll,100),diversity_time_random, label="random")
+    for k_,name in name_list:
+        with open(name, "rb") as f:
+            content_imgep = pickle.load(f)
+        bins = count_bins(content_imgep)
+        #bins = np.arange(0,max(np.max(content_imgep["time_core0_together"]),np.max(content_imgep["time_core1_together"])),50)
+        diversity_time_imgep = [diversity([content_imgep["time_core0_together"][:k],content_imgep["time_core1_together"][:k]],[bins, bins]) for k in range(0,ll,100)]
+        plt.plot(range(0,ll,100),diversity_time_imgep, label=f"imgep k = {k_}")
+    plt.xlabel("iteration")
+    plt.ylabel("diversity")
+    if title:
+        plt.title(title)
+    else:
+        plt.title("time")
+    plt.legend()
+    if title:
+        plt.savefig(f"image/{title}")
+    plt.close()
 def representation(content, content2 = None):
     if content2:
         fig, axs = plt.subplots(4,4, figsize = (15,10), layout='constrained')
@@ -235,13 +304,13 @@ def representation(content, content2 = None):
     #plt.show()
 if __name__=="__main__":
     random.seed(0)
-    N = int(10)
+    N = int(100)
     max_len = 500  
-    length_programs = 100
+    #length_programs = 100
 
     H = History(max_size=1000)
     H2 = History(max_size=1000)
-    En = Env(length_programs=length_programs, max_len=max_len)
+    En = Env()
     rand = RANDOM(N = N,E = En, H = H, H2 = H2)
     rand()
     content = H.present_content()
