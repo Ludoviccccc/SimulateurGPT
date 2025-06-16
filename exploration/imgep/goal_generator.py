@@ -34,6 +34,15 @@ class GoalGenerator:
                     out = stats[f"time_core{core}_alone"]
                 else:
                     out = stats[f"time_core{core}_together"]
+            if module["type"]=="miss_ratios_detailled":
+                core = module["core"] 
+                bank = module["bank"]
+                row = module["row"]
+                if core!=None:
+                    out = np.array(stats[f"miss_ratios_core{core}"])[:,row,bank]
+                else:
+                    out = np.array(stats[f"miss_ratios"])[:,row,bank]
+               
         elif module in [f"miss_count_bank_{j}" for j in range(self.num_bank)]:
             out  = np.stack((np.array(stats["miss_count_core0"])[:,int(module[-1])],
                             np.array(stats["miss_count_core1"])[:,int(module[-1])],
@@ -46,19 +55,14 @@ class GoalGenerator:
         return np.array(out)
     def __call__(self,H:History, module:str)->np.ndarray:
         assert module in self.modules, f"module {module} unknown"
-        #stats = H.stats2()
         stats_ = H.memory_perf
+        stat = self.data2feature(stats_, module)
         if module=="time":
-            stat = self.data2feature(stats_, module)
             times = np.random.randint(.6*stat.min(axis=1), 4*stat.max(axis=1))
             delta = np.random.uniform(.6,4.0,(2,))
             times_together = np.floor(delta*times)
             return np.concatenate((times,times_together))
-
-
         elif module in [f"miss_bank_{j}" for j in range(self.num_bank)]:
-
-            stat = self.data2feature(stats_, module)
             minmiss = .6*stat.min(axis=1)
             maxmiss = 1*stat.max(axis=1)
             miss_target = np.random.uniform(minmiss,maxmiss)
@@ -66,41 +70,29 @@ class GoalGenerator:
             return miss_target
         elif type(module)==dict: 
             if module["type"]=="miss_ratios":
-                bank = module["bank"]
-                core = module["core"]
-                stat = self.data2feature(stats_, module)
                 minmiss = min(stat)
                 maxmiss = 2*max(stat)
                 miss_target = np.random.uniform(minmiss,maxmiss)
                 return miss_target
             if module["type"]=="time":
-                stat = self.data2feature(stats_, module)
                 mintime = min(stat)
                 maxtime = max(stat)
-                core = module["core"]
-                single = module["single"]
                 out = np.random.randint(0.6*mintime,4.0*maxtime,(1,))
                 return out
         elif module in [f"miss_count_bank_{j}" for j in range(self.num_bank)]:
-            stat = self.data2feature(stats_, module)
             minmiss = .6*stat.min(axis=1)
             maxmiss = 1*stat.max(axis=1)
             miss_count_target = np.floor(1.5* maxmiss)
             return miss_count_target
         elif module in [f"diff_ratios_bank_{j}" for j in range(self.num_bank)]:
-            stat = self.data2feature(stats_, module)
             minmiss = stat.min(axis=1)
             maxmiss = stat.max(axis=1)
             minmiss = (1-np.sign(minmiss)*0.4)*minmiss
             diff_ratios_target = np.random.uniform(minmiss,maxmiss)
-            #print("diff_ratios_target", diff_ratios_target.shape)
             return diff_ratios_target
-
         elif module=="time_diff":
-            stat = self.data2feature(stats_, module)
             mintime = stat.min(axis=1)
             maxtime = stat.max(axis=1)
             times = np.concatenate((np.floor(1.0*np.random.randint(mintime[0],4.0*maxtime[0],(1,))),
                 np.floor(1.0*np.random.randint(mintime[1],4.0*maxtime[1],(1,)))))
-            #print("times", times.shape)
             return times 

@@ -63,10 +63,9 @@ class Env:
                 "diff_time0":np.mean([np.abs(program[j].compl_time_core0 - program0[j].compl_time_core0)],axis=0),
                 "diff_time1":np.mean([np.abs(program[j].compl_time_core1 - program1[j].compl_time_core1)],axis=0),
 
-                "miss_ratios_detailled": np.mean([program[j].ratios_tab for j in range(self.repetition)],axis=0),
+                "miss_ratios_detailled":    np.mean([program[j].ratios_tab for j in range(self.repetition)],axis=0),
                 "miss_ratios_core0_detailled": np.mean([program0[j].ratios_tab for j in range(self.repetition)],axis=0),
                 "miss_ratios_core1_detailled": np.mean([program1[j].ratios_tab for j in range(self.repetition)],axis=0),
-
                 }
     def _make_program(self):
         ddr = DDRMemory()
