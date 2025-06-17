@@ -73,7 +73,7 @@ if __name__=="__main__":
         H_imgep = History(max_size=N)
         ir = IR(modules,H_imgep, G)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
-        imgep()
+        imgep(lp=False)
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_no_lp")
         print(f"done")
     N = 3000

@@ -98,7 +98,7 @@ The performed mutations consist of changing the existing instructions
 ### Results
 
 The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with a random exploration for `N=2000` iterations, with `N_init = 500` steps for initialization. 
-* Modules that are used there, are:
+* Modules that are used:
 
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
 	* time difference: $|t_{\cdot,1}(c_{1}),- t_{0,1}(c_{1})|$

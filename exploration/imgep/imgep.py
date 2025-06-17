@@ -34,14 +34,14 @@ class IMGEP:
         self.ir = ir
         self.periode = periode
         self.modules = modules 
-    def __call__(self):
+    def __call__(self,lp=True):
         for i in range(self.N):
             if i<self.N_init:
                 parameter = make_random_paire_list_instr()
             else:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0 and i>=self.N_init:
-                    if False and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
+                    if lp and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
                         module = self.ir.choice()
                     else:
                         module = random.choice(self.modules)
