@@ -69,9 +69,9 @@ By performing exploration, we would like the white space within the scatter plot
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))\in\mathbb{R}^{4}$
 	* time difference core 0: $|(t_{0,\cdot}(c_{0})-(t_{0,1}(c_{0}))|\in\mathbb{R}$
 	* time difference core 1: $|(t_{\cdot,1}(c_{1})-(t_{0,1}(c_{1}))|\in\mathbb{R}$
-	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in{[0,1]}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}$
-	* miss ratio in isolation core 0: $ratio[(0,\cdot),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
-	* miss ratio in isolation core 1: $ratio[(\cdot,1),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
+	* miss ratio: $(ratio[(0,\cdot),bk,rw], ratio[(\cdot,1),bk,rw],ratio[(0,1),bk,rw])\in{[0,1]}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}, rw\in\\{1,\cdots, n_{n}\\}$
+	* miss ratio in isolation core 0: $ratio[(0,\cdot),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}\, rw\in\\{1, \cdots,n_{n}\\}$
+	* miss ratio in isolation core 1: $ratio[(\cdot,1),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}$
 	* mutual miss ratio: $ratio[(0,1),bk]\in[0,1], bk\in\\{1,2,3,4\\}$
 	* miss ratio differences core 0: $|ratio[(0,1),bk] - ratio[(0,\cdot),bk]|, \mbox{with bank } bk\in\\{1,2,3,4\\}$
 	* miss ratio differences core 1: $|ratio[(0,1),bk] - ratio[(\cdot,1),bk]|, \mbox{with bank } bk\in\\{1,2,3,4\\}$
