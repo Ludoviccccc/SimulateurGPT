@@ -69,10 +69,10 @@ By performing exploration, we would like the white space within the scatter plot
 	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))\in\mathbb{R}^{4}$
 	* time difference core 0: $|(t_{0,\cdot}(c_{0})-(t_{0,1}(c_{0}))|\in\mathbb{R}$
 	* time difference core 1: $|(t_{\cdot,1}(c_{1})-(t_{0,1}(c_{1}))|\in\mathbb{R}$
-	* miss ratio: $(ratio[(0,\cdot),bk,rw], ratio[(\cdot,1),bk,rw],ratio[(0,1),bk,rw])\in{[0,1]}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}, rw\in\\{1,\cdots, n_{n}\\}$
-	* miss ratio in isolation core 0: $ratio[(0,\cdot),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}\, rw\in\\{1, \cdots,n_{n}\\}$
-	* miss ratio in isolation core 1: $ratio[(\cdot,1),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}$
-	* mutual miss ratio: $ratio[(0,1),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\},row in rw\in\\{1, \cdots,n\\}$
+	* miss ratio: $(ratio[(0,\cdot),bk], ratio[(\cdot,1),bk],ratio[(0,1),bk])\in{[0,1]}^{3}, \mbox{with bank } bk\in\\{1,2,3,4\\}$
+	* miss ratio in isolation core 0: $ratio[(0,\cdot),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}, \mbox{row},rw\in\\{1, \cdots,n_{r}\\}$
+	* miss ratio in isolation core 1: $ratio[(\cdot,1),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\}, \mbox{row},rw\in\\{1, \cdots,n_{r}\\}$
+	* mutual miss ratio: $ratio[(0,1),bk,rw]\in[0,1], bk\in\\{1,2,3,4\\},\mbox{row} in rw\in\\{1, \cdots,n_{r}\\}$
 	* miss ratio differences core 0: $|ratio[(0,1),bk] - ratio[(0,\cdot),bk]|, \mbox{with bank } bk\in\\{1,2,3,4\\}$
 	* miss ratio differences core 1: $|ratio[(0,1),bk] - ratio[(\cdot,1),bk]|, \mbox{with bank } bk\in\\{1,2,3,4\\}$
    	* $\cdots$
@@ -85,6 +85,7 @@ Let's note the cores $c_{0}$ and $c_{1}$.
 	* $(t_{\cdot,1},t_{0,\cdot})\sim (\mathcal{U}([min T (c_{0}), max T (c_{0})]),\mathcal{U}([min T (c_{1}), max T (c_{1})]))$
 
 	* $(t_{0,1}(c_{1}),t_{0,1}(c_{1}))\sim (t_{\cdot,1}(c_{1})\cdot \mathcal{U}([1.0,4.0]),t_{0,\cdot}(c_{0})\cdot \mathcal{U}([1.0,4.0]))$
+* I use an instrinsic reward...
 ### Goal strategy achievement
 For a given time goal $g$, I choose to exploit a **kNN** model with a loss function based on the L2 norm, ${\mathcal{L}}(g)(z) = \sum_{i}{(z_{i} - g_{i})}^{2}$:
 *  to select the **k** closest time vectors from our database $\mathcal{H}$. 
@@ -97,16 +98,7 @@ To provide more efficiency and to avoid working with a limited novelty in our pa
 The performed mutations consist of changing the existing instructions
 ### Results
 
-The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with a random exploration for `N=2000` iterations, with `N_init = 500` steps for initialization. 
-* Modules that are used:
-
-	* time : $(t_{\cdot,1}(c_{1}),t_{0,\cdot}(c_{0}), t_{0,1}(c_{1}),t_{0,1}(c_{0}))$
-	* time difference: $|t_{\cdot,1}(c_{1}),- t_{0,1}(c_{1})|$
-	* time difference: $|t_{0,\cdot}(c_{0})- t_{0,1}(c_{0})|$
-	* miss ratio for bank 0 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
-   	* $\cdots$
-   	* miss ratio for bank 4 : $ratio[(0,\cdot)], ratio[(\cdot,1)],ratio[(0,1)]$
-   	* miss ratio difference  for bank 0: $|ratio[(0,\cdot)] - ratio[(0,1)]|$
+The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with a random exploration for `N=3000` iterations, with `N_init = 500` steps for initialization. 
 * The phenomenon is stochastic and the variance seems non negligeable. As Pierre-Yves suggested, I will maybe calculate the empirical mean of the statistics for each program.
 * We can visualise distributions on histograms for time differences and miss ratios differences. The distributions look gaussian, probably a consequence of **Central limit theorem** ? 
 * As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
