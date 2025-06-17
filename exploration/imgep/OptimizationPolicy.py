@@ -5,28 +5,17 @@ import sys
 sys.path.append("../../")
 from exploration.imgep.mutation import mutate_paire_instructions, mix_instruction_lists
 from exploration.history import History
+from exploration.imgep.features import Features
 
 
 
 
-class OptimizationPolicy:
-    def __init__(self,mutation_rate = .1):
-        """
-        Selects a parameter based on a chosen goal and the history.
-        Takes the code corresponding to the closest signature to the desired goal signature
-        """
-        self.mutation_rate = mutation_rate
-    def __call__(self,goal:dict[list],H)->dict:
-        closest_code = H.select_closest_code(goal) #most promising sample from the history
-        output = self.light_code_mutation(closest_code["program"]) #expansion strategie: small random mutation
-        return output
-    def light_code_mutation(self,programs):
-        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"], mutation_rate = self.mutation_rate)
-        return {"core0":[mutated0[:50]],"core1":[mutated1[:50]]}
-
-
-class OptimizationPolicykNN:
-    def __init__(self,k=4, mutation_rate = 0.1,max_len=50):
+class OptimizationPolicykNN(Features):
+    def __init__(self,
+                k=4,
+                mutation_rate = 0.1,
+                max_len=50):
+        super().__init__()
         self.k = k
         self.mutation_rate = mutation_rate
         self.max_len = max_len
@@ -70,13 +59,24 @@ class OptimizationPolicykNN:
         elif type(module)==dict:
             t = True
             if module["type"]=="miss_ratios":
-                bank = module["bank"]
-                core = module["core"]
-                if core:
-                    keys = [f"miss_ratios_core{core}"]
-                else:
-                    keys = ["miss_ratios"]
-                b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
+                #bank = module["bank"]
+                #core = module["core"]
+                #if core:
+                #    keys = [f"miss_ratios_core{core}"]
+                #else:
+                #    keys = ["miss_ratios"]
+                #b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
+                b = self.data2feature(H.memory_perf,module)
+            if module["type"]=="miss_ratios_detailled":
+                #bank = module["bank"]
+                #core = module["core"]
+                #row = module["row"]
+                #if core:
+                #    keys = [f"miss_ratios_core{core}"]
+                #else:
+                #    keys = ["miss_ratios"]
+                #b = np.array([np.array(H.memory_perf[key])[:,row,bank] for key in keys])
+                b = self.data2feature(H.memory_perf, module)
             elif module["type"]=="time":
                 core = module["core"]
                 single = module["single"]

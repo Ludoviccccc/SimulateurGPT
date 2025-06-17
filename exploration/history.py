@@ -6,9 +6,6 @@ class History:
         self.max_size = max_size
         self.memory_program = {"core0":[],"core1":[]}
         self.memory_perf = {}
-#    def stats2(self):
-#        out = {key:{"min":np.min(self.memory_perf[key],axis=0),"max":np.max(self.memory_perf[key],axis=0)} for key in self.memory_perf.keys()}
-#        return out
     def eviction(self):
         if len(self.memory_program)>self.max_size:
             self.memory_program["core0"] = self.memory_program["core0"][-self.max_size:]

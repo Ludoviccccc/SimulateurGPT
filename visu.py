@@ -182,11 +182,11 @@ def comparaison_ratios_iterations(content_random, content_imgep = None, name = N
         bins = np.arange(-1.0,1.0,0.05)
         diversity_ratio_imgep = [diversity([content_imgep["miss_ratios_core0"][:k,j],  content_imgep["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
         diversity_ratio_random = [diversity([content_random["miss_ratios_core0"][:k,j],  content_random["miss_ratios"][:k,j]], [bins, bins]) for k in range(0,ll,100)]
-        axs[j].set_xlabel("iteration")
-        axs[j].set_ylabel("diversity")
         axs[j].plot(range(0,ll,100),diversity_ratio_imgep, label="imgep")
         axs[j].plot(range(0,ll,100),diversity_ratio_random, label="random")
-        axs[j].set_title(f"miss_ratios vs miss ratios together core 0, bank {j} k = "+str(k))
+        axs[j].set_xlabel("iteration")
+        axs[j].set_ylabel("diversity")
+        axs[j].set_title(f"diversity miss_ratios vs miss ratios together core 0, bank {j} k = "+str(k))
         axs[j].legend()
     if name:
         plt.savefig(f"image/{name}")

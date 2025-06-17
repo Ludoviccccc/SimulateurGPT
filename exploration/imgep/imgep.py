@@ -41,13 +41,13 @@ class IMGEP:
             else:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0 and i>=self.N_init:
-                    if len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
+                    if True and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
                         module = self.ir.choice()
                     else:
                         module = random.choice(self.modules)
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
-            observation = self.env.call2(parameter)
+            observation = self.env(parameter)
             #print(observation)
             #exit()
             if (i-self.N_init)%self.periode==0 and i>=self.N_init and True:

@@ -7,8 +7,10 @@ class IR:
     def __init__(self,modules,
             history:History,
             goal_module:GoalGenerator,
-            window:int=10
+            window:int=10,
+            epsilon:float=.1
             ):
+        self.epsilon = epsilon
         self.history = history
         self.modules = modules
         self.goal_module = goal_module
@@ -23,7 +25,6 @@ class IR:
     def progress(self):
         out = {}
         for key in self.diversity.keys():
-            #print("len", len(self.diversity[key]))
             out[key] = np.abs(self.diversity[key][-1] - self.diversity[key][0])/np.abs(self.diversity[key][0])
         return out
     def prob(self)->dict:
@@ -36,8 +37,17 @@ class IR:
             probs[key] = in_[key]/sum_
         return probs
     def choice(self):
+        """
+        choose the module to explore, the choice is random, based on the learing progress,
+        itself based on the diversity
+        """
         probs = self.prob()
-        return self.modules[int(np.random.choice(len(self.modules), 1, p=list(probs.values())))]
+        C = np.random.binomial(1,self.epsilon)
+        vec = np.zeros(len(self.modules))
+        if C:
+            vec[np.random.randint(0,len(self.modules))] = 1.0
+        probs = (1-C)*np.array(list(probs.values()))+ C*vec
+        return self.modules[int(np.random.choice(len(self.modules), 1, p=probs))]
     def __call__(self,
                  parameter:dict[list], 
                  observation:dict[list],
@@ -64,6 +74,15 @@ class IR:
                     else:
                         name = f"time_{core}_mutual"
                     bins = np.linspace(0,1000,21)
+                elif module["type"] == "miss_ratios_detailled":
+                    core = module["core"]
+                    bank = module["bank"]
+                    row = module["row"]
+                    if core!=None:
+                        name = f"miss_core_{core}_bank_{bank}_core_{core}"
+                    else:
+                        name = f"miss_together_bank_{bank}_core_{core}"
+                    bins = np.linspace(0,1,21)
                 hist,_ = np.histogram(feature,bins =bins)
                 div = sum(hist>0)
                 self.add(name, div=div)

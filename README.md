@@ -24,6 +24,7 @@ A binary tree is used to implement the PLRU algorithm. here is one tree per set.
 
 ## Parameter space
 Parameters are pair of intruction sequences like below:
+I fix the maximum length of the instruction sequences
 ```python
 sequence_core_0 = [{'type': 'r', 'addr': 11, 'core': 0},{'type': 'w', 'addr': 5, 'value': 686, 'core': 0}]
 sequence_core_1 = [{'type': 'w', 'addr': 42, 'value': 686, 'core': 1},{'type': 'r', 'addr': 14,  'core': 1}]
@@ -111,18 +112,18 @@ The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with
 * As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
 * The diversity is higher with IMGEP, for both miss ratios and time spaces. Meanwhile some spaces aren't explored enough. I will have to make a longer exploration to see changes.
 #### k = 1
-![Alt text](image/comp_ratios_1.png)
-![Alt text](image/comp_times_k1.png)
-![Alt text](image/time_diversity_1.png)
+![Alt text](image/comp_ratios_1_3000.png)
+![Alt text](image/comp_times_k1_3000.png)
+![Alt text](image/time_diversity_1_3000.png)
 
 #### k = 2
-![Alt text](image/comp_ratios_2.png)
-![Alt text](image/comp_times_k2.png)
-![Alt text](image/time_diversity_2.png)
+![Alt text](image/comp_ratios_2_3000.png)
+![Alt text](image/comp_times_k2_3000.png)
+![Alt text](image/time_diversity_2_3000.png)
 #### k = 3
-![Alt text](image/comp_ratios_3.png)
-![Alt text](image/comp_times_k3.png)
-![Alt text](image/time_diversity_3.png)
+![Alt text](image/comp_ratios_3_3000.png)
+![Alt text](image/comp_times_k3_3000.png)
+![Alt text](image/time_diversity_3_3000.png)
 #### k = 4
 ![Alt text](image/comp_ratios_4_3000.png)
 ![Alt text](image/comp_times_k4_3000.png)
