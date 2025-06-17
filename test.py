@@ -65,7 +65,7 @@ if __name__=="__main__":
         H_rand.save_pickle(f"history_rand_N_{N}")
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
             content_random = pickle.load(f)
-    ks = []
+    ks = [1,2,3,4]
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
@@ -74,12 +74,12 @@ if __name__=="__main__":
         ir = IR(modules,H_imgep, G)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
         imgep()
-        H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
+        H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_no_lp")
         print(f"done")
     N = 3000
     ks = []
     
-    for k_moins_un,name in [(k,f"data/history_kNN_{k}_N_{N}_lp_0") for k in ks]:
+    for k_moins_un,name in [(k,f"data/history_kNN_{k}_N_{N}_no_lp_0") for k in ks]:
         with open(name, "rb") as f:
             content_imgep = pickle.load(f)
         #comparaison(content_random, content_imgep, name = [f"image/comp_ratios_{k_moins_un}_{N}",f"image/comp_times_k{k_moins_un}_{N}",f"image/comp_count_{k_moins_un}_{N}"])
@@ -88,4 +88,4 @@ if __name__=="__main__":
         comparaison_ratios_iterations(("random",content_random), ("imgep",content_imgep), name = f"comp_ratios_iteration_{k_moins_un}_{N}", k = k_moins_un + 1)
         diversity_time_iteration(content_random, content_imgep, f"time_diversity_{k_moins_un}_{N}",title=f"time, k = {k_moins_un}")
     ks = [1,2,3,4]
-    diversity_time_iteration2(content_random,[(k,f"data/history_kNN_{k}_N_{N}_lp_0") for k in ks],"comparaison_time_diversity")
+    diversity_time_iteration2(content_random,[(k,f"data/history_kNN_{k}_N_{N}_no_lp_0") for k in ks],"comparaison_time_diversity")

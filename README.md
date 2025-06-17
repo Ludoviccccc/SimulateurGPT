@@ -114,12 +114,10 @@ The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with
 #### k = 1
 ![Alt text](image/comp_ratios_1_3000.png)
 ![Alt text](image/comp_times_k1_3000.png)
-![Alt text](image/time_diversity_1_3000.png)
 
 #### k = 2
 ![Alt text](image/comp_ratios_2_3000.png)
 ![Alt text](image/comp_times_k2_3000.png)
-![Alt text](image/time_diversity_2_3000.png)
 #### k = 3
 ![Alt text](image/comp_ratios_3_3000.png)
 ![Alt text](image/comp_times_k3_3000.png)
@@ -127,4 +125,5 @@ The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with
 #### k = 4
 ![Alt text](image/comp_ratios_4_3000.png)
 ![Alt text](image/comp_times_k4_3000.png)
-![Alt text](image/time_diversity_4_3000.png)
+#### Time space exploration evolution over iterations
+![Alt text](image/comparaison_time_diversity.png)
