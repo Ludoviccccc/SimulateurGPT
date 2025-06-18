@@ -218,13 +218,13 @@ def diversity_time_iteration2(content_random,name_list=[str],title=None):
     plt.figure()
     diversity_time_random = [diversity([content_random["time_core0_together"][:k],content_random["time_core1_together"][:k]], [bins, bins]) for k in range(0,ll,100)]
     plt.plot(range(0,ll,100),diversity_time_random, label="random")
-    for k_,name in name_list:
+    for label,k_,name in name_list:
         with open(name, "rb") as f:
             content_imgep = pickle.load(f)
         bins = count_bins(content_imgep)
         #bins = np.arange(0,max(np.max(content_imgep["time_core0_together"]),np.max(content_imgep["time_core1_together"])),50)
         diversity_time_imgep = [diversity([content_imgep["time_core0_together"][:k],content_imgep["time_core1_together"][:k]],[bins, bins]) for k in range(0,ll,100)]
-        plt.plot(range(0,ll,100),diversity_time_imgep, label=f"imgep k = {k_}")
+        plt.plot(range(0,ll,100),diversity_time_imgep, label=f"{label} k = {k_}")
     plt.xlabel("iteration")
     plt.ylabel("diversity")
     if title:

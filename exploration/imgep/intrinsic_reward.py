@@ -83,6 +83,10 @@ class IR:
                     else:
                         name = f"miss_together_bank_{bank}_core_{core}"
                     bins = np.linspace(0,1,21)
+                elif module["type"] =="time_diff":
+                    bins = np.linspace(0,1000,21)
+                    core = module["core"]
+                    name = f"time_diff_core{core}"
                 hist,_ = np.histogram(feature,bins =bins)
                 div = sum(hist>0)
                 self.add(name, div=div)

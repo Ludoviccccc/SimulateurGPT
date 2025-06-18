@@ -7,9 +7,6 @@ from exploration.imgep.mutation import mutate_paire_instructions, mix_instructio
 from exploration.history import History
 from exploration.imgep.features import Features
 
-
-
-
 class OptimizationPolicykNN(Features):
     def __init__(self,
                 k=4,
@@ -21,7 +18,6 @@ class OptimizationPolicykNN(Features):
         self.max_len = max_len
         self.num_bank = 4
     def __call__(self,goal:np.ndarray,H:History, module:str)->dict:
-        #assert module in ["time"]+[f"miss_bank_{j}" for j in range(self.num_bank)], f"module {module} is unknown"
         closest_codes = self.select_closest_codes(H,goal, module) #most promising sample from the history
         output = self.mix(closest_codes) #expansion strategie: small random mutation
         return output
@@ -38,54 +34,7 @@ class OptimizationPolicykNN(Features):
     def select_closest_codes(self,H:History,signature: np.ndarray,module:str)->dict:
         t = False
         assert len(H.memory_program)>0, "history empty"
-        if module=="time":
-            keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
-            b = np.array([np.array(H.memory_perf[key]) for key in keys])
-        elif module in [f"miss_bank_{j}" for j in range(4)]:
-            keys = ["miss_ratios_core0","miss_ratios_core1","miss_ratios"]
-            bank = int(module[-1])
-            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
-        elif module in [f"miss_count_bank_{j}" for j in range(4)]:
-            keys = ["miss_count_core0","miss_count_core1","miss_ratios"]
-            bank = int(module[-1])
-            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
-        elif module=="time_diff":
-            keys = ["time_core0_alone", "time_core1_alone","time_core0_together", "time_core1_together"]
-            b = np.array([np.abs(np.array(H.memory_perf[keys[i+2]]) - np.array(H.memory_perf[keys[i]])) for i in range(2)])
-        elif module in [f"diff_ratios_bank_{j}" for j in range(4)]:
-            bank = int(module[-1])
-            keys = [f"diff_ratios_core{j}" for j in range(2)]
-            b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
-        elif type(module)==dict:
-            t = True
-            if module["type"]=="miss_ratios":
-                #bank = module["bank"]
-                #core = module["core"]
-                #if core:
-                #    keys = [f"miss_ratios_core{core}"]
-                #else:
-                #    keys = ["miss_ratios"]
-                #b = np.array([np.array(H.memory_perf[key])[:,bank] for key in keys])
-                b = self.data2feature(H.memory_perf,module)
-            if module["type"]=="miss_ratios_detailled":
-                #bank = module["bank"]
-                #core = module["core"]
-                #row = module["row"]
-                #if core:
-                #    keys = [f"miss_ratios_core{core}"]
-                #else:
-                #    keys = ["miss_ratios"]
-                #b = np.array([np.array(H.memory_perf[key])[:,row,bank] for key in keys])
-                b = self.data2feature(H.memory_perf, module)
-            elif module["type"]=="time":
-                core = module["core"]
-                single = module["single"]
-                if single:
-                    keys = [f"time_core{core}_alone"]
-                else:
-                    keys = [f"time_core{core}_together"]
-                b = np.array([np.array(H.memory_perf[key]) for key in keys])
-        ##########################################
+        b = self.data2feature(H.memory_perf, module)
         d = self.loss(signature,b)
         idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}
