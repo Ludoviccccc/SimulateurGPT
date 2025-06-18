@@ -17,6 +17,8 @@ class GoalGenerator(Features):
         assert module in self.modules, f"module {module} unknown"
         stats_ = H.memory_perf
         stat = self.data2feature(stats_, module)
+        print("module", module)
+        print("stat shape", stat.shape)
         if module=="time":
             times = np.random.randint(.6*stat.min(axis=1), 4*stat.max(axis=1))
             return times
@@ -40,7 +42,7 @@ class GoalGenerator(Features):
         elif module in [f"miss_count_bank_{j}" for j in range(self.num_bank)]:
             min_ = .6*stat.min(axis=1)
             max_ = stat.max(axis=1)
-            out = np.floor(1.5* max_)
+            out = np.random.randint(0.6*min_,4.0*max_,(1,))
             return out
         elif module in [f"diff_ratios_bank_{j}" for j in range(self.num_bank)]:
             min_ = stat.min(axis=1)
