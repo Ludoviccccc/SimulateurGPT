@@ -112,7 +112,7 @@ def make_random_list_instr(length = 5, core = "0"):
     out = []
     for j in range(length):
         addr = random.randint(0, 20)    
-        if random.random() < .2:   
+        if np.random.binomial(1,0.5):
             out.append({"type":"w",
                          "addr":addr,  
                          "value":random.randint(0, 1000),  
@@ -123,10 +123,10 @@ def make_random_list_instr(length = 5, core = "0"):
             "func":lambda val: None,
             "core":core}) 
     return out  
-def make_random_paire_list_instr(length:int=50,length2:int=None)->dict:
-    assert type(length) == int
-    if not length2:
-        length2 = length
+def make_random_paire_list_instr(max_len)->dict:
+    #assert type(length) == int
+    length = np.random.randint(1,max_len)
+    length2 = np.random.randint(1,max_len)
     instructions0 = make_random_list_instr(length=length, core=0)
     instructions1 = make_random_list_instr(length=length2, core=1)
     return  {"core0": [instructions0],"core1":[instructions1]}

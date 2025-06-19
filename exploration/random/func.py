@@ -29,6 +29,9 @@ class RANDOM:
         """
         N: int. The experimental budget
         H: History. Buffer containing codes and signature pairs
+        H2: History a second history to make comparaisons.
+        max_l: int. Max length for of the instruction sequences
+        E: Env. The environnement.
         """
         self.env = E
         self.H = H
@@ -37,8 +40,6 @@ class RANDOM:
         self.max_ = max_
     def __call__(self):
         for i in range(self.N):
-            L1 = int(np.random.randint(5,self.max_,(1,))[0])
-            L2 = int(np.random.randint(5,self.max_,(1,))[0])
-            parameter = make_random_paire_list_instr(L1,L2)
+            parameter = make_random_paire_list_instr(self.max_)
             self.H.store({"program":parameter}|self.env(parameter))
             self.H2.store({"program":parameter}|self.env(parameter))

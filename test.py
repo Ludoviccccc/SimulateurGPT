@@ -26,19 +26,19 @@ def test(num_bank):
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
         H_imgep = History(max_size=N)
-        ir = IR(modules,H_imgep, G)
+        ir = IR(modules,H_imgep, G, window = periode)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
         imgep()
         H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_test")
         print(f"done")
 if __name__=="__main__":
-    np.random.seed(0)
-    test_mode = True
+    #np.random.seed(0)
+    test_mode = False
     num_addr = 20
     N = int(3000)
     N_init = 500
     max_len = 50
-    periode = 20
+    periode = 1
     num_bank = 4 # m'est pas variable, a changer dans dossier simulation
     mutation_rate = .1
     modules = ["time"]+[f"miss_bank_{j}" for j in range(num_bank)]+[f"miss_count_bank_{j}" for j in range(num_bank)]+[f"diff_ratios_bank_{j}" for j in range(num_bank)]
@@ -71,14 +71,14 @@ if __name__=="__main__":
             content_random = pickle.load(f)
 
     lp = False
-    ks = []
+    ks = [3]
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
         H_imgep = History(max_size=N)
-        ir = IR(modules,H_imgep, G)
-        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules)
+        ir = IR(modules,H_imgep, G, window = 5*periode)
+        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
         imgep(lp=lp)
         if lp:
             H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
@@ -103,7 +103,7 @@ if __name__=="__main__":
             name = f"comp_ratios_iteration_{k_moins_un}_{N}_no_lp"
         comparaison3(content_random, content_imgep, name = file_names)
     ks = [1,2,3,4]
-    exit()
+    #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
                                 [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],

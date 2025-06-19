@@ -34,9 +34,9 @@ class OptimizationPolicykNN(Features):
     def select_closest_codes(self,H:History,signature: np.ndarray,module:str)->dict:
         t = False
         assert len(H.memory_program)>0, "history empty"
-        feature_history = self.data2feature(H.memory_perf, module)
-        loss = self.loss(signature, feature_hist)
-        idx = np.argsort(loss)[:self.k]
+        b = self.data2feature(H.memory_perf, module)
+        d = self.loss(signature,b)
+        idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}
         for id_ in idx:
             output["program"]["core0"].append(H.memory_program["core0"][id_])

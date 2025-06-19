@@ -51,8 +51,7 @@ class IR:
     def __call__(self,
                  parameter:dict[list], 
                  observation:dict[list],
-                 goal:np.ndarray,
-                 module):
+                 goal:np.ndarray):
         for module in self.modules:
             feature = self.goal_module.data2feature(self.history.memory_perf, module)
             #print(feature.shape)

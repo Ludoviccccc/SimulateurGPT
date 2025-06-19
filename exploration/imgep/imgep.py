@@ -10,14 +10,17 @@ import random
 from exploration.imgep.intrinsic_reward import IR
 
 class IMGEP:
-    def __init__(self,N:int,
+    def __init__(self,
+                N:int,
                 N_init:int,
-                E:Env,H:History,
+                E:Env,
+                H:History,
                 G:GoalGenerator, 
                 Pi:OptimizationPolicykNN,
                 ir:IR,
                 periode:int = 1,
-                modules = ["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"]+["ratios_diff"]):
+                modules = ["time"]+[f"miss_bank_{j}" for j in range(4)]+["time_diff"]+["ratios_diff"],
+                max_len = 100):
         """
         N: int. The experimental budget
         N_init: int. Number of experiments at random
@@ -34,10 +37,11 @@ class IMGEP:
         self.ir = ir
         self.periode = periode
         self.modules = modules 
+        self.max_len = max_len
     def __call__(self,lp=True):
         for i in range(self.N):
             if i<self.N_init:
-                parameter = make_random_paire_list_instr()
+                parameter = make_random_paire_list_instr(self.max_len)
             else:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0 and i>=self.N_init:
@@ -48,11 +52,10 @@ class IMGEP:
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
             observation = self.env(parameter)
-            if (i-self.N_init)%self.periode==0 and i>=self.N_init and True:
+            if (i-self.N_init)%self.periode==0 and i>=self.N_init and lp:
                 self.ir(parameter=parameter,
                         observation=observation,
-                        goal=goal,
-                        module = module)
+                        goal=goal)
                 #if len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
                 #    progress = self.ir.progress()
             self.H.store({"program":parameter}|observation)
