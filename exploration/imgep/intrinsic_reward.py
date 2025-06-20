@@ -57,6 +57,11 @@ class IR:
             #print(feature.shape)
             #print("module", module)
             if type(module) is dict:
+                if module["type"] == "miss_ratios_global_time":
+                    name = module["type"]
+                    bins = np.linspace(0,1,21)
+                    print("implementation de ce module pas prete")
+                    exit()
                 if module["type"] == "miss_ratios":
                     core = module["core"]
                     bank = module["bank"]
@@ -110,4 +115,7 @@ class IR:
                 hist,_,_ = np.histogram2d(feature[0,:],feature[1,:], bins=[bins, bins])
                 div = np.sum(hist>0)
                 self.add(module,div=div)
+            else:
+                print("module not known")
+                exit()
 

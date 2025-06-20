@@ -9,11 +9,12 @@ class Env:
                 l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2},
                 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4},
                 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8},
+                repetition = 5
                 ):
         self.l1_conf = l1_conf
         self.l2_conf = l2_conf
         self.l3_conf = l3_conf
-        self.repetition = 5
+        self.repetition = repetition
     def __call__(self, parameter:dict)->dict:
         program = [self._make_program() for j in range(self.repetition)]
         program0 = [self._make_program() for j in range(self.repetition)]
@@ -24,6 +25,7 @@ class Env:
             program1[j]([],parameter["core1"][0])
         return {
                 "miss_ratios": np.mean([program[j].ratios for j in range(self.repetition)],axis=0),
+                "miss_ratios_global": np.mean([program[j].miss_ratio_global for j in range(self.repetition)],axis=0),
                 "miss_ratios_core0": np.mean([program0[j].ratios for j in range(self.repetition)],axis=0),
                 "miss_ratios_core1": np.mean([program1[j].ratios for j in range(self.repetition)],axis=0),
                 "time_core0_together":np.mean([program[j].compl_time_core0 for j in range(self.repetition)],axis=0),

@@ -38,14 +38,22 @@ class IMGEP:
         self.periode = periode
         self.modules = modules 
         self.max_len = max_len
+        self.start = 0
+    def take(self,sample:dict,N_init:int): 
+        print("sampl", sample.keys())
+        for key in sample["memory_perf"].keys():
+            self.H.memory_perf[key]= list(sample["memory_perf"][key][:N_init])
+        self.H.memory_program["core0"] = sample["memory_program"]["core0"][:N_init]
+        self.H.memory_program["core1"] = sample["memory_program"]["core1"][:N_init]
+        self.start = N_init
     def __call__(self,lp=True):
-        for i in range(self.N):
+        for i in range(self.start,self.N):
             if i<self.N_init:
                 parameter = make_random_paire_list_instr(self.max_len)
             else:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0 and i>=self.N_init:
-                    if lp and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=2:
+                    if lp and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=3:
                         module = self.ir.choice()
                     else:
                         module = random.choice(self.modules)

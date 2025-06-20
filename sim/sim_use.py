@@ -22,7 +22,6 @@ class runpgrms:
         self.list_acces_ddr1 = []    
         self.list_best_request1 = []    
         self.list_address1 = []   
-        #self.max_len = max_len
         self.miss_count = np.zeros(self.num_banks) 
         self.hits_count = np.zeros(self.num_banks)
         self.ratios = None
@@ -39,11 +38,11 @@ class runpgrms:
         #exit()
         if instr["type"]=="r": 
             if instr["core"]==0:    
-                out = self.core0.read(instr["addr"], instr["func"]) 
+                out = self.core0.read(instr["addr"], lambda val: None) 
                 #print("fin")
                 #exit()
             elif instr["core"]==1:  
-                out = self.core1.read(instr["addr"], instr["func"])    
+                out = self.core1.read(instr["addr"], lambda val: None)    
         elif instr["type"]=="w":    
             if instr["core"]==0:    
                 out = self.core0.write(instr["addr"], instr["value"])  
@@ -103,6 +102,10 @@ class runpgrms:
         denominator[denominator==0] = -1
         self.ratios = miss/(denominator)
         self.ratios[self.ratios<0] = -1
+        if (np.sum(miss)+np.sum(hits))==0:
+            self.miss_ratio_global =0
+        else:
+            self.miss_ratio_global = np.sum(miss)/(np.sum(miss)+np.sum(hits))
 
         denominator_tab  = miss_tab + hits_tab
         denominator_tab[denominator_tab==0] = -1
@@ -120,13 +123,12 @@ def make_random_list_instr(length = 5, core = "0"):
         else:  
              out.append({"type":"r",
             "addr":addr,  
-            "func":lambda val: None,
             "core":core}) 
     return out  
 def make_random_paire_list_instr(max_len)->dict:
     #assert type(length) == int
-    length = np.random.randint(1,max_len)
-    length2 = np.random.randint(1,max_len)
+    length = np.random.randint(5,max_len)
+    length2 = np.random.randint(5,max_len)
     instructions0 = make_random_list_instr(length=length, core=0)
     instructions1 = make_random_list_instr(length=length2, core=1)
     return  {"core0": [instructions0],"core1":[instructions1]}

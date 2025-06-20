@@ -19,6 +19,9 @@ class GoalGenerator(Features):
         stat = self.data2feature(stats_, module)
         min_ = stat.min(axis=-1)
         max_ = stat.max(axis=-1)
-        min_ = (1-np.sign(min_)*0.6)*min_
-        out = np.random.uniform(min_,2.0*max_)
+        #if type(module)==dict:
+        #    if module["type"]=="miss_count":
+        #        out = 4.0*max_
+        #        return out
+        out = np.random.uniform((1-np.sign(min_)*0.6)*min_,4.0*max_)
         return out

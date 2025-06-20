@@ -34,6 +34,7 @@ class History:
         while os.path.isfile(f"data/{name}_{k}"):
             k+=1
             name = f"data/{name}_{k}"
-        output  = {key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()}
+        output  = {"memory_perf":{key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()},
+                "memory_program":{"core0":self.memory_program["core0"],"core1":self.memory_program["core1"]}}
         with open(name, "wb") as f:
             pickle.dump(output, f)

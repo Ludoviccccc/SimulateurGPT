@@ -36,19 +36,24 @@ if __name__=="__main__":
     test_mode = False
     num_addr = 20
     N = int(3000)
-    N_init = 500
+    N_init = 1000
     max_len = 50
     periode = 1
     num_bank = 4 # m'est pas variable, a changer dans dossier simulation
     mutation_rate = .1
-    modules = ["time"]+[f"miss_bank_{j}" for j in range(num_bank)]+[f"miss_count_bank_{j}" for j in range(num_bank)]+[f"diff_ratios_bank_{j}" for j in range(num_bank)]
-    modules +=[{"type":"time_diff","core":core} for core in range(2)]
+    modules =   ["time"]
+    modules +=  [f"miss_bank_{j}" for j in range(num_bank)]
+    modules +=  [f"diff_ratios_bank_{j}" for j in range(num_bank)]
+    modules +=  [{"type":"time_diff","core":core} for core in range(2)]
+    modules +=  [{"type":"miss_count", "bank":bank} for bank in range(num_bank)]
     dict_modules = [{"type":"miss_ratios","bank":bank, "core":core} for core in [None, 0,1] for bank in range(num_bank)]
     dict_modules2 = [{"type":"time", "core":core,"single":single} for core in range(2) for single in [True, False]]
 
     ratios_detailled = [{"type":"miss_ratios_detailled","bank":bank,"core":core,"row":row} for core in [None,0,1] for bank in range(num_bank) for row in range(num_addr//16)]
     modules = modules + dict_modules2 + dict_modules + ratios_detailled
-    En = Env()
+    #modules = [{"type":"miss_ratios_global_time"}]
+    print("nomb modules", len(modules))
+    En = Env(repetition=1)
 
     H_rand = History(max_size= N)
     H2_rand = History(max_size=N)
@@ -60,7 +65,8 @@ if __name__=="__main__":
 
     try:
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
-            content_random = pickle.load(f)
+            sample_rand = pickle.load(f)
+            content_random = sample_rand["memory_perf"]
     except:
         print("start random exploration")
         rand()
@@ -68,17 +74,19 @@ if __name__=="__main__":
         #save results
         H_rand.save_pickle(f"history_rand_N_{N}")
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
-            content_random = pickle.load(f)
-
-    lp = False
-    ks = [3]
+            sample_rand = pickle.load(f)
+            content_random = sample_rand["memory_perf"]
+    print("keys", H_rand.memory_perf.keys())
+    lp = True
+    ks = [1,2,3]
     for k in ks:
         print(f"start: k = {k}, N={N}")
         G = GoalGenerator(num_bank = num_bank, modules = modules)
         Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
         H_imgep = History(max_size=N)
-        ir = IR(modules,H_imgep, G, window = 5*periode)
+        ir = IR(modules,H_imgep, G, window = periode)
         imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
+        imgep.take(sample_rand,N_init)
         imgep(lp=lp)
         if lp:
             H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
@@ -93,7 +101,8 @@ if __name__=="__main__":
         file = lambda k,N: f"data/history_kNN_{k}_N_{N}_no_lp_0"
     for k_moins_un,name in [(k,file(k,N)) for k in ks]:
         with open(name, "rb") as f:
-            content_imgep = pickle.load(f)
+            sample = pickle.load(f)
+            content_imgep = sample["memory_perf"]
         file_names = [f"image/comp_ratios_{k_moins_un}_{N}",f"image/comp_times_k{k_moins_un}_{N}",f"image/comp_count_{k_moins_un}_{N}"]
         if lp:
             file_names = [f+"_lp" for f in file_names]
@@ -113,9 +122,11 @@ if __name__=="__main__":
 
     for k in [1,2,3,4]:
         with open(f"data/history_kNN_{k}_N_{N}_no_lp_0", "rb") as f:
-            content_imgep_no_lp = pickle.load(f)
+            sample = pickle.load(f)
+            content_imgep_no_lp = sample["memory_perf"] 
         with open(f"data/history_kNN_{k}_N_{N}_lp_0", "rb") as f:
-            content_imgep_lp = pickle.load(f)
+            sample = pickle.load(f)
+            content_imgep_lp = sample["memory_perf"]
         comparaison_ratios_iterations(("random",content_random),
                                     ("imgep -lp",content_imgep_lp),
                                     ("imgep - no lp",content_imgep_no_lp),
