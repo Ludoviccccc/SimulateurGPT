@@ -44,7 +44,6 @@ class IMGEP:
         self.start = 0
         self.p = p
     def take(self,sample:dict,N_init:int): 
-        print("sampl", sample["memory_program"].keys())
         for key in sample["memory_perf"].keys():
             self.H.memory_perf[key]= list(sample["memory_perf"][key][:N_init])
         self.H.memory_program["core0"] = sample["memory_program"]["core0"][:N_init]

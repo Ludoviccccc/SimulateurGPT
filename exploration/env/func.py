@@ -26,6 +26,8 @@ class Env:
         return {
                 "miss_ratios": np.mean([program[j].ratios for j in range(self.repetition)],axis=0),
                 "miss_ratios_global": np.mean([program[j].miss_ratio_global for j in range(self.repetition)],axis=0),
+                "miss_ratios_global0": np.mean([program0[j].miss_ratio_global for j in range(self.repetition)],axis=0),
+                "miss_ratios_global1": np.mean([program1[j].miss_ratio_global for j in range(self.repetition)],axis=0),
                 "miss_ratios_core0": np.mean([program0[j].ratios for j in range(self.repetition)],axis=0),
                 "miss_ratios_core1": np.mean([program1[j].ratios for j in range(self.repetition)],axis=0),
                 "time_core0_together":np.mean([program[j].compl_time_core0 for j in range(self.repetition)],axis=0),

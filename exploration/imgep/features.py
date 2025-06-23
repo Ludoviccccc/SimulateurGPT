@@ -23,11 +23,12 @@ class Features:
                     out = np.array(stats[f"miss_ratios"])[:,bank]
             if module["type"]=="miss_ratios_global_time": 
                 out = np.stack((np.array(stats["miss_ratios_global"]),
-                                stats["time_core0_alone"],
+                               np.array(stats["miss_ratios_global0"]),
+                               np.array(stats["miss_ratios_global1"]),
+                               stats["time_core0_alone"],
                                 stats["time_core1_alone"],
                                 stats["time_core0_together"],
-                                stats["time_core1_together"],
-                                ))
+                                stats["time_core1_together"]))
             if module["type"]=="time":
                 core = module["core"]
                 single = module["single"]

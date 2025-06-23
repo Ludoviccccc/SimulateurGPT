@@ -137,6 +137,24 @@ def comparaison_ratios_iterations(*args:tuple, name = None,k = None):
                 axs[j+row*4].legend()
                 axs[j+row*4].set_title(f"Mutual Vs Isolation bank {j},row {row}", fontsize=20)
     if name:
-        plt.savefig(f"image/{name}")
+        plt.savefig(name)
+    plt.close()
+
+        #plt.show()
+def comparaison_ratios_global_iterations(*args:tuple, name = None,k = None):
+    plt.figure()
+    fig, axs = plt.subplots(8,1, figsize = (25,20), layout='constrained')
+
+    bins = np.arange(-1.0,1.0,0.05)
+    for label, content in args:
+        ll = len(content["miss_ratios_core0_detailled"])
+        diversity_ratio = [diversity([content["miss_ratios_global0"][:k],  content["miss_ratios_global"][:k]], [bins, bins]) for k in range(0,ll,100)]
+        plt.plot(range(0,ll,100),diversity_ratio, label=label)
+        plt.xlabel("iteration",fontsize=18)
+        plt.ylabel("diversity",fontsize=18)
+        plt.legend()
+        plt.set_title(f"Mutual Vs Isolation", fontsize=20)
+    if name:
+        plt.savefig(name)
     plt.close()
     

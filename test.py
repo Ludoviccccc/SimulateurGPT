@@ -9,7 +9,7 @@ from exploration.imgep.goal_generator import GoalGenerator
 from exploration.imgep.OptimizationPolicy import OptimizationPolicykNN
 from exploration.imgep.imgep import IMGEP
 import matplotlib.pyplot as plt
-from visu import representation, comparaison, comparaison_ratios_iterations, diversity_time_iteration, diversity_time_iteration2
+from visu import diversity_time_iteration2
 from visu2 import comparaison3, comparaison_ratios_iterations
 from exploration.imgep.intrinsic_reward import IR
 def test(num_bank):
@@ -72,12 +72,12 @@ if __name__=="__main__":
         rand()
         print("done")
         #save results
-        H_rand.save_pickle(f"history_rand_N_{N}")
-        with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
+        H_rand.save_pickle(f"data/history_rand_N_{N}")
+        with open(f"data_1module/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
     lp = False
-    ks = [1,2,3,4,5]
+    ks = []
     for lp in [True,False]:
         for k in ks:
             print(f"start: k = {k}, N={N}")
@@ -89,9 +89,9 @@ if __name__=="__main__":
             imgep.take(sample_rand,N_init)
             imgep(lp=lp)
             if lp:
-                H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
+                H_imgep.save_pickle(f"data/history_kNN_{k}_N_{N}_lp")
             else:
-                H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_no_lp")
+                H_imgep.save_pickle(f"data/history_kNN_{k}_N_{N}_no_lp")
             print(f"done")
     N = 5000
     ks = [1,2,3,4]
@@ -107,16 +107,15 @@ if __name__=="__main__":
         file_names = [f"image/comp_ratios_{k_moins_un}_{N}",f"image/comp_times_k{k_moins_un}_{N}",f"image/comp_count_{k_moins_un}_{N}"]
         if lp:
             file_names = [f+"_lp" for f in file_names]
-            name = f"comp_ratios_iteration_{k_moins_un}_{N}_lp"
         else:
             file_names = [f+"_no_lp" for f in file_names]
-            name = f"comp_ratios_iteration_{k_moins_un}_{N}_no_lp"
         comparaison3(content_random, content_imgep, name = file_names)
     ks = [1,2,3,4]
     #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
-                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],f"comparaison_time_diversity_{k}")
+                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],f"comparaison_time_diversity_{k}",
+                                "image")
 
 
 
@@ -130,4 +129,4 @@ if __name__=="__main__":
         comparaison_ratios_iterations(("random",content_random),
                                     ("imgep -lp",content_imgep_lp),
                                     ("imgep - no lp",content_imgep_no_lp),
-                                    name = f"comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+                                    name = f"image/comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)

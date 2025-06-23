@@ -211,7 +211,7 @@ def diversity_time_iteration(content_random, content_imgep, name=None,title=None
         plt.savefig(f"image/{name}")
     #plt.show()
     plt.close()
-def diversity_time_iteration2(content_random,name_list=[str],title=None):
+def diversity_time_iteration2(content_random,name_list=[str],title=None, folder="image"):
     count_bins = lambda content: np.arange(0,max(np.max(content["time_core0_together"]),np.max(content["time_core1_together"])),50)
     ll = len(content_random["miss_ratios_core0"])
     bins = count_bins(content_random)
@@ -234,7 +234,7 @@ def diversity_time_iteration2(content_random,name_list=[str],title=None):
         plt.title("time")
     plt.legend()
     if title:
-        plt.savefig(f"image/{title}")
+        plt.savefig(f"{folder}/{title}")
     plt.close()
 def representation(content, content2 = None):
     if content2:
@@ -302,7 +302,7 @@ def representation(content, content2 = None):
     plt.show()
 
 
-    #plt.show()
+
 if __name__=="__main__":
     random.seed(0)
     N = int(100)
