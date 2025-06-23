@@ -35,10 +35,10 @@ if __name__=="__main__":
     #np.random.seed(0)
     test_mode = False
     num_addr = 20
-    N = int(3000)
+    N = int(5000)
     N_init = 1000
     max_len = 50
-    periode = 1
+    periode = 15
     num_bank = 4 # m'est pas variable, a changer dans dossier simulation
     mutation_rate = .1
     modules =   ["time"]
@@ -76,25 +76,26 @@ if __name__=="__main__":
         with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
-    print("keys", H_rand.memory_perf.keys())
-    lp = True
-    ks = [1,2,3]
-    for k in ks:
-        print(f"start: k = {k}, N={N}")
-        G = GoalGenerator(num_bank = num_bank, modules = modules)
-        Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
-        H_imgep = History(max_size=N)
-        ir = IR(modules,H_imgep, G, window = periode)
-        imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
-        imgep.take(sample_rand,N_init)
-        imgep(lp=lp)
-        if lp:
-            H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
-        else:
-            H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_no_lp")
-        print(f"done")
-    N = 3000
+    lp = False
+    ks = [1,2,3,4,5]
+    for lp in [True,False]:
+        for k in ks:
+            print(f"start: k = {k}, N={N}")
+            G = GoalGenerator(num_bank = num_bank, modules = modules)
+            Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
+            H_imgep = History(max_size=N)
+            ir = IR(modules,H_imgep, G, window = periode)
+            imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
+            imgep.take(sample_rand,N_init)
+            imgep(lp=lp)
+            if lp:
+                H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_lp")
+            else:
+                H_imgep.save_pickle(f"history_kNN_{k}_N_{N}_no_lp")
+            print(f"done")
+    N = 5000
     ks = [1,2,3,4]
+    lp = True
     if lp:
         file = lambda k,N: f"data/history_kNN_{k}_N_{N}_lp_0" 
     else:
@@ -115,8 +116,7 @@ if __name__=="__main__":
     #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
-                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],
-                                f"comparaison_time_diversity_{k}")
+                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],f"comparaison_time_diversity_{k}")
 
 
 

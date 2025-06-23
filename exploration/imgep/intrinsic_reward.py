@@ -52,6 +52,9 @@ class IR:
                  parameter:dict[list], 
                  observation:dict[list],
                  goal:np.ndarray):
+        """
+        Calculates the diversity
+        """
         for module in self.modules:
             feature = self.goal_module.data2feature(self.history.memory_perf, module)
             #print(feature.shape)

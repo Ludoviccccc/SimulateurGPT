@@ -14,20 +14,16 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
     2. Deleting instructions
     3. Adding new instructions
     
-    All read functions are replaced with lambda val: None
     
     Args:
         instructions: List of instruction dictionaries
         mutation_rate: Probability of each mutation occurring (0.0 to 1.0)
     
     Returns:
-        A new mutated list of instructions with all functions replaced
+        A new mutated list of instructions
     """
-    # First, replace all functions with lambda val: None
     mutated = []
     for instr in copy.deepcopy(instructions):
-        if instr['type'] == 'r' and 'func' in instr:
-            instr['func'] = lambda val: None
         mutated.append(instr)
     
     # Now perform random mutations
@@ -49,7 +45,6 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
                 if instr['type'] == 'w' and 'value' not in instr:
                     instr['value'] = random.randint(0, 1000)
                 elif instr['type'] == 'r':
-                    instr['func'] = lambda val: None
                     if 'value' in instr:
                         del instr['value']
             
@@ -70,14 +65,10 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
             new_instr['addr'] = random.randint(0, 20)
             new_instr['core'] = instructions[0]["core"]
             
-            if new_instr['type'] == 'r':
-                new_instr['func'] = lambda val: None
-            else:
+            if new_instr['type'] == 'w':
                 new_instr['value'] = random.randint(0, 1000)
-            
             pos = random.randint(0, len(mutated))
             mutated.insert(pos, new_instr)
-    
     return mutated
 
 
@@ -98,13 +89,10 @@ def mix_instruction_lists(instruction_lists: List[List[Dict[str, Any]]],
     """
     if len(instruction_lists)==1: 
         return instruction_lists[0]
-    # First replace all functions with lambda val: None in all input lists
     sanitized_lists = []
     for instr_list in instruction_lists:
         sanitized = []
         for instr in copy.deepcopy(instr_list):
-            if instr['type'] == 'r' and 'func' in instr:
-                instr['func'] = lambda val: None
             sanitized.append(instr)
         sanitized_lists.append(sanitized)
 

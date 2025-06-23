@@ -221,6 +221,7 @@ def diversity_time_iteration2(content_random,name_list=[str],title=None):
     for label,k_,name in name_list:
         with open(name, "rb") as f:
             content_imgep = pickle.load(f)
+            content_imgep = content_imgep["memory_perf"]
         bins = count_bins(content_imgep)
         #bins = np.arange(0,max(np.max(content_imgep["time_core0_together"]),np.max(content_imgep["time_core1_together"])),50)
         diversity_time_imgep = [diversity([content_imgep["time_core0_together"][:k],content_imgep["time_core1_together"][:k]],[bins, bins]) for k in range(0,ll,100)]
