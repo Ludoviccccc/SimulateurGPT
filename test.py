@@ -10,7 +10,7 @@ from exploration.imgep.OptimizationPolicy import OptimizationPolicykNN
 from exploration.imgep.imgep import IMGEP
 import matplotlib.pyplot as plt
 from visu import diversity_time_iteration2
-from visu2 import comparaison3, comparaison_ratios_iterations
+from visu2 import comparaison3, comparaison_ratios_iterations, comparaison_ratios_global_iterations
 from exploration.imgep.intrinsic_reward import IR
 def test(num_bank):
     N = 500
@@ -64,7 +64,7 @@ if __name__=="__main__":
         exit()
 
     try:
-        with open(f"data/history_rand_N_{N}_{0}", "rb") as f:
+        with open(f"data_1module/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
     except:
@@ -76,7 +76,6 @@ if __name__=="__main__":
         with open(f"data_1module/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
-    lp = False
     ks = []
     for lp in [True,False]:
         for k in ks:
@@ -94,7 +93,7 @@ if __name__=="__main__":
                 H_imgep.save_pickle(f"data/history_kNN_{k}_N_{N}_no_lp")
             print(f"done")
     N = 5000
-    ks = [1,2,3,4]
+    ks = []
     lp = True
     if lp:
         file = lambda k,N: f"data/history_kNN_{k}_N_{N}_lp_0" 
@@ -110,7 +109,7 @@ if __name__=="__main__":
         else:
             file_names = [f+"_no_lp" for f in file_names]
         comparaison3(content_random, content_imgep, name = file_names)
-    ks = [1,2,3,4]
+    ks = []
     #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
@@ -126,7 +125,19 @@ if __name__=="__main__":
         with open(f"data/history_kNN_{k}_N_{N}_lp_0", "rb") as f:
             sample = pickle.load(f)
             content_imgep_lp = sample["memory_perf"]
+        with open(f"data_1module/history_kNN_{k}_N_{N}_no_lp_0", "rb") as f:
+            sample = pickle.load(f)
+            content_imgep_no_lp_1module = sample["memory_perf"] 
+        #with open(f"data_1module/history_kNN_{k}_N_{N}_lp_0", "rb") as f:
+        #    sample = pickle.load(f)
+        #    content_imgep_lp = sample["memory_perf"]
         comparaison_ratios_iterations(("random",content_random),
-                                    ("imgep -lp",content_imgep_lp),
-                                    ("imgep - no lp",content_imgep_no_lp),
-                                    name = f"image/comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+                                     ("imgep -lp",content_imgep_lp),
+                                     ("imgep - no lp",content_imgep_no_lp),
+                                     ("imgep - no lp 1 module",content_imgep_no_lp_1module),
+                                     name = f"image/comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+        comparaison_ratios_global_iterations(("random",content_random),
+                                            ("imgep -lp",content_imgep_lp),
+                                            ("imgep - no lp",content_imgep_no_lp),
+                                            ("imgep - no lp 1 module",content_imgep_no_lp_1module),
+                                            name = f"image/comp_global_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)

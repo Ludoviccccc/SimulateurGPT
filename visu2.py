@@ -142,18 +142,20 @@ def comparaison_ratios_iterations(*args:tuple, name = None,k = None):
 
         #plt.show()
 def comparaison_ratios_global_iterations(*args:tuple, name = None,k = None):
-    plt.figure()
-    fig, axs = plt.subplots(8,1, figsize = (25,20), layout='constrained')
-
+    plt.figure(figsize = (25,20))
     bins = np.arange(-1.0,1.0,0.05)
     for label, content in args:
-        ll = len(content["miss_ratios_core0_detailled"])
+        ll = len(content["miss_ratios_global0"])
+        print("together",len(content["miss_ratios_global0"]))
+        print("0 alone",len(content["miss_ratios_global"]))
         diversity_ratio = [diversity([content["miss_ratios_global0"][:k],  content["miss_ratios_global"][:k]], [bins, bins]) for k in range(0,ll,100)]
+        #print("k", k)
+        print("name", name)
         plt.plot(range(0,ll,100),diversity_ratio, label=label)
         plt.xlabel("iteration",fontsize=18)
         plt.ylabel("diversity",fontsize=18)
         plt.legend()
-        plt.set_title(f"Mutual Vs Isolation", fontsize=20)
+        plt.title(f"Global miss ratio diversity, Mutual Vs Isolation", fontsize=20)
     if name:
         plt.savefig(name)
     plt.close()
