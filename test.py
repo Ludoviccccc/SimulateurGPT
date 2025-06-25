@@ -46,6 +46,8 @@ if __name__=="__main__":
     modules +=  [f"diff_ratios_bank_{j}" for j in range(num_bank)]
     modules +=  [{"type":"time_diff","core":core} for core in range(2)]
     modules +=  [{"type":"miss_count", "bank":bank} for bank in range(num_bank)]
+    modules += [{"type":"miss_ratios_global"}]
+    modules += [{"type":"miss_ratios_global_time"}]
     dict_modules = [{"type":"miss_ratios","bank":bank, "core":core} for core in [None, 0,1] for bank in range(num_bank)]
     dict_modules2 = [{"type":"time", "core":core,"single":single} for core in range(2) for single in [True, False]]
 
@@ -76,7 +78,7 @@ if __name__=="__main__":
         with open(f"data_1module/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
-    ks = []
+    ks = [1,2,3,4]
     for lp in [True,False]:
         for k in ks:
             print(f"start: k = {k}, N={N}")
@@ -93,7 +95,7 @@ if __name__=="__main__":
                 H_imgep.save_pickle(f"data/history_kNN_{k}_N_{N}_no_lp")
             print(f"done")
     N = 5000
-    ks = []
+    ks = [1,2,3,4]
     lp = True
     if lp:
         file = lambda k,N: f"data/history_kNN_{k}_N_{N}_lp_0" 
@@ -109,7 +111,7 @@ if __name__=="__main__":
         else:
             file_names = [f+"_no_lp" for f in file_names]
         comparaison3(content_random, content_imgep, name = file_names)
-    ks = []
+    ks = [1,2,3,4]
     #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
