@@ -118,6 +118,7 @@ The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with
 ![Alt text](image/comp_times_k3_5000_lp.png)
 ![Alt text](image/comparaison_time_diversity_3.png)
 ![Alt text](image/comp_global_ratios_iteration_3_5000_lp_vs_no_lp.png)
+![Alt text](image/comp_ratios_iteration_2_5000_lp_vs_no_lp.png)
 #### k = 4
 ![Alt text](image/comp_ratios_4_5000_lp.png)
 ![Alt text](image/comp_times_k4_5000_lp.png)
