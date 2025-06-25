@@ -78,7 +78,7 @@ if __name__=="__main__":
         with open(f"data_1module/history_rand_N_{N}_{0}", "rb") as f:
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
-    ks = [1,2,3,4]
+    ks = []
     for lp in [True,False]:
         for k in ks:
             print(f"start: k = {k}, N={N}")
@@ -95,7 +95,7 @@ if __name__=="__main__":
                 H_imgep.save_pickle(f"data/history_kNN_{k}_N_{N}_no_lp")
             print(f"done")
     N = 5000
-    ks = [1,2,3,4]
+    ks = []
     lp = True
     if lp:
         file = lambda k,N: f"data/history_kNN_{k}_N_{N}_lp_0" 
@@ -111,12 +111,15 @@ if __name__=="__main__":
         else:
             file_names = [f+"_no_lp" for f in file_names]
         comparaison3(content_random, content_imgep, name = file_names)
-    ks = [1,2,3,4]
+    ks = []
     #exit()
     for k in ks:
         diversity_time_iteration2(content_random,
-                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]+[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")],f"comparaison_time_diversity_{k}",
-                                "image")
+                                [("imgep no lp",k,f"data/history_kNN_{k}_N_{N}_no_lp_0")]
+                                +[("imgep -lp",k,f"data/history_kNN_{k}_N_{N}_lp_0")]
+                                + [("imgep 1 module",k,f"data_1module/history_kNN_{k}_N_{N}_no_lp_0")],
+                                title = f"comparaison_time_diversity_{k}",
+                                folder = "image")
 
 
 

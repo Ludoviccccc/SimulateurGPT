@@ -99,23 +99,27 @@ The performed mutations consist of changing the existing instructions
 ### Results
 
 The result of an exploration with **kNN** with k=1,2,3,4. IMGEP is compared with a random exploration for `N=3000` iterations, with `N_init = 500` steps for initialization. 
-* The phenomenon is stochastic and the variance seems non negligeable. As Pierre-Yves suggested, I will maybe calculate the empirical mean of the statistics for each program.
-* We can visualise distributions on histograms for time differences and miss ratios differences. The distributions look gaussian, probably a consequence of **Central limit theorem** ? 
+* We can visualise distributions on histograms for time differences and miss ratios differences. The distributions look gaussian, probably a consequence of **Central limit theorem** ? For random exploration, the selection of program is random and thus the otention of metrics is also random. With the combination of these these two stages, the obtained metrics are random variables following an unknown multivariate distribution. 
 * As I discussed with Marko, I have implemented an intrinsic reward based on diversity evolution, to help with module selection, in file `exploration.imgep.intrinsic_reward.py`.
 * The diversity is higher with IMGEP, for both miss ratios and time spaces. Meanwhile some spaces aren't explored enough. I will have to make a longer exploration to see changes.
 #### k = 1
 ![Alt text](image/comp_ratios_1_5000_lp.png)
 ![Alt text](image/comp_times_k1_5000_lp.png)
+![Alt text](image/comparaison_time_diversity_1.png)
+![Alt text](image/comp_global_ratios_iteration_1_5000_lp_vs_no_lp.png)
 
 #### k = 2
 ![Alt text](image/comp_ratios_2_5000_lp.png)
 ![Alt text](image/comp_times_k2_5000_lp.png)
+![Alt text](image/comparaison_time_diversity_2.png)
+![Alt text](image/comp_global_ratios_iteration_2_5000_lp_vs_no_lp.png)
 #### k = 3
 ![Alt text](image/comp_ratios_3_5000_lp.png)
 ![Alt text](image/comp_times_k3_5000_lp.png)
-![Alt text](image/time_diversity_3_3_lp000.png)
+![Alt text](image/comparaison_time_diversity_3.png)
+![Alt text](image/comp_global_ratios_iteration_3_5000_lp_vs_no_lp.png)
 #### k = 4
 ![Alt text](image/comp_ratios_4_5000_lp.png)
 ![Alt text](image/comp_times_k4_5000_lp.png)
-#### Time space exploration evolution over iterations
-![Alt text](image/comparaison_time_diversity.png)
+![Alt text](image/comparaison_time_diversity_4.png)
+![Alt text](image/comp_global_ratios_iteration_4_5000_lp_vs_no_lp.png)
