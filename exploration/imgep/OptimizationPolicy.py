@@ -39,9 +39,9 @@ class OptimizationPolicykNN(Features):
         b = self.data2feature(H.memory_perf, module)
         selection = random.sample(range(len(H.memory_program)),min(5000,len(H.memory_program)))
         d = self.loss(signature,b)
-        dist_idx = [(d[l],l) for l in selection]
-        idx = sort_tuple(dist_idx)[:self.k]
-        #idx = np.argsort(d)[:self.k]
+        #dist_idx = [(d[l],l) for l in selection]
+        #idx = sort_tuple(dist_idx)[:self.k]
+        idx = np.argsort(d)[:self.k]
         output = {"program": {"core0":[],"core1":[]},}
         for id_ in idx:
             output["program"]["core0"].append(H.memory_program["core0"][id_])

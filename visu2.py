@@ -4,8 +4,8 @@ def diversity(data:[np.ndarray,np.ndarray],bins:[np.ndarray, np.ndarray]):
     H,_,_ = np.histogram2d(data[0],data[1],bins)
     divers = np.sum(H>0)
     return divers
-def comparaison3(content_random, content_imgep = None, name = None):
-    fig, axs = plt.subplots(8,4, figsize = (25,20), layout='constrained')
+def comparaison3(content_random, content_imgep = None, name = None, title = None):
+    fig, axs = plt.subplots(8,4, figsize = (28,20), layout='constrained')
     for j in range(4):
         for row in range(2):
             bins = np.arange(-1.0,1.0,0.05)
@@ -48,6 +48,8 @@ def comparaison3(content_random, content_imgep = None, name = None):
             axs[4*row + j,3].set_xticks(np.linspace(0,1,11))
             axs[4*row + j,3].set_yticks(np.linspace(0,1,11))
             axs[4*row + j,3].grid()
+    if title:
+        fig.suptitle(title,fontsize = 20)
     if name:
         plt.savefig(name[0])
     plt.close()
