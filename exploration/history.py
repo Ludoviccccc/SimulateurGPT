@@ -30,10 +30,10 @@ class History:
         return output
     def save_pickle(self, name:str=None):
         k = 0
-        name = f"{name}_{k}"
-        while os.path.isfile(f"{name}_{k}"):
+        name = f"{name}_{k}.pkl"
+        while os.path.isfile(f"{name}_{k}.pkl"):
             k+=1
-            name = f"data/{name}_{k}"
+            name = f"data/{name}_{k}.pkl"
         output  = {"memory_perf":{key:np.array(self.memory_perf[key]) for key in self.memory_perf.keys()},
                 "memory_program":{"core0":self.memory_program["core0"],"core1":self.memory_program["core1"]}}
         with open(name, "wb") as f:
