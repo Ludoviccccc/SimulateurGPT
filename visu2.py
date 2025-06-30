@@ -123,14 +123,14 @@ def comparaison3(content_random, content_imgep = None, name = None, title = None
     plt.close()
 
 
-def comparaison_ratios_iterations(*args:tuple, name = None,k = None):
+def comparaison_ratios_iterations(contents:list[tuple], name = None,k = None):
     plt.figure()
     fig, axs = plt.subplots(8,1, figsize = (25,20), layout='constrained')
 
     bins = np.arange(-1.0,1.0,0.05)
     for j in range(4):
         for row in range(2):
-            for label, content in args:
+            for label, content in contents:
                 ll = len(content["miss_ratios_core0_detailled"])
                 diversity_ratio = [diversity([content["miss_ratios_core0_detailled"][:k,row,j],  content["miss_ratios_detailled"][:k,row,j]], [bins, bins]) for k in range(0,ll,100)]
                 axs[j+row*4].plot(range(0,ll,100),diversity_ratio, label=label)
