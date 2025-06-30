@@ -36,35 +36,9 @@ if __name__=="__main__":
     H2_rand = History(max_size=N)
     rand = RANDOM(N = N,E = En, H = H_rand, H2 = H2_rand,max_=max_len)
 
-    try:
-        with open(f"{folder}/history_rand_N_{N}_{0}.pkl", "rb") as f:
-            sample_rand = pickle.load(f)
-            content_random = sample_rand["memory_perf"]
-    except:
-        print("start random exploration")
-        rand()
-        print("done")
-        #save results
-        H_rand.save_pickle(f"{folder}/history_rand_N_{N}")
-        with open(f"{folder}/history_rand_N_{N}_{0}.pkl", "rb") as f:
-            sample_rand = pickle.load(f)
-            content_random = sample_rand["memory_perf"]
-    ks = ks_
-    for lp in [True]:
-        for k in ks:
-            print(f"start: k = {k}, N={N}")
-            G = GoalGenerator(num_bank = num_bank, modules = modules)
-            Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
-            H_imgep = History(max_size=N)
-            ir = IR(modules,H_imgep, G, window = periode)
-            imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
-            imgep.take(sample_rand,N_init)
-            imgep(lp=lp)
-            if lp:
-                H_imgep.save_pickle(f"{folder}/history_kNN_{k}_N_{N}_lp")
-            else:
-                H_imgep.save_pickle(f"{folder}/history_kNN_{k}_N_{N}_no_lp")
-            print(f"done")
+    with open(f"{folder}/history_rand_N_{N}_{0}.pkl", "rb") as f:
+        sample_rand = pickle.load(f)
+        content_random = sample_rand["memory_perf"]
 #    N = 10000
     ks = [1,2,3,4]
     for lp in [True,False]:
