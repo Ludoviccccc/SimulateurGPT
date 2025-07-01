@@ -11,12 +11,15 @@ class OptimizationPolicykNN(Features):
     def __init__(self,
                 k=4,
                 mutation_rate = 0.1,
-                max_len=50):
+                max_len=50,
+                num_addr = 20,
+                num_bank = 4):
         super().__init__()
         self.k = k
         self.mutation_rate = mutation_rate
         self.max_len = max_len
-        self.num_bank = 4
+        self.num_bank = num_bank #this attribute is used by Features
+        self.num_addr = num_addr
     def __call__(self,goal:np.ndarray,H:History, module:str)->dict:
         closest_codes = self.select_closest_codes(H,goal, module) #most promising sample from the history
         output = self.mix(closest_codes) #expansion strategie: small random mutation
@@ -48,5 +51,5 @@ class OptimizationPolicykNN(Features):
             output["program"]["core1"].append(H.memory_program["core1"][id_])
         return output
     def light_code_mutation(self,programs:dict[list[dict]]):
-        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"],mutation_rate = self.mutation_rate)
+        mutated0, mutated1 = mutate_paire_instructions(programs["core0"], programs["core1"],mutation_rate = self.mutation_rate,num_addr=self.num_addr)
         return {"core0":[mutated0[:self.max_len]],"core1":[mutated1[:self.max_len]]}

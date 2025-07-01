@@ -1,15 +1,15 @@
 import json
 if __name__ == "__main__":
-    folder = "data"
+    folder = "data_addr_32_bank_8"
     folder1module = "data_1module"
-    image_folder ="image"
+    image_folder ="image_addr_32_bank_8"
     test_mode = False
-    num_addr = 20
+    num_addr = 64
     N = int(10000)
     N_init = 1000
     max_len = 50
     periode = 100
-    num_bank = 4 
+    num_bank = 8
     mutation_rate = .1
     modules =   ["time"]
     modules +=   [f"miss_bank_{j}" for j in range(num_bank)]

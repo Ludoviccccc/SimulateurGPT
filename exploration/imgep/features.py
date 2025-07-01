@@ -21,7 +21,7 @@ class Features:
                     out = np.array(stats[f"miss_ratios_core{core}"])[:,bank]
                 else:
                     out = np.array(stats[f"miss_ratios"])[:,bank]
-            if module["type"]=="miss_ratios_global_time": 
+            elif module["type"]=="miss_ratios_global_time": 
                 out = np.stack((np.array(stats["miss_ratios_global"]),
                                np.array(stats["miss_ratios_global0"]),
                                np.array(stats["miss_ratios_global1"]),
@@ -29,24 +29,24 @@ class Features:
                                 stats["time_core1_alone"],
                                 stats["time_core0_together"],
                                 stats["time_core1_together"]))
-            if module["type"]=="miss_ratios_global":
+            elif module["type"]=="miss_ratios_global":
                 out = np.stack((np.array(stats["miss_ratios_global"]),
                                np.array(stats["miss_ratios_global0"]),
                                np.array(stats["miss_ratios_global1"])))
 
-            if module["type"]=="time":
+            elif module["type"]=="time":
                 core = module["core"]
                 single = module["single"]
                 if single:
                     out = stats[f"time_core{core}_alone"]
                 else:
                     out = stats[f"time_core{core}_together"]
-            if module["type"]=="miss_count":
+            elif module["type"]=="miss_count":
                 bank = module["bank"]
                 out  = np.stack((np.array(stats["miss_count_core0"])[:,bank],
                                 np.array(stats["miss_count_core1"])[:,bank],
                                 np.array(stats["miss_count"])[:,bank]))
-            if module["type"]=="miss_ratios_detailled":
+            elif module["type"]=="miss_ratios_detailled":
                 core = module["core"] 
                 bank = module["bank"]
                 row = module["row"]
@@ -54,10 +54,17 @@ class Features:
                     out = np.array(stats[f"miss_ratios_core{core}_detailled"])[:,row,bank]
                 else:
                     out = np.array(stats[f"miss_ratios_detailled"])[:,row,bank]
-            if module["type"]=="time_diff":
+            elif module["type"]=="time_diff":
                 core = module["core"]
                 out = np.array(stats[f"diff_time{core}"])
+            else:
+                print(f"module {module} unknown")
+                exit()
+
         elif module in [f"diff_ratios_bank_{j}" for j in range(self.num_bank)]:
             out = np.stack((np.array(stats["diff_ratios_core0"])[:,int(module[-1])],
                 np.array(stats["diff_ratios_core1"])[:,int(module[-1])]))
+        else:
+            print(f"module {module} unknown")
+            exit()
         return np.array(out)

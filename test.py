@@ -30,7 +30,7 @@ if __name__=="__main__":
     image_folder = config["image_folder"]
     ks_ = config["ks"]
     print("nomb modules", len(modules))
-    En = Env(repetition=1)
+    En = Env(repetition=1,num_banks = num_bank,num_addr = num_addr)
 
     H_rand = History(max_size= N)
     H2_rand = History(max_size=N)
@@ -50,11 +50,11 @@ if __name__=="__main__":
             sample_rand = pickle.load(f)
             content_random = sample_rand["memory_perf"]
     ks = ks_
-    for lp in [True]:
+    for lp in [False]:
         for k in ks:
             print(f"start: k = {k}, N={N}")
-            G = GoalGenerator(num_bank = num_bank, modules = modules)
-            Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len)
+            G = GoalGenerator(num_bank = num_bank,modules = modules)
+            Pi = OptimizationPolicykNN(k=k,mutation_rate=mutation_rate,max_len=max_len,num_addr=num_addr,num_bank=num_bank)
             H_imgep = History(max_size=N)
             ir = IR(modules,H_imgep, G, window = periode)
             imgep = IMGEP(N,N_init, En,H_imgep,G,Pi,ir, periode = periode, modules = modules, max_len = max_len)
@@ -66,54 +66,54 @@ if __name__=="__main__":
                 H_imgep.save_pickle(f"{folder}/history_kNN_{k}_N_{N}_no_lp")
             print(f"done")
 #    N = 10000
-    ks = [1,2,3,4]
-    for lp in [True,False]:
-        if lp:
-            file = lambda k,N: f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl" 
-        else:
-            file = lambda k,N: f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl"
-        for k_moins_un,name in [(k,file(k,N)) for k in ks]:
-            with open(name, "rb") as f:
-                sample = pickle.load(f)
-                content_imgep = sample["memory_perf"]
-            file_names = [f"{image_folder}/comp_ratios_{k_moins_un}_{N}",f"{image_folder}/comp_times_k{k_moins_un}_{N}",f"{image_folder}/comp_count_{k_moins_un}_{N}"]
-            if lp:
-                file_names = [f+"_lp" for f in file_names]
-            else:
-                file_names = [f+"_no_lp" for f in file_names]
-            comparaison3(content_random, content_imgep, name = file_names, title=f"miss ratios k = {k_moins_un}, {N} iterations")
-    ks = [1,2,3,4]
-    #exit()
-    for k in ks:
-        diversity_time_iteration2(content_random,
-                                [("imgep no lp",k,f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl")]
-                                +[("imgep -lp",k,f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl")],
-                                #+ [("imgep 1 module",k,f"{folder1module}/history_kNN_{k}_N_{N}_no_lp_0")],
-                                title = f"comparaison_time_diversity_{k}",
-                                folder = image_folder)
-
-
-
-    for k in [1,2,3,4]:
-        with open(f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl", "rb") as f:
-            sample = pickle.load(f)
-            content_imgep_no_lp = sample["memory_perf"] 
-        with open(f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl", "rb") as f:
-            sample = pickle.load(f)
-            content_imgep_lp = sample["memory_perf"]
-        #with open(f"{folder1module}/history_kNN_{k}_N_{N}_no_lp_0.pkl", "rb") as f:
-        #    sample = pickle.load(f)
-        #    content_imgep_no_lp_1module = sample["memory_perf"] 
-        #with open(f"data_1module/history_kNN_{k}_N_{N}_lp_0.pkl", "rb") as f:
-        #    sample = pickle.load(f)
-        #    content_imgep_lp = sample["memory_perf"]
-        comparaison_ratios_iterations(("random",content_random),
-                                     ("imgep -lp",content_imgep_lp),
-                                     ("imgep - no lp",content_imgep_no_lp),
-                                     #("imgep - no lp 1 module",content_imgep_no_lp_1module),
-                                     name = f"{image_folder}/comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
-        comparaison_ratios_global_iterations(("random",content_random),
-                                            ("imgep -lp",content_imgep_lp),
-                                            ("imgep - no lp",content_imgep_no_lp),
-                                           # ("imgep - no lp 1 module",content_imgep_no_lp_1module),
-                                            name = f"{image_folder}/comp_global_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+#    ks = [1,2,3,4]
+#    for lp in [True,False]:
+#        if lp:
+#            file = lambda k,N: f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl" 
+#        else:
+#            file = lambda k,N: f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl"
+#        for k_moins_un,name in [(k,file(k,N)) for k in ks]:
+#            with open(name, "rb") as f:
+#                sample = pickle.load(f)
+#                content_imgep = sample["memory_perf"]
+#            file_names = [f"{image_folder}/comp_ratios_{k_moins_un}_{N}",f"{image_folder}/comp_times_k{k_moins_un}_{N}",f"{image_folder}/comp_count_{k_moins_un}_{N}"]
+#            if lp:
+#                file_names = [f+"_lp" for f in file_names]
+#            else:
+#                file_names = [f+"_no_lp" for f in file_names]
+#            comparaison3(content_random, content_imgep, name = file_names, title=f"miss ratios k = {k_moins_un}, {N} iterations")
+#    ks = [1,2,3,4]
+#    #exit()
+#    for k in ks:
+#        diversity_time_iteration2(content_random,
+#                                [("imgep no lp",k,f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl")]
+#                                +[("imgep -lp",k,f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl")],
+#                                #+ [("imgep 1 module",k,f"{folder1module}/history_kNN_{k}_N_{N}_no_lp_0")],
+#                                title = f"comparaison_time_diversity_{k}",
+#                                folder = image_folder)
+#
+#
+#
+#    for k in [1,2,3,4]:
+#        with open(f"{folder}/history_kNN_{k}_N_{N}_no_lp_0.pkl", "rb") as f:
+#            sample = pickle.load(f)
+#            content_imgep_no_lp = sample["memory_perf"] 
+#        with open(f"{folder}/history_kNN_{k}_N_{N}_lp_0.pkl", "rb") as f:
+#            sample = pickle.load(f)
+#            content_imgep_lp = sample["memory_perf"]
+#        #with open(f"{folder1module}/history_kNN_{k}_N_{N}_no_lp_0.pkl", "rb") as f:
+#        #    sample = pickle.load(f)
+#        #    content_imgep_no_lp_1module = sample["memory_perf"] 
+#        #with open(f"data_1module/history_kNN_{k}_N_{N}_lp_0.pkl", "rb") as f:
+#        #    sample = pickle.load(f)
+#        #    content_imgep_lp = sample["memory_perf"]
+#        comparaison_ratios_iterations(("random",content_random),
+#                                     ("imgep -lp",content_imgep_lp),
+#                                     ("imgep - no lp",content_imgep_no_lp),
+#                                     #("imgep - no lp 1 module",content_imgep_no_lp_1module),
+#                                     name = f"{image_folder}/comp_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+#        comparaison_ratios_global_iterations(("random",content_random),
+#                                            ("imgep -lp",content_imgep_lp),
+#                                            ("imgep - no lp",content_imgep_no_lp),
+#                                           # ("imgep - no lp 1 module",content_imgep_no_lp_1module),
+#                                            name = f"{image_folder}/comp_global_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)

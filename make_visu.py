@@ -11,11 +11,14 @@ if __name__=="__main__":
     folder1module = "data_1module"
     with open(sys.argv[1],"rb") as f:
         config = json.load(f)
+    print("config keys", config.keys())
     N = config["N"]
     N_init = config["N_init"]
     image_folder = config["image_folder"]
     files = config["files"]
     random = config["random"]
+    num_bank = config["num_bank"]
+    num_addr = config["num_addr"]
     with open(os.path.join(random["folder"],random["file"]),"rb") as f:
         sample = pickle.load(f)
     content_random = sample["memory_perf"]
@@ -27,12 +30,10 @@ if __name__=="__main__":
             sample = pickle.load(f)
             content = sample["memory_perf"]
             contents_.append((data["name"],content,data["k"]))
-            #content_.append({"file":data["file"],"data":sample["memory_perf"],"name":data["name"]})
         comparaison3(content_random, 
                      content, 
                      name = [f"{image_folder}/{nn}_{data['type']}_{data['k']}_{N}" for nn in ["ratios","time"]], 
-                     title=f"miss ratios k = {data['k']}, {data['N']} iterations")
-    #exit()
+                     title=[f"{name} k = {data['k']}, {data['N']} iterations" for name in ["miss ratios", "time"]],num_bank=num_bank, num_row = num_addr//16)
     for k_ in [1,2,3,4]:
         diversity_time_iteration2(content_random,
                             [(data["name"],data["k"],f"{data['folder']}/{data['file']}") for data in files if data["k"]==k_],
@@ -42,10 +43,7 @@ if __name__=="__main__":
 
 
 
-        comparaison_ratios_iterations([(a[0],a[1]) for a in contents_ if a[2]==k_],
-                                     name = f"{image_folder}/comp_ratios_iteration_{k_}_{N}_lp_vs_no_lp", k = k_)
-#        comparaison_ratios_global_iterations(("random",content_random),
-#                                            ("imgep -lp",content_imgep_lp),
-#                                            ("imgep - no lp",content_imgep_no_lp),
-#                                           # ("imgep - no lp 1 module",content_imgep_no_lp_1module),
-#                                            name = f"{image_folder}/comp_global_ratios_iteration_{k}_{N}_lp_vs_no_lp", k = k)
+        comparaison_ratios_iterations([(a[0],a[1]) for a in contents_ if a[2]==k_] + [("random", content_random)],
+                                     name = f"{image_folder}/comp_ratios_iteration_{k_}_{N}", k = k_)
+        comparaison_ratios_global_iterations([(a[0],a[1]) for a in contents_ if a[2]==k_] + [("random", content_random)],
+                                            name = f"{image_folder}/comp_global_ratios_iteration_{k_}_{N}", k = k_)

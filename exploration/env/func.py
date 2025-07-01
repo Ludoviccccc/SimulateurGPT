@@ -9,12 +9,16 @@ class Env:
                 l1_conf = {'size': 32,  'line_size': 4, 'assoc': 2},
                 l2_conf = {'size': 128, 'line_size': 4, 'assoc': 4},
                 l3_conf = {'size': 512, 'line_size': 4, 'assoc': 8},
-                repetition = 5
+                repetition = 5,
+                num_banks = 4,
+                num_addr = 20
                 ):
         self.l1_conf = l1_conf
         self.l2_conf = l2_conf
         self.l3_conf = l3_conf
         self.repetition = repetition
+        self.num_banks = num_banks
+        self.num_addr = num_addr
     def __call__(self, parameter:dict)->dict:
         program = [self._make_program() for j in range(self.repetition)]
         program0 = [self._make_program() for j in range(self.repetition)]
@@ -47,8 +51,8 @@ class Env:
                 "miss_ratios_core1_detailled": np.mean([program1[j].ratios_tab for j in range(self.repetition)],axis=0),
                 }
     def _make_program(self):
-        ddr = DDRMemory()
+        ddr = DDRMemory(num_banks=self.num_banks)
         interconnect = Interconnect(ddr, delay=5, bandwidth=4)
         core0 = MultiLevelCache(0, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
         core1 = MultiLevelCache(1, self.l1_conf, self.l2_conf, self.l3_conf, interconnect)
-        return runpgrms(core0, core1, interconnect, ddr)
+        return runpgrms(core0, core1, interconnect, ddr,num_banks=self.num_banks,num_addr = self.num_addr)

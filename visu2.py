@@ -4,52 +4,50 @@ def diversity(data:[np.ndarray,np.ndarray],bins:[np.ndarray, np.ndarray]):
     H,_,_ = np.histogram2d(data[0],data[1],bins)
     divers = np.sum(H>0)
     return divers
-def comparaison3(content_random, content_imgep = None, name = None, title = None,label_algo = "imgep"):
-    fig, axs = plt.subplots(8,4, figsize = (28,20), layout='constrained')
-    for j in range(4):
-        for row in range(2):
+def comparaison3(content_random, content_imgep = None, name = None, title = None,label_algo = "imgep",num_bank=4,num_row = 2):
+    fig, axs = plt.subplots(num_row*num_bank,4, figsize = (28*num_row//2,20), layout='constrained')
+    for j in range(num_bank):
+        for row in range(num_row):
             bins = np.arange(-1.0,1.0,0.05)
-            axs[4*row+j,0].hist(content_imgep["miss_ratios_detailled"][:,row,j] - content_imgep["miss_ratios_core0_detailled"][:,row,j],bins=bins,alpha = .5, label=label_algo)
-            axs[4*row+j,0].hist(content_random["miss_ratios_detailled"][:,row,j] - content_random["miss_ratios_core0_detailled"][:,row,j],  bins=bins,alpha = .5, label="random")
-            axs[4*row+j,0].set_xlabel(f"ratio[bank{j+1},row{row},(S_0,S_1)] - ratio[bank{j+1},row{row},(S_0,)]")
-            axs[4*row+j,0].set_title("row miss hits ratio difference")
-            axs[4*row+j,0].legend()
-                    
-                    
-            axs[4*row+j,1].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j],bins=bins,alpha = .5, label=label_algo)
-            axs[4*row+j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
-            axs[4*row+j,1].set_xlabel(f"ratio[bank{j+1},row{row},(S_0,S_1)] - ratio[bank{j+1},row{row},(,S_1)]")
-            axs[4*row+j,1].set_title("row miss hits ratio difference")
-            axs[4*row+j,1].legend()
+            axs[num_bank*row+j,0].hist(content_imgep["miss_ratios_detailled"][:,row,j] - content_imgep["miss_ratios_core0_detailled"][:,row,j],bins=bins,alpha = .5, label=label_algo)
+            axs[num_bank*row+j,0].hist(content_random["miss_ratios_detailled"][:,row,j] - content_random["miss_ratios_core0_detailled"][:,row,j],  bins=bins,alpha = .5, label="random")
+            axs[num_bank*row+j,0].set_xlabel(f"ratio[bank{j+1},row{row},(S_0,S_1)] - ratio[bank{j+1},row{row},(S_0,)]")
+            axs[num_bank*row+j,0].set_title("row miss hits ratio difference")
+            axs[num_bank*row+j,0].legend()
+            axs[num_bank*row+j,1].hist(content_imgep["miss_ratios"][:,j] - content_imgep["miss_ratios_core1"][:,j],bins=bins,alpha = .5, label=label_algo)
+            axs[num_bank*row+j,1].hist(content_random["miss_ratios"][:,j] - content_random["miss_ratios_core1"][:,j],  bins=bins,alpha = .5, label="random")
+            axs[num_bank*row+j,1].set_xlabel(f"ratio[bank{j+1},row{row},(S_0,S_1)] - ratio[bank{j+1},row{row},(,S_1)]")
+            axs[num_bank*row+j,1].set_title("row miss hits ratio difference")
+            axs[num_bank*row+j,1].legend()
 
             diversity_ratio_random = diversity([content_random["miss_ratios_core0_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j]], [bins, bins])
             diversity_ratio_imgep = diversity([content_imgep["miss_ratios_core0_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j]], [bins, bins])
-            axs[4*row+j,2].scatter(content_imgep["miss_ratios_core0_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j],label=label_algo, alpha = .5)
-            axs[4*row+j,2].scatter(content_random["miss_ratios_core0_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j],  label="random", alpha = .5)
-            axs[4*row+j,2].set_xlabel("miss ratio alone (S_0,)")
-            axs[4*row+j,2].set_ylabel("(S_0,S_1)")
-            axs[4*row+j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-            axs[4*row+j,2].set_title(f"bank {j+1}, row {row}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
-            axs[4*row+j,2].legend()
-            axs[4*row+j,2].set_xticks(np.linspace(0,1,11))
-            axs[4*row+j,2].set_yticks(np.linspace(0,1,11))
-            axs[4*row+j,2].grid()
+            axs[num_bank*row+j,2].scatter(content_imgep["miss_ratios_core0_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j],label=label_algo, alpha = .5)
+            axs[num_bank*row+j,2].scatter(content_random["miss_ratios_core0_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j],  label="random", alpha = .5)
+            axs[num_bank*row+j,2].set_xlabel("miss ratio alone (S_0,)")
+            axs[num_bank*row+j,2].set_ylabel("(S_0,S_1)")
+            axs[num_bank*row+j,2].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+            axs[num_bank*row+j,2].set_title(f"bank {j+1}, row {row}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
+            axs[num_bank*row+j,2].legend()
+            axs[num_bank*row+j,2].set_xticks(np.linspace(0,1,11))
+            axs[num_bank*row+j,2].set_yticks(np.linspace(0,1,11))
+            axs[num_bank*row+j,2].grid()
 
 
             diversity_ratio_random = diversity([content_random["miss_ratios_core1_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j]], [bins, bins])
             diversity_ratio_imgep = diversity([content_imgep["miss_ratios_core1_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j]], [bins, bins])
-            axs[4*row + j,3].scatter(content_imgep["miss_ratios_core1_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j],label=label_algo, alpha=.5)
-            axs[4*row + j,3].scatter(content_random["miss_ratios_core1_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j],  label="random", alpha=.5)
-            axs[4*row + j,3].set_xlabel("miss ratio alone (,S_1)")
-            axs[4*row + j,3].set_ylabel("(S_0,S_1)")
-            axs[4*row + j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
-            axs[4*row + j,3].set_title(f"bank {j+1}, row {row}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
-            axs[4*row + j,3].legend()
-            axs[4*row + j,3].set_xticks(np.linspace(0,1,11))
-            axs[4*row + j,3].set_yticks(np.linspace(0,1,11))
-            axs[4*row + j,3].grid()
+            axs[num_bank*row + j,3].scatter(content_imgep["miss_ratios_core1_detailled"][:,row,j],  content_imgep["miss_ratios_detailled"][:,row,j],label=label_algo, alpha=.5)
+            axs[num_bank*row + j,3].scatter(content_random["miss_ratios_core1_detailled"][:,row,j],  content_random["miss_ratios_detailled"][:,row,j],  label="random", alpha=.5)
+            axs[num_bank*row + j,3].set_xlabel("miss ratio alone (,S_1)")
+            axs[num_bank*row + j,3].set_ylabel("(S_0,S_1)")
+            axs[num_bank*row + j,3].axline(xy1=(0, 0), slope=1, color='r', lw=2)
+            axs[num_bank*row + j,3].set_title(f"bank {j+1}, row {row}, imgep:{diversity_ratio_imgep}, rand:{diversity_ratio_random}")
+            axs[num_bank*row + j,3].legend()
+            axs[num_bank*row + j,3].set_xticks(np.linspace(0,1,11))
+            axs[num_bank*row + j,3].set_yticks(np.linspace(0,1,11))
+            axs[num_bank*row + j,3].grid()
     if title:
-        fig.suptitle(title,fontsize = 20)
+        fig.suptitle(title[0],fontsize = 20)
     if name:
         plt.savefig(name[0])
     plt.close()
@@ -117,6 +115,8 @@ def comparaison3(content_random, content_imgep = None, name = None, title = None
     axs[2,0].set_yticks(bins)
     axs[2,0].grid()
     axs[2,0].set_title(f"imgep:{diversity_time_imgep}, rand:{diversity_time_rand}")
+    if title:
+        fig.suptitle(title[1],fontsize = 20)
 
     if name:
         plt.savefig(name[1])
@@ -143,10 +143,10 @@ def comparaison_ratios_iterations(contents:list[tuple], name = None,k = None):
     plt.close()
 
         #plt.show()
-def comparaison_ratios_global_iterations(*args:tuple, name = None,k = None):
+def comparaison_ratios_global_iterations(list_args:list[tuple], name = None,k = None):
     plt.figure(figsize = (25,20))
     bins = np.arange(-1.0,1.0,0.05)
-    for label, content in args:
+    for label, content in list_args:
         ll = len(content["miss_ratios_global0"])
         print("together",len(content["miss_ratios_global0"]))
         print("0 alone",len(content["miss_ratios_global"]))

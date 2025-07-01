@@ -136,7 +136,6 @@ class DDRMemory:
                     "pending_addr":[item[1].addr for item in self.pending],
                     "pending_core_id":[item[1].core_id for item in self.pending],
                     }
-            #break
         return output
 
     # Compute a score for each request

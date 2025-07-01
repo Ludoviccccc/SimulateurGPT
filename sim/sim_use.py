@@ -7,11 +7,13 @@ from sim.class_mem_sim import Interconnect, MultiLevelCache
 from sim.ddr import DDRMemory
 import matplotlib.pyplot as plt
 class runpgrms: 
-    def __init__(self, core0, core1, interconnect, ddr, num_banks = 4):   
+    def __init__(self, core0, core1, interconnect, ddr, num_banks = 4,num_addr = 20):   
         self.nb_read =0   
         self.interconnect = interconnect
         self.ddr = ddr
         self.num_banks = num_banks
+        self.num_addr = num_addr
+        self.num_rows = self.num_addr//16+1
         
         self.core0 = core0
         self.list_acces_ddr0 = []    
@@ -80,8 +82,8 @@ class runpgrms:
     def reorder(self):
         hits = np.zeros(self.num_banks)
         miss = np.zeros(self.num_banks)
-        hits_tab = np.zeros((2,self.num_banks))
-        miss_tab = np.zeros((2,self.num_banks))
+        hits_tab = np.zeros((self.num_rows,self.num_banks))
+        miss_tab = np.zeros((self.num_rows,self.num_banks))
         for d in self.list_best_request:
             self.miss_count[d["bank"]]+=1*d["status"]=="ROW MISS"
             self.hits_count[d["bank"]]+=1*d["status"]=="ROW HIT"
@@ -111,10 +113,10 @@ class runpgrms:
         denominator_tab[denominator_tab==0] = -1
         self.ratios_tab = miss_tab/(denominator_tab)
         self.ratios_tab[self.ratios_tab<0] = -1
-def make_random_list_instr(length = 5, core = "0"):
+def make_random_list_instr(length = 5, core = "0",num_addr = 20):
     out = []
     for j in range(length):
-        addr = random.randint(0, 20)    
+        addr = random.randint(0, num_addr)    
         if np.random.binomial(1,0.5):
             out.append({"type":"w",
                          "addr":addr,  
@@ -125,11 +127,11 @@ def make_random_list_instr(length = 5, core = "0"):
             "addr":addr,  
             "core":core}) 
     return out  
-def make_random_paire_list_instr(max_len)->dict:
+def make_random_paire_list_instr(max_len,num_addr=20)->dict:
     #assert type(length) == int
     length = np.random.randint(5,max_len)
     length2 = np.random.randint(5,max_len)
-    instructions0 = make_random_list_instr(length=length, core=0)
-    instructions1 = make_random_list_instr(length=length2, core=1)
+    instructions0 = make_random_list_instr(length=length, core=0, num_addr = num_addr)
+    instructions1 = make_random_list_instr(length=length2, core=1, num_addr = num_addr)
     return  {"core0": [instructions0],"core1":[instructions1]}
 

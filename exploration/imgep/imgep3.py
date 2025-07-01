@@ -39,6 +39,9 @@ class IMGEP:
         self.modules = modules 
         self.max_len = max_len
         self.start = 0
+
+
+        self.periode_expl = 5
     def take(self,sample:dict,N_init:int): 
         print("sampl", sample.keys())
         for key in sample["memory_perf"].keys():
@@ -53,15 +56,20 @@ class IMGEP:
             else:
                 #Sample target goal
                 if (i-self.N_init)%self.periode==0 and i>=self.N_init:
-                    if lp and len(self.ir.diversity)==len(self.modules) and len(list(self.ir.diversity.values())[0])>=3:
-                        module = self.ir.choice()
+                    if lp:
+                        if self.k%self.periode_expl==0:
+                            self.time_explor = i + 100
+                        if i<self.time_explor or len(self.ir.diversity)!=len(self.modules) or len(list(self.ir.diversity.values())[0])<3:
+                            self.ir(parameter=parameter,
+                                    observation=observation,
+                                    goal=goal)
+                            module = random.choice(self.modules)
+                        else:
+                            module = self.ir.choice()
+                            self.k+=1
                     else:
-                        module = random.choice(self.modules)
+                            module = self.ir.choice()
                     goal = self.G(self.H, module = module)
                 parameter = self.Pi(goal,self.H, module)
             observation = self.env(parameter)
-            if (i-self.N_init)%self.periode==0 and i>=self.N_init and lp:
-                self.ir(parameter=parameter,
-                        observation=observation,
-                        goal=goal)
             self.H.store({"program":parameter}|observation)

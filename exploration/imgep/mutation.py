@@ -4,10 +4,10 @@ import copy
 import copy
 from typing import List, Dict, Any
 
-def mutate_paire_instructions(instructions1:list[dict], instructions2:list[dict], mutation_rate=.3)->(dict,dict):
-    return mutate_instructions(instructions1, mutation_rate=mutation_rate),mutate_instructions(instructions2, mutation_rate=mutation_rate)
+def mutate_paire_instructions(instructions1:list[dict], instructions2:list[dict], mutation_rate=.3,num_addr=20)->(dict,dict):
+    return mutate_instructions(instructions1, mutation_rate=mutation_rate),mutate_instructions(instructions2, mutation_rate=mutation_rate, num_addr=num_addr)
 
-def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
+def mutate_instructions(instructions:list[dict], mutation_rate=0.3,num_addr=20):
     """
     Randomly mutate a list of instructions by:
     1. Changing existing instructions
@@ -28,8 +28,6 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
     
     # Now perform random mutations
     num_mutations = max(0, int(len(mutated) * mutation_rate))
-    #print("num mutations",num_mutations)
-    #exit()
     
     for _ in range(num_mutations):
         mutation_type = random.choice(['change','delete', 'add'])
@@ -49,7 +47,7 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
                         del instr['value']
             
             elif change_what == 'addr':
-                instr['addr'] = random.randint(0, 20)
+                instr['addr'] = random.randint(0, num_addr)
             
             elif change_what == 'value' and instr['type'] == 'w':
                 instr['value'] = random.randint(0, 1000)
@@ -62,7 +60,7 @@ def mutate_instructions(instructions:list[dict], mutation_rate=0.3):
         elif mutation_type == 'add':
             new_instr = {}
             new_instr['type'] = random.choice(['r', 'w'])
-            new_instr['addr'] = random.randint(0, 20)
+            new_instr['addr'] = random.randint(0, num_addr)
             new_instr['core'] = instructions[0]["core"]
             
             if new_instr['type'] == 'w':
